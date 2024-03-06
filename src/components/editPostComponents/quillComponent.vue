@@ -1,0 +1,80 @@
+<template>
+  <quill-editor class="quill-editor"
+    v-model:value="state.content"
+    :options="state.editorOption"
+    :disabled="state.disabled"
+    @blur="onEditorBlur($event)"
+    @focus="onEditorFocus($event)"
+    @ready="onEditorReady($event)"
+    @change="onEditorChange($event)"
+  />
+<!--  <div ref="quillEditor" class=""></div>-->
+
+
+</template>
+  
+<script lang="ts">
+import {reactive} from 'vue'
+import {QuillEditor} from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+
+export default {
+  name: 'App',
+  components: {QuillEditor},
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  },
+  setup({ emit }:any) {
+
+
+    const state = reactive({
+      content: '<p>2333</p>',
+      _content: '',
+      editorOption: {
+        placeholder: 'core',
+        modules: {
+          // toolbars: [
+            // custom toolbars options
+            // will override the default configuration
+          // ],
+          // other moudle options here
+          // otherMoudle: {}
+        },
+        // more options
+      },
+      
+      disabled: false
+    })
+
+    const onEditorBlur = (quill:any) => {
+      console.log('editor blur!', quill)
+    }
+    const onEditorFocus = (quill:any) => {
+      console.log('editor focus!', quill)
+    }
+    const onEditorReady = (quill:any) => {
+      console.log('editor ready!', quill)
+    }
+    const onEditorChange = ({ quill, html, text }:any) => {
+      console.log('editor change!', quill, html, text)
+      state._content = html
+      emit('update:content', html);
+    }
+
+    return { state, onEditorBlur, onEditorFocus, onEditorReady, onEditorChange }
+  },
+}
+  </script>
+
+  <style scoped>
+  .ql-container {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    min-height: 200px;
+    background-color: aliceblue;
+    font-size: 20px;
+  }
+  </style>
