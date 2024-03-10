@@ -1,0 +1,307 @@
+<template>
+  <div>
+    <div class="main_comment_card">
+      <div class="main_userinfo">
+        <div
+          class="userInfo_avatar"
+          @click="enterUserPage(comment.userInfo.userId)"
+        >
+          <!-- <img src="../../assets/霍霍果照片.png" alt="" /> -->
+        </div>
+        <span class="userInfo_username">{{ comment.userInfo.username }}</span>
+        <span class="userInfo_level">{{ comment.userInfo.level }}</span>
+        <span class="userInfo_userId">{{ comment.userInfo.userId }}</span>
+      </div>
+      <div class="main_comments_card_content">
+        <div class="content_html" v-html="comment.content"></div>
+        <!-- <img src="../../assets/霍霍果照片.png" alt="" /> -->
+
+        <div v-if = "comment.subComments != null" class="main_comments_card_subComments_container">
+          <div
+            v-for="subComment in comment.subComments"
+            v-bind:key="subComment.id"
+            class="main_comments_card_subComments_card"
+          >
+            <div class="main_userinfo">
+              <span>{{ subComment.userInfo.username }}</span>
+              <span>{{ subComment.userInfo.level }}</span>
+              <span>{{ subComment.userInfo.userId }}</span>
+            </div>
+            <div class="main_comments_card_content">
+              <!-- 子回复没有图片和点赞 -->
+              {{ subComment.content }}
+            </div>
+          </div>
+
+          <div  class="main_comments_card_subComments_morereply">更多回复-></div>
+        </div>
+      </div>
+      <div class="main_comments_card_operator_container">
+        <div class="main_comments_card_operator_container_left">
+          {{ comment.date }}
+        </div>
+        <div class="main_comments_card_operator_container_right">
+          <img
+            v-if="comment.isLiked === 1"
+            src="../../assets/icon/thumb-up1.svg"
+            @click="thumbUp"
+          />
+          <img v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
+          <div class="other_info_operations_number">{{ comment.thumbUp }}</div>
+          <img
+            v-if="comment.isLiked === -1"
+            src="../../assets/icon/thumb-down1.svg"
+            @click="thumbDown"
+          />
+          <img
+            v-else
+            src="../../assets/icon/thumb-down.svg"
+            @click="thumbDown"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {PropType} from "vue";
+
+export default {
+  name: "CommentCard",
+  props: {
+    comment: {
+      type: Object as PropType<any>,
+      required: true,
+    },
+  },
+
+  setup(props, cxy) {
+    const thumbUp = () => {
+      //根据id获得 评论
+      cxy.emit("update:thumpUp", {
+        id: props.comment.id,
+      });
+    };
+
+    const thumbDown = () => {
+      //根据id获得 评论
+      console.log("thumbDown");
+      cxy.emit("update:thumpDown", {
+        id: props.comment.id,
+      });
+    };
+
+    return { thumbUp, thumbDown };
+  },
+
+  data() {
+    return {
+      // Your data properties here
+    };
+  },
+  methods: {
+    enterUserPage(id:any) {
+      console.log(id);
+    },
+  },
+  computed: {
+    // Your computed properties here
+  },
+  mounted() {
+    // Your mounted hook code here
+  },
+};
+</script>
+
+<style scoped>
+.main_userinfo {
+  width: 100%;
+  height: 30px;
+  background-color: transparent;
+  align-items: center;
+  border-bottom: 1px solid rgb(162, 160, 160);
+}
+
+.main_comment_card {
+  width: 100%;
+  min-height: 300px;
+  background-color: rgb(197, 231, 230);
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid rgb(162, 160, 160);
+}
+
+.main_comments_card_content {
+  line-height: 18px;
+  margin-top: 8px;
+  margin-left: 30px;
+  background-color: transparent;
+}
+
+.main_comments_card_content p {
+  width: 100%;
+  margin: 0;
+  color: black;
+  font-size: 1em;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.main_comments_card_content img {
+  max-width: 80%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.main_comments_card_operator_container {
+  width: 100%;
+  height: 25px;
+  background-color: rgb(197, 231, 230);
+  margin: 10px 0 0 0;
+}
+
+.main_comments_card_operator_container_left {
+  width: 40%;
+  height: 25px;
+  background-color: transparent;
+  float: left;
+}
+
+.main_comments_card_operator_container_right {
+  width: 15%;
+  height: 25px;
+  background-color: transparent;
+  float: right;
+  display: flex;
+}
+
+.main_comments_card_operator_container_right img {
+  width: 25px;
+  height: 25px;
+  background-color: transparent;
+  color: rgb(233, 219, 219);
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.main_comments_card_operator_container_right img:hover {
+  background-color: rgb(71, 74, 88);
+  border-radius: 5px;
+}
+
+.main_comments_card_subComments_container {
+  width: 90%;
+  min-height: 20px;
+  background-color: rgb(174, 169, 169);
+  padding: 2px;
+  margin-left: 50px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  border: 1px solid rgb(162, 160, 160);
+  border-radius: 5px;
+}
+
+.main_comments_card_subComments_card {
+  width: 100%;
+  max-height: 200px;
+  background-color: rgb(174, 169, 169);
+  box-sizing: border-box;
+  margin-top: 10px;
+  border: 1px solid rgb(162, 160, 160);
+  border-radius: 5px;
+}
+
+.main_comments_card_subComments_morereply {
+  width: 100%;
+  height: 20px;
+  background-color: transparent;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+}
+
+.userInfo_avatar img {
+  width: 40px;
+  height: 40px;
+  background-color: rgb(183, 144, 144);
+  display: inline;
+  float: left;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.userInfo_avatar {
+  width: 40px;
+  height: 40px;
+  align-content: center;
+  display: inline;
+}
+.userInfo_username {
+  color: rgb(45, 44, 44);
+  align-items: center;
+  font-size: 0.95em;
+  margin-left: 10px;
+}
+.userInfo_level {
+  font: 0.5em sans-serif;
+  margin-left: 10px;
+}
+
+.userInfo_userId {
+  align-items: center;
+  font: 0.5em sans-serif;
+  margin-left: 10px;
+}
+
+.otherinfo_operations {
+  width: 15%;
+  height: 26px;
+  background-color: transparent;
+  align-items: center;
+  float: right;
+  display: flex;
+}
+
+.otherinfo_operations img {
+  height: 100%;
+  background-color: transparent;
+  align-items: center;
+  display: inline-block;
+}
+
+.otherinfo_operations img:hover {
+  height: 100%;
+  background-color: rgb(131, 188, 152);
+  align-items: center;
+  display: inline-block;
+}
+
+.otherinfo_operations_number {
+  height: 100%;
+  background-color: transparent;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.8em;
+  line-height: 24px;
+}
+
+:deep(.content_html img) {
+  max-width: 80%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+:deep(.content_html p) {
+  width: 100%;
+  margin: 0;
+  color: black;
+  font-size: 1em;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+</style>
