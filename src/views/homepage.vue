@@ -3,16 +3,7 @@
     <div class="main_container">
       <div class="main_container_message">
         <div class="main_container_mainMessage">
-          <!-- 置顶评论 -->
-          <!-- <div class="main_container_top">
-                        <div class="main_container_top_content">
-                            <div class="main_card_title">标题
-                            </div>
-                        </div>
-                        <div class="main_container_top_content">2</div>
-                    </div> -->
-
-          <!-- 评论区 -->
+          
           <post-comment
             v-for="item in comments"
             :comment="item"
@@ -22,9 +13,23 @@
           ></post-comment>
         </div>
         <div class="main_container_rightMessage">
+          <div class="main_container_mainMessage_rightMessage_card">
+            <div>
+              <button class="right_op_button" >
+                <router-link to="/post-edit" class="nav_link" :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
+
+                </button>
+            </div>
+            <div>
+              <button class="right_op_button">聊天</button>
+            </div>
+            <div>
+              <button class="right_op_button">AI帮助</button>
+            </div>
+
+          </div>
           <div class="main_container_mainMessage_rightMessage_card">2</div>
-          <div class="main_container_mainMessage_rightMessage_card">2</div>
-          <div class="main_container_mainMessage_rightMessage_card">2</div>
+          
         </div>
       </div>
     </div>
@@ -189,17 +194,32 @@ export default {
 
 .main_container_mainMessage_rightMessage_card {
   width: 220px;
-  height: 300px;
+  height: auto;
   background-color: rgb(255, 255, 255);
   margin: 20px;
   padding: 10px;
+  padding-top: 60px;
+  padding-bottom: 60px;
   box-sizing: border-box;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
+  text-align: center;  
+  align-content: center;
 }
 
 .main_container_mainMessage_rightMessage_card:hover {
   background-color: rgb(235, 195, 195);
   border-radius: 5px;
+}
+
+.right_op_button{
+  width: 100px;
+  height: 30px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 5px;
+  text-align: center;
+  align-content: center;
+  margin: 10px;
 }
 </style>

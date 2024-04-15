@@ -95,32 +95,6 @@ export default {
             userId: "12110112",
             userMassage: "这是用户的信息",
           },
-          subComments: [
-            {
-              id: "12",
-              content: "抽卡零保底，副本全掉落",
-              date: "2022-12-12 12:12:12",
-              thumbUp: 121,
-              userInfo: {
-                username: "路过的舰伥",
-                level: "4级",
-                userId: "12110112",
-                userMassage: "这是用户的信息",
-              },
-            },
-            {
-              id: "13",
-              content: "抽卡零保底，副本全掉落",
-              date: "2022-12-12 12:12:12",
-              thumbUp: 121,
-              userInfo: {
-                username: "路过的舰伥",
-                level: "4级",
-                userId: "12110112",
-                userMassage: "这是用户的信息",
-              },
-            },
-          ],
         },
       ],
       post: {
