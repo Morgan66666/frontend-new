@@ -1,21 +1,24 @@
 <template>
   <quill-editor class="quill-editor"
-    v-model:value="state.content"
-    :options="state.editorOption"
+    v-model="content"
+    :options="editorOptions"
     :disabled="state.disabled"
     @blur="onEditorBlur($event)"
     @focus="onEditorFocus($event)"
     @ready="onEditorReady($event)"
     @change="onEditorChange($event)"
+    @imageAdded="handleImageAdded"
   />
 
 
 </template>
   
 <script lang="ts">
-import {reactive} from 'vue'
+import {reactive, ref} from 'vue'
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
+
+
 
 export default {
   name: 'App',
@@ -27,6 +30,27 @@ export default {
     }
   },
   setup({ emit }:any) {
+
+    const content = ref('');
+    const editorOptions = ref({
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],
+          ['blockquote', 'code-block'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],
+          [{ indent: '-1' }, { indent: '+1' }],
+          [{ size: ['small', false, 'large', 'huge'] }],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ color: [] }, { background: [] }],
+          [{ font: [] }],
+          [{ align: [] }],
+          ['image'], // 添加图片按钮
+          ['clean']
+        ]
+      }
+    });
 
 
     const state = reactive({
@@ -63,7 +87,13 @@ export default {
       emit('update:content', html);
     }
 
-    return { state, onEditorBlur, onEditorFocus, onEditorReady, onEditorChange }
+    const handleImageAdded = async (file:any, Editor:any, cursorLocation:any) => {
+      console.log('file', file)
+      console.log('Editor', Editor)
+      console.log('cursorLocation', cursorLocation)
+    }
+
+    return { state, onEditorBlur, onEditorFocus, onEditorReady, onEditorChange, content, editorOptions, handleImageAdded }
   },
 }
   </script>
@@ -76,4 +106,5 @@ export default {
     background-color: aliceblue;
     font-size: 20px;
   }
+
   </style>

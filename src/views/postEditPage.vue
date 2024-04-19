@@ -26,7 +26,9 @@
               <a>内容:</a>
             </div>
             <div class="edit-box-item-input-container">
-              <quillComponent @update:content="handleContentChange" />
+              <div class="edit-box-textarea">
+                <quillComponent @update:content="handleContentChange" />
+              </div>
             </div>
 
             <div>
@@ -158,6 +160,8 @@ export default {
   flex-direction: column;
 }
 
+
+
 .edit-box-title-input {
   width: 98%;
   height: 60%;
@@ -172,6 +176,7 @@ export default {
   margin-left: 10px;
   font-size: 20px;   
    border-radius: 5px;
+  background-color: #fff;
 
 }
 
@@ -233,6 +238,16 @@ export default {
   cursor: pointer;
 }
 
+
+input{
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.edit-box-textarea{
+  background-color: #fff;
+  border-radius: 3px;
+}
 
 </style>
 
