@@ -18,7 +18,7 @@ const router = createRouter({
             component: ProductDetail
         },
         {
-            path: '/personal',
+            path: '/personal/:userId',
             name: 'personal',
             component: personalPage,
             children: [

@@ -15,7 +15,7 @@
       <div class="header_search_container">
         <input class="header_search" type="text" name="search" id="search" placeholder="搜索">
 <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
-          <div class="userInfo_avatar" @click = "isVisible = true">
+          <div class="userInfo_avatar" @click = "avatar">
             <img src="../assets/霍霍.png" alt="">
           </div>
 <!--        </router-link>-->
@@ -34,17 +34,30 @@
 
 <script lang="ts">
 
+import { ref } from "vue";
 import loginComponent from "../components/loginComponent.vue";
+import router from "../router";
+import store from "../store";
+
 export default {
   name: 'headerOfMainPage',
-  //error  Component name "header" should always be multi-word  vue/multi-word-component-names
-  // Your component options go here
+
   components: {loginComponent},
-  data(){
-    return {
-      isVisible: false,
+  setup() {
+    let isVisible = ref(false);
+    const avatar = () => {
+      if(store.getters.getIsLogin){
+        router.push(`/personal/${store.getters.getUser.userId}`);
+      }else{
+        isVisible.value = true;
+      }
+      
     }
-  }
+
+
+    return {avatar, isVisible};
+  },
+
 
 }
 </script>

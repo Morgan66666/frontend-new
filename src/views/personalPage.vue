@@ -1,7 +1,7 @@
 <template>
         <div class="main_container">
             <div class="main_container_sub1">
-                <userInfoVue></userInfoVue>
+                <userInfoVue :userInfo ="userInfo"  ></userInfoVue>
             </div>
             <div class="main_container_sub1">
                 <div class="main_container_user_function_container" >
@@ -9,7 +9,7 @@
                             <div class="main_container_user_title"><a>个人中心</a></div>
                         
 
-                                <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === '/personal/posts' }" to="/personal/posts" >
+                                <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}posts` }" :to="`/personal/${userInfo.userId}/posts`" >
                                     <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                     发帖</router-link>
                             
@@ -27,7 +27,7 @@
                                 <a>购票记录</a>
                             </div>
 
-                            <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === '/personal/infoEdit' }" to="/personal/infoEdit">
+                            <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}/infoEdit` }" :to="`/personal/${userInfo.userId}/infoEdit`">
                                 <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                 <a>编辑资料</a>
                             </router-link>
@@ -44,21 +44,23 @@
 
 <script lang="ts">
 import userInfoVue from '../components/personalComponents/userInfo.vue';
+import { ref } from 'vue';
+import { getUserInfo } from '../utils/userUtil.vue';
+import { useRoute } from 'vue-router';
+import store from '../store';
 
 export default {
   name: 'PersonalPage',
-  components: { userInfoVue},
-  data() {
-    return {
+  components: { userInfoVue },
 
-    };
-  },
-  methods: {
-    // Your methods here
-  },
-  mounted() {
-    // Code to run when the component is mounted
-  },
+setup() {
+    const route = useRoute();
+    let userId = route.params.userId;
+    
+    let userInfo = ref( getUserInfo(userId));
+    console.log(store.getters.getIsLogin);
+    return {userInfo};
+},
 };
 </script>
 

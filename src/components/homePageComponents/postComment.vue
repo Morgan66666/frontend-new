@@ -15,11 +15,9 @@
       <div class="main_card_title">
         <strong>{{ comment.title }}</strong>
       </div>
-      <div class="main_card_content">{{ comment.content }}</div>
+      <div class="main_card_content">{{ shortContent }}</div>
       <div class="main_card_img">
-        <img src="../../assets/霍霍果照片.png" alt="" />
-        <img src="../../assets/霍霍果照片.png" alt="" />
-        <img src="../../assets/霍霍果照片.png" alt="" />
+        <img class="main_card_img"  v-for="(img, index) in imgs" :key=index :src="img" alt="">
       </div>
     </router-link>
 
@@ -28,45 +26,39 @@
         {{ comment.date }}
       </div>
       <div class="other_info_operations">
-        <img
+        <img alt=""
           v-if="comment.isLiked === 1"
           src="../../assets/icon/thumb-up1.svg"
           @click="thumbUp"
         />
-        <img v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
-        <div class="other_info_operations_number">{{ comment.thumbUp }}</div>
+        <img  v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" alt=""/>
+        <div class="other_info_operations_number" alt="">{{ comment.thumbUp }}</div>
         <img
           v-if="comment.isLiked === -1"
           src="../../assets/icon/thumb-down1.svg"
-          @click="thumbDown"
+          @click="thumbDown" alt=""
         />
-        <img v-else src="../../assets/icon/thumb-down.svg" @click="thumbDown" />
+        <img v-else src="../../assets/icon/thumb-down.svg" @click="thumbDown" alt=""/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {PropType} from "vue";
+import {PropType, ref} from "vue";
+import { computed } from "vue";
+import { getUserInfo } from "../../utils/userUtil.vue";
 
 export default {
   name: "PostComment",
 
-  data() {
-    return {
-      // Your data properties here
-    };
-  },
   props: {
     comment: {
       type: Object as PropType<any>,
       required: true,
     },
   },
-  computed: {
-    // Your computed properties here
-  },
-  setup(props, cxy) {
+  setup(props:any, cxy:any) {
     const thumbUp = () => {
       //根据id获得 评论
       cxy.emit("update:thumpUp", {
@@ -82,19 +74,60 @@ export default {
       });
     };
 
-    return { thumbUp, thumbDown };
-  },
-  methods: {
-    enterUserPage() {
-      alert("进入用户页面");
-    },
 
-  },
-  mounted() {
-    // Your mounted hook code here
+    const enterUserPage = ref(
+      function () {
+      alert("进入用户页面");
+      }
+    )
+    //根据评论内容获得图片，最多三张
+    const imgs = computed(() => {
+      let content = props.comment.content;
+      let reg = /<img.*?src="(.*?)".*?>/g;
+      let imgs = content.match(reg);
+      //把img标签去掉，只留下src
+      
+
+      if(imgs != null){
+        if(imgs.length > 3)
+          {imgs = imgs.slice(1, 3);}
+            reg = /src="(.*?)"/g;
+      for(let i = 0;i < imgs.length;i++){
+        imgs[i] = imgs[i].match(reg)[0];
+        imgs[i] = imgs[i].slice(5, -1);
+      }
+
+
+      }
+
+      return imgs;
+    });
+    //先用正则表达式匹配到第一个<p>的内容，然后截取前100个字符
+    const shortContent = computed(() => {
+      
+      let content = props.comment.content;
+      let reg = /<p>(.*?)<\/p>/;
+      let shortContent = content.match(reg);
+
+      if(shortContent != null){
+        shortContent = shortContent[1].slice(0, 20);
+      }
+
+      return shortContent;
+    });
+
+    //根据评论id获得用户信息，显示用户头像等
+    const userInfo = computed(() => {
+      let id = props.comment.userInfo.userId;
+      let userInfo = getUserInfo(id);
+      return userInfo;
+    });
+    return { thumbUp, thumbDown, imgs, enterUserPage, userInfo , shortContent};
   },
 };
 </script>
+
+
 
 <style scoped>
 .comment_card {

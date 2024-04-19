@@ -48,8 +48,7 @@ export default {
         {
           id: "1",
           title: "寻找失落的提瓦特大陆",
-          content: "家人们谁懂啊，这个游戏一点都不好玩",
-          img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
+          content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -63,8 +62,7 @@ export default {
         {
           id: "2",
           title: "寻找失落的提瓦特大陆",
-          content: "",
-          img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
+          content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -78,8 +76,7 @@ export default {
         {
           id: "3",
           title: "寻找失落的提瓦特大陆",
-          content: "",
-          img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
+          content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,

@@ -42,6 +42,8 @@
 <script lang="ts">
 
 
+import store from '../store/index'
+
 export default {
   data() {
     return {
@@ -76,8 +78,20 @@ export default {
         username: this.username,
         password: this.password
       }
-
+      console.log(store.getters.getIsLogin)
+      let user = {
+        username: 'admin',
+        password: 'admin',
+        userId: '12110112',
+        userMassage: '这是用户的信息',
+        level: '4级'
+      }
       console.log(loginForm)
+      store.dispatch('LoginIn', user)
+      console.log(store.getters.getIsLogin)
+      //登录成功后跳转到首页
+      this.$router.push('/')
+      console.log(store.getters.getUser)
 
     },
   }

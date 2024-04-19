@@ -16,29 +16,25 @@
 </template>
 
 <script lang="ts">
+import { ref } from 'vue';
+
+
+
 export default {
   name: 'UserInfo',
-  data() {
-    return {
-      userInfo:{
-        avatar: '霍霍.png',
-        account:"1234567890", // "账号" 
-        username: '花开富贵',
-        userId: '123',
-        signature: '个性签名',
-        
+  props:{
+      userInfo: {
+          type: Object,
+          required: true,
       }
-    };
+
   },
-  methods: {
-    // Your methods here
+  setup(props:any) {
+    let userInfo = ref(props.userInfo);
+    console.log(userInfo.value);
+    return {userInfo};
   },
-  computed: {
-    // Your computed properties here
-  },
-  mounted() {
-    // Your mounted hook code here
-  },
+
 };
 </script>
 

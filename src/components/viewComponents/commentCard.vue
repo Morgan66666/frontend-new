@@ -6,7 +6,6 @@
           class="userInfo_avatar"
           @click="enterUserPage(comment.userInfo.userId)"
         >
-          <!-- <img src="../../assets/霍霍果照片.png" alt="" /> -->
         </div>
         <span class="userInfo_username">{{ comment.userInfo.username }}</span>
         <span class="userInfo_level">{{ comment.userInfo.level }}</span>
@@ -14,7 +13,6 @@
       </div>
       <div class="main_comments_card_content">
         <div class="content_html" v-html="comment.content"></div>
-        <!-- <img src="../../assets/霍霍果照片.png" alt="" /> -->
 
         <div v-if = "comment.subComments != null" class="main_comments_card_subComments_container">
           <div
@@ -41,20 +39,20 @@
           {{ comment.date }}
         </div>
         <div class="main_comments_card_operator_container_right">
-          <img
+          <img alt="点赞"
             v-if="comment.isLiked === 1"
             src="../../assets/icon/thumb-up1.svg"
             @click="thumbUp"
           />
-          <img v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
+          <img alt="点赞" v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
           <div class="other_info_operations_number">{{ comment.thumbUp }}</div>
-          <img
+          <img alt="点踩"
             v-if="comment.isLiked === -1"
             src="../../assets/icon/thumb-down1.svg"
             @click="thumbDown"
           />
           <img
-            v-else
+            v-else alt="点踩"
             src="../../assets/icon/thumb-down.svg"
             @click="thumbDown"
           />
@@ -76,9 +74,9 @@ export default {
     },
   },
 
-  setup(props, cxy) {
+  setup(props:any, cxy:any) {
     const thumbUp = () => {
-      //根据id获得 评论
+      //根据id获得 评论, 调用父组件的方法
       cxy.emit("update:thumpUp", {
         id: props.comment.id,
       });
@@ -92,25 +90,13 @@ export default {
       });
     };
 
-    return { thumbUp, thumbDown };
+    const enterUserPage = (id:any) => {
+      console.log(id);
+    };
+
+    return { thumbUp, thumbDown, enterUserPage };
   },
 
-  data() {
-    return {
-      // Your data properties here
-    };
-  },
-  methods: {
-    enterUserPage(id:any) {
-      console.log(id);
-    },
-  },
-  computed: {
-    // Your computed properties here
-  },
-  mounted() {
-    // Your mounted hook code here
-  },
 };
 </script>
 
