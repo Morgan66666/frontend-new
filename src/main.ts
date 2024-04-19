@@ -10,6 +10,9 @@ import * as directives from 'vuetify/directives'
 import router from "./router";
 import {createPinia} from "pinia";
 import store from "./store/index";
+//@ts-ignore
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 const vuetify = createVuetify({
     components,
@@ -18,4 +21,11 @@ const vuetify = createVuetify({
 
 const pinia = createPinia()
 
-createApp(App).use(vuetify).use(router).use(pinia).use(axios).use(store).mount('#app')
+const app = createApp(App);
+
+app.use(ElementPlus, {
+    locale: zhCn,
+})
+
+
+app.use(vuetify).use(router).use(pinia).use(axios).use(store).mount('#app')

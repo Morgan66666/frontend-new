@@ -14,7 +14,6 @@
               <input
                 class="edit-box-title-input"
                 type="text"
-                auto-height=""
                 placeholder="标题(必填)"
                 v-model="title"
               />
@@ -27,7 +26,7 @@
             </div>
             <div class="edit-box-item-input-container">
               <div class="edit-box-textarea">
-                <quillComponent @update:content="handleContentChange" />
+                <quillComponent @update:content="handleContentChange" ref="quillContent"/>
               </div>
             </div>
 
@@ -60,14 +59,41 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
+import {ref} from "vue";
+
+let quillContent = ref();
+let title = ref("标题");
+let content = ref("你好");
+let selectedPlate = ref("体育比赛");
+
+const publicPost = () => {
+  console.log(title.value);
+  console.log(quillContent.value.editor.querySelector('.ql-editor').innerHTML);
+  console.log(selectedPlate.value);
+};
+
+const handleContentChange = () => {
+  content.value = quillContent.value.editor.querySelector('.ql-editor').innerHTML;
+};
+
+</script>
+
+<!--<script lang="ts">
+
 
 export default {
   components: {
     quillComponent,
   },
-  setup() {},
+  setup() {
+    let quillContent = ref();
+
+    return {
+      quillContent
+    }
+  },
   data() {
     return {
       title: "标题",
@@ -80,15 +106,15 @@ export default {
     //发表
     publicPost() {
       console.log(this.title);
-      console.log(this.content);
+      console.log(this.quillContent.value.editor);
       console.log(this.selectedPlate);
     },
-    handleContentChange(newContent:any) {
-      this.content = newContent;
+    handleContentChange() {
+      this.content = this.quillContent.value.querySelector('.ql-editor').innerHTML;
     }
   },
 };
-</script>
+</script>-->
 
 <style scoped>
 .main_container {
@@ -194,7 +220,7 @@ export default {
   text-justify: auto;
   text-overflow: clip;
   text-transform: none;
-  text-indent: 0px;
+  text-indent: 0;
   text-decoration: none;
   text-shadow: none;
   text-underline-position: auto;
