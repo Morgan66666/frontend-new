@@ -36,6 +36,8 @@ const exportedHtml = ref('');
 
 const imageUrl = ref<string>('');
 
+let quill:Quill = null;
+
 
 async function handleUpload(file: File) {
   try {
@@ -78,33 +80,14 @@ async function getOssSignature(): Promise<SignatureInfo> {
     if (response.data) {
       return response.data;
     } else {
-      ElMessage.error("获取签名信息失败");
+      throw new Error("获取签名信息失败");
     }
   } catch (error) {
     throw error;
   }
 }
 
-const quill = new Quill(editor.value, {
-  theme: 'snow',
-  modules: {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ indent: '-1' }, { indent: '+1' }],
-      [{ size: ['small', false, 'large', 'huge'] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ align: [] }],
-      // ['image', 'uploadImage'],
-      ['image'],
-      ['clean']
-    ]
-  }
-});
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -147,6 +130,26 @@ function insertToEditor(url: string): void {
 
 
 onMounted(() => {
+  quill = new Quill(editor.value, {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ color: [] }, { background: [] }],
+        [{ font: [] }],
+        [{ align: [] }],
+        // ['image', 'uploadImage'],
+        ['image'],
+        ['clean']
+      ]
+    }
+  });
 
 });
 
