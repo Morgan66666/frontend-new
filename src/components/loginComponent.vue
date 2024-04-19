@@ -90,8 +90,7 @@ export default {
       store.dispatch('LoginIn', user)
       console.log(store.getters.getIsLogin)
       //登录成功后跳转到首页
-      this.$router.push('/')
-      console.log(store.getters.getUser)
+      this.$emit('login', true)
 
     },
   }

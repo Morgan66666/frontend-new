@@ -9,25 +9,26 @@
                             <div class="main_container_user_title"><a>个人中心</a></div>
                         
 
-                                <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}posts` }" :to="`/personal/${userInfo.userId}/posts`" >
+                                <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}/posts` }" :to="`/personal/${userInfo.userId}/posts`" >
                                     <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
-                                    发帖</router-link>
+                                    <a>发帖</a>
+                                </router-link>
                             
-                            <div class="main_container_user_function_left_button">
+                            <div v-if="isMaster" class="main_container_user_function_left_button">
                                 <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                 <a>收藏</a>
                                 
                             </div>
-                            <div class="main_container_user_function_left_button">
+                            <div v-if="isMaster" class="main_container_user_function_left_button">
                                 <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                 <a>浏览记录</a>
                             </div>
-                            <div class="main_container_user_function_left_button">
+                            <div v-if="isMaster" class="main_container_user_function_left_button">
                                 <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                 <a>购票记录</a>
                             </div>
 
-                            <router-link class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}/infoEdit` }" :to="`/personal/${userInfo.userId}/infoEdit`">
+                            <router-link v-if="isMaster" class="main_container_user_function_left_button" :class="{ active: $route.path === `/personal/${userInfo.userId}/infoEdit` }" :to="`/personal/${userInfo.userId}/infoEdit`">
                                 <img class="main_icon_svg" src="../assets/icon/time.svg" alt="百度logo">
                                 <a>编辑资料</a>
                             </router-link>
@@ -35,7 +36,7 @@
                         </div>
                         <div class="main_container_user_function_right">
                             <router-view></router-view>
-
+                                
                         </div>
                 </div>
             </div>
@@ -56,10 +57,10 @@ export default {
 setup() {
     const route = useRoute();
     let userId = route.params.userId;
-    
+    let isMaster = store.getters.getIsLogin && store.getters.getUser.userId === userId;
     let userInfo = ref( getUserInfo(userId));
     console.log(store.getters.getIsLogin);
-    return {userInfo};
+    return {userInfo, isMaster};
 },
 };
 </script>
@@ -70,24 +71,31 @@ setup() {
     width: 100%;
     height: 100%;
     justify-content: center;
-    background-color: rgb(247,248,252);
+    background-color: rgb(245, 245, 245);   
     box-sizing: content-box;
+}
+
+
+.main_container::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 .main_container_sub1{
     width: 1000px;
-    height: 100%;
+    height: auto;
     margin: 0 auto ;
     padding-left: 100px;
     padding-right: 100px;
-    background-color: rgb(247,248,252);
+    background-color: transparent;    
     box-sizing: content-box;
 }
 
 
 .main_container_user_function_container{
     width: 980px;
-    height: 450px;
-    background-color: rgb(255, 255, 255);
+    height: 800px;
+    background-color: transparent;
     margin-top: 10px;
 }
 
@@ -95,7 +103,7 @@ setup() {
 .main_container_user_function_left{
     width: 280px;
     height: 300px;
-    background-color: rgb(197, 231, 230);
+    background-color: rgb(255,255,255);
     display: inline;
     margin-right: 10px;
     float: left;
@@ -105,7 +113,7 @@ setup() {
 .main_container_user_function_left_button{
     width: 280px;
     height: 40px;
-    background-color: rgb(191, 237, 236);
+    background-color: rgb(255,255,255);
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -114,7 +122,7 @@ setup() {
 }
 
 .main_container_user_function_left_button a{
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;  
     height: 0.5em;
     display: inline-block;
@@ -135,7 +143,7 @@ setup() {
     width: 660px;
     height: auto;
     min-height: 300px;
-    background-color: rgb(197, 231, 230);
+    background-color: rgb(255,255,255);
     display: inline;
     float: right;
     border-radius: 8px;
@@ -151,7 +159,7 @@ setup() {
 }
 
 .main_container_user_title a{
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;  
     height: 0.5em;
     text-align: center;

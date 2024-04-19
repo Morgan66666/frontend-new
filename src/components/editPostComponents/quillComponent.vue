@@ -8,7 +8,6 @@
     @ready="onEditorReady($event)"
     @change="onEditorChange($event)"
   />
-<!--  <div ref="quillEditor" class=""></div>-->
 
 
 </template>

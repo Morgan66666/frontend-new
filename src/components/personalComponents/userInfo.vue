@@ -50,7 +50,7 @@ export default {
 .main_container_user_avatar_container{
     height: 100%;
     width: 200px;
-    background-color: rgb(197, 231, 230);
+    background-color: rgb(255,255,255);
     display: inline;
     float: left;
     border-top-left-radius: 8px;
@@ -69,7 +69,7 @@ export default {
 .main_container_user_info{
     height: 100%;
     width: 780px;
-    background-color: rgb(197, 231, 230);
+    background-color: rgb(255,255,255);
     display: inline;
     float: right;
     border-top-right-radius: 8px;
@@ -108,7 +108,7 @@ export default {
     margin-top: 12px;
     margin-right: 12px;
     font-size: 0.8em;
-    background-color: rgb(197, 231, 230);
+    background-color: rgb(255,255,255);
     word-wrap:break-word;  
     word-break:break-all;  
 }

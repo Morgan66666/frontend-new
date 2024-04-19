@@ -9,7 +9,7 @@
         <router-link to="/" class="nav_link" :class="{ active: $route.path === '/' }">首页</router-link>
         <router-link to="/activities" class="nav_link" :class="{ active: $route.path.startsWith('/activities') }">活动
         </router-link>
-            <router-link to="/post-edit" class="nav_link" :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
+            <router-link to="/forum" class="nav_link" :class="{ active: $route.path.startsWith('/forum') }">论坛</router-link>
 
       </div>
       <div class="header_search_container">
@@ -21,7 +21,7 @@
 <!--        </router-link>-->
       </div>
       <div class="login" v-if="isVisible">
-        <login-component></login-component>
+        <login-component @login="login"></login-component>
       </div>
         
 
@@ -51,11 +51,17 @@ export default {
       }else{
         isVisible.value = true;
       }
-      
+    };
+
+    const login = (success:any) => {
+      if(success){
+        isVisible.value = false;
+        router.push(`/`);
+      };
     }
 
 
-    return {avatar, isVisible};
+    return {avatar, isVisible, login};
   },
 
 
@@ -83,7 +89,7 @@ export default {
 .header_nav {
   width: 30em;
   height: 100%;
-  background-color: rgb(31, 34, 51);
+  background-color: rgb(31,34,51);
   justify-content: left;
   justify-items: center;
   vertical-align: middle
@@ -104,12 +110,10 @@ export default {
 
 .header_nav a.active {
   background-color: rgb(71, 74, 88);
-  color: rgb(136, 146, 205);
 }
 
 .header_nav a:hover {
   background-color: rgb(71, 74, 88);
-  color: rgb(136, 146, 205);
 }
 
 .header_search_container {

@@ -5,9 +5,9 @@
         <div class="main_container_mainMessage">
           <div class="main_main_card">
             <div class="main_main_card_title">{{ post.title }}</div>
-            <div class="main_main_card_content">
-              <!-- 这个会是一个富文本，用v-html处理 -->
-              {{ post.content }}
+
+            <div class="main_main_card_content" v-html="post.content">
+              
             </div>
 
             <div class="main_main_card_other_info_container">
@@ -71,6 +71,7 @@
 <script lang="ts">
 import commentCardVue from "../components/viewComponents/commentCard.vue";
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
+import store from "../store";
 
 export default {
   components: { commentCardVue, quillComponent },
@@ -98,20 +99,19 @@ export default {
         },
       ],
       post: {
-        id: "1",
-        title: "寻找失落的提瓦特大陆",
-        content: "家人们谁懂啊，这个游戏一点都不好玩",
-        img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
-        date: "2022-12-12 12:12:12",
-        thumbUp: 121,
-        isLiked: 0,
-        userInfo: {
-          username: "张三",
-          level: "4级",
-          userId: "12110112",
-          userMassage: "这是用户的信息",
+          id: "1",
+          title: "寻找失落的提瓦特大陆",
+          content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
+          date: "2022-12-12 12:12:12",
+          thumbUp: 121,
+          isLiked: 0,
+          userInfo: {
+            username: "张三",
+            level: "4级",
+            userId: "12110112",
+            userMassage: "这是用户的信息",
+          },
         },
-      },
     };
   },
 
@@ -155,26 +155,29 @@ export default {
     },
 
     handleContentChange(newContent:any) {
+      console.log("awdw");
       this.newContent = newContent;
 
     },
 
     //评论
     comment(){
+        if(!store.getters.getIsLogin){
+          this.$router.push('/login');
+          return;
+        } 
+        let userInfo = store.getters.getUser;
+
+
         let newComment:any = {
         id: "1",
         content: this.newContent,
-        img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
-        userInfo: {
-          username: "李四",
-          level: "4级",
-          userId: "12110112",
-          userMassage: "这是用户的信息",
-        },
+        userInfo: userInfo
       };
+        console.log('newComment', newComment);
         this.comments.push(newComment);
     }
 
@@ -183,13 +186,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .main_container {
   width: 100%;
   height: 100%;
   justify-content: center;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(247,248,252);
   box-sizing: content-box;
+}
+
+.main_container::after{
+  content: '';
+  display: block;
+  clear: both;
+
 }
 .main_container_message {
   width: 1000px;
@@ -197,45 +207,45 @@ export default {
   margin: 0 auto;
   padding-left: 100px;
   padding-right: 100px;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   box-sizing: content-box;
 }
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   float: left;
 }
 .main_container_rightMessage {
   width: 280px;
   height: 100%;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
   float: right;
 }
 
 .main_container_mainMessage_rightMessage_card {
   width: 220px;
   height: 300px;
-  background-color: rgb(197, 231, 230);
+  background-color: rgb(255, 255, 255);
   margin: 20px;
   padding: 10px;
   box-sizing: border-box;
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(255, 255, 255);
   border-radius: 5px;
 }
 
 .main_container_mainMessage_rightMessage_card:hover {
-  background-color: rgb(235, 195, 195);
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
 }
 
 .main_main_card {
   width: 100%;
   min-height: 300px;
-  background-color: rgb(197, 231, 230);
+  background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;
-  border: 1px solid rgb(162, 160, 160);
+  border: 1px solid rgb(255, 255, 255);
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -249,14 +259,14 @@ export default {
   white-space: nowrap;
   display: flex;
   font-weight: bold;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   font-size: 1.5em;
 }
 
 .main_main_card_content {
   line-height: 18px;
   margin-top: 8px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   border-bottom: 1px solid rgb(162, 160, 160);
 }
 
@@ -265,11 +275,13 @@ export default {
   margin: 0;
   color: black;
   font-size: 1em;
+  margin-top: 10px;
   word-wrap: break-word;
   word-break: break-all;
 }
 .main_main_card_content img {
   max-width: 80%;
+
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -280,14 +292,14 @@ export default {
   width: 100%;
   height: 20px;
   margin-top: 10px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   align-items: center;
 }
 
 .main_main_card_other_info_left {
   width: 40%;
   height: 20px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   align-items: center;
   float: left;
   font: 0.6em sans-serif;
@@ -296,7 +308,7 @@ export default {
 .main_main_card_other_info_right {
   width: 40%;
   height: 20px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   align-items: center;
   float: right;
 }
@@ -304,7 +316,7 @@ export default {
 .main_main_card_comment_input_container {
   width: 100%;
   min-height: 50px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   box-sizing: border-box;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -327,13 +339,13 @@ export default {
 .main_main_card_comment_operator_container {
   width: 100%;
   height: 35px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
 }
 
 .main_main_card_comment_operator_container_operator {
   width: 180px;
   height: 35px;
-  background-color: rgb(197, 231, 230);
+  background-color: transparent;
   color: white;
   border: none;
   border-radius: 5px;
@@ -362,4 +374,6 @@ export default {
   margin: 5px 10px 0 5px;
   float: right;
 }
+
+
 </style>

@@ -8,8 +8,6 @@
         comment.userInfo.username
       }}</span>
       <span class="userInfo_level">{{ comment.userInfo.level }}</span>
-      <span class="userInfo_userId">{{ comment.userInfo.userId }}</span>
-      <span>{{ comment.userInfo.userMassage }}</span>
     </div>
     <router-link class="router-link" :to="'/comments/' + comment.id">
       <div class="main_card_title">
@@ -48,6 +46,7 @@
 import {PropType, ref} from "vue";
 import { computed } from "vue";
 import { getUserInfo } from "../../utils/userUtil.vue";
+import router from "../../router"
 
 export default {
   name: "PostComment",
@@ -77,7 +76,8 @@ export default {
 
     const enterUserPage = ref(
       function () {
-      alert("进入用户页面");
+        router.push(`/personal/${props.comment.userInfo.userId}`);
+        alert("进入用户页面");
       }
     )
     //根据评论内容获得图片，最多三张
@@ -133,14 +133,14 @@ export default {
 .comment_card {
   width: 100%;
 
-  background-color: rgb(189, 233, 239);
+  background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;
-  border: 1px solid rgb(162, 160, 160);
+  border-bottom: 1px solid rgb(200, 200, 200);
 }
 
 .comment_card:hover {
-  background-color: rgb(146, 227, 238);
+  background-color: rgba(252, 252, 252, 0.846)
 }
 
 .main_userinfo {
@@ -177,7 +177,7 @@ export default {
 .main_card_img img {
   width: 30%;
   height: 180px;
-  background-color: rgb(183, 144, 144);
+  background-color: rgba(252, 252, 252, 0.846);
   align-items: center;
   margin-top: 8px;
   margin-left: 10px;
@@ -185,9 +185,9 @@ export default {
 }
 
 .userInfo_avatar img {
-  width: 30px;
-  height: 30px;
-  background-color: rgb(183, 144, 144);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(252, 252, 252, 0.846);
   display: inline;
   float: left;
   border-radius: 50%;
@@ -201,13 +201,16 @@ export default {
 }
 
 .userInfo_username {
-  color: rgb(45, 44, 44);
+  color: rgb(151,151,151);
   align-items: center;
   font-size: 0.95em;
-  margin-left: 10px;
+  margin-left: 18px;
 }
 .userInfo_level {
-  font: 0.5em sans-serif;
+  background-color:rgb(176, 231, 109);
+  width: 36px;
+  text-align: center;
+  font: 0.8em sans-serif;
   margin-left: 10px;
 }
 
@@ -256,7 +259,7 @@ export default {
 
 .other_info_operations img:hover {
   height: 100%;
-  background-color: rgb(131, 188, 152);
+  background-color: rgba(252, 252, 252, 0.846);
   align-items: center;
   display: inline-block;
 }
@@ -269,4 +272,7 @@ export default {
   font-size: 0.8em;
   line-height: 24px;
 }
+
+
+
 </style>

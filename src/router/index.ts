@@ -16,6 +16,10 @@ const router = createRouter({
             path: '/activity',
             name: 'activity',
             component: ProductDetail
+        },{
+            path: '/forum',
+            name: 'forum',
+            component: () => import('../views/forumPage.vue')
         },
         {
             path: '/personal/:userId',

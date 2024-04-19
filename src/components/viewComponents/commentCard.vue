@@ -109,10 +109,46 @@ export default {
   border-bottom: 1px solid rgb(162, 160, 160);
 }
 
+.userInfo_avatar img {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(252, 252, 252, 0.846);
+  display: inline;
+  float: left;
+  border-radius: 50%;
+}
+
+.userInfo_avatar {
+  width: 30px;
+  height: 30px;
+  align-content: center;
+  display: inline;
+}
+
+.userInfo_username {
+  color: rgb(151,151,151);
+  align-items: center;
+  font-size: 0.95em;
+  margin-left: 18px;
+}
+.userInfo_level {
+  background-color:rgb(176, 231, 109);
+  width: 36px;
+  text-align: center;
+  font: 0.8em sans-serif;
+  margin-left: 10px;
+}
+
+.userInfo_userId {
+  align-items: center;
+  font: 0.5em sans-serif;
+  margin-left: 10px;
+}
+
 .main_comment_card {
   width: 100%;
   min-height: 300px;
-  background-color: rgb(197, 231, 230);
+  background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;
   border: 1px solid rgb(162, 160, 160);
@@ -127,9 +163,10 @@ export default {
 
 .main_comments_card_content p {
   width: 100%;
-  margin: 0;
+  margin-top: 300px;
   color: black;
   font-size: 1em;
+  
   word-wrap: break-word;
   word-break: break-all;
 }
@@ -144,7 +181,7 @@ export default {
 .main_comments_card_operator_container {
   width: 100%;
   height: 25px;
-  background-color: rgb(197, 231, 230);
+  background-color: rgb(255, 255, 255);
   margin: 10px 0 0 0;
 }
 
@@ -209,38 +246,7 @@ export default {
   text-align: center;
 }
 
-.userInfo_avatar img {
-  width: 40px;
-  height: 40px;
-  background-color: rgb(183, 144, 144);
-  display: inline;
-  float: left;
-  border-radius: 50%;
-  cursor: pointer;
-}
 
-.userInfo_avatar {
-  width: 40px;
-  height: 40px;
-  align-content: center;
-  display: inline;
-}
-.userInfo_username {
-  color: rgb(45, 44, 44);
-  align-items: center;
-  font-size: 0.95em;
-  margin-left: 10px;
-}
-.userInfo_level {
-  font: 0.5em sans-serif;
-  margin-left: 10px;
-}
-
-.userInfo_userId {
-  align-items: center;
-  font: 0.5em sans-serif;
-  margin-left: 10px;
-}
 
 .otherinfo_operations {
   width: 15%;
@@ -284,7 +290,7 @@ export default {
 
 :deep(.content_html p) {
   width: 100%;
-  margin: 0;
+  margin-top: 8px;
   color: black;
   font-size: 1em;
   word-wrap: break-word;
