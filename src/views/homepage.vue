@@ -70,6 +70,7 @@ export default {
           thumbUp: 121,
           isLiked: 0,
           userInfo: {
+            avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
             username: "张三",
             level: "4级",
             userId: "12110112",
@@ -84,6 +85,7 @@ export default {
           thumbUp: 121,
           isLiked: 0,
           userInfo: {
+            avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
             username: "张三",
             level: "4级",
             userId: "121101142",
@@ -98,6 +100,7 @@ export default {
           thumbUp: 121,
           isLiked: 0,
           userInfo: {
+            avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
             username: "张三",
             level: "4级",
             userId: "121101152",
@@ -271,6 +274,7 @@ export default {
   margin: 0;
   -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
   padding: 0;
+  border-radius: 0.375rem;
   text-transform: uppercase;
 }
 .btn-24:disabled {
@@ -352,6 +356,7 @@ export default {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
   width: 90%;
+  height: auto;
   margin: auto;
   margin-bottom: 50px;
 }

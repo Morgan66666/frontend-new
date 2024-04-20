@@ -107,6 +107,7 @@ export default {
           isLiked: 0,
           userInfo: {
             username: "张三",
+            avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
             level: "4级",
             userId: "12110112",
             userMassage: "这是用户的信息",

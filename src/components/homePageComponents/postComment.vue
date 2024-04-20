@@ -2,7 +2,7 @@
   <div class="comment_card">
     <div class="main_userinfo">
       <div class="userInfo_avatar" @click="enterUserPage()">
-        <img src="../../assets/霍霍果照片.png" alt="" />
+        <img :src= "comment.userInfo.avatar" alt="" />
       </div>
       <span class="userInfo_username" @click="enterUserPage()">{{
         comment.userInfo.username

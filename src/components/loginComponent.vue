@@ -96,10 +96,9 @@ export default {
           console.log(error);
         });
 
-      console.log(store.getters.getIsLogin)
       let user = {
+        avatar: 'https://cdn.vuetifyjs.com/images/john.jpg',
         username: 'admin',
-        password: 'admin',
         userId: '12110112',
         userMassage: '这是用户的信息',
         level: '4级'

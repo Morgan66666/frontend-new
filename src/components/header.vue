@@ -3,7 +3,7 @@
     <div class="header_container">
       <div class="header_log">
 
-        <img style="width: auto; height: 100%;" src="../assets/SUSTech.svg" alt="百度logo">
+        <img style="width: auto; height: 100%;" src="../assets/SUSTech.svg" alt="南科大">
       </div>
       <div class="header_nav">
         <router-link to="/" class="nav_link" :class="{ active: $route.path === '/' }">首页</router-link>
@@ -39,11 +39,13 @@ import loginComponent from "../components/loginComponent.vue";
 import router from "../router";
 import store from "../store";
 
+
 export default {
   name: 'headerOfMainPage',
 
   components: {loginComponent},
   setup() {
+    let 
     let isVisible = ref(false);
     const avatar = () => {
       if(store.getters.getIsLogin){
