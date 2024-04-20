@@ -4,6 +4,18 @@
       <div class="main_container_message">
 
         <div class="main_container_mainMessage">
+
+          <v-carousel class="carousel"  cycle height="500"
+                    hide-delimiters
+                    :show-arrows="false"
+        >
+          <v-carousel-item
+              v-for="image in images"
+              :key="image"
+              :src="image"
+          ></v-carousel-item>
+        </v-carousel>
+
           <post-comment-component
               v-for="item in comments"
               :comment="item"
@@ -39,17 +51,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 
-export default {
-  components: { PostCommentComponent },
-  name: "HomePage",
-  data() {
-    return {
-      comments: [
+
+
+<script setup lang="ts">
+import { ref, watch, reactive } from 'vue';
+import PostCommentComponent from "../components/homePageComponents/postComment.vue";
+import { Post } from '../types';
+
+const comments = reactive<Post[]>([
         {
-          id: "1",
+          id: 1,
           title: "寻找失落的提瓦特大陆",
           content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
@@ -64,7 +76,7 @@ export default {
           },
         },
         {
-          id: "2",
+          id: 2,
           title: "寻找失落的提瓦特大陆",
           content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
@@ -79,7 +91,7 @@ export default {
           },
         },
         {
-          id: "3",
+          id: 3,
           title: "寻找失落的提瓦特大陆",
           content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
@@ -93,65 +105,55 @@ export default {
             userMassage: "这是用户的信息",
           },
         },
-      ],
-    };
-  },
-  methods: {
-    handleThumbUpChange({id}) {
-      let post = this.getPostById(id);
-      if (post != null) {
-        //如果点过踩
-        if (post.isLiked === -1) {
-          let thumbUp = post.thumbUp + 1;
-          post.isLiked = 1;
-          post.thumbUp = thumbUp;
-        } else {
-          let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
-          post.isLiked = post.isLiked === 1 ? 0 : 1;
-          post.thumbUp = thumbUp;
-        }
+      
+]);
 
-      }
-      console.log('post', post);
-    },
+const images = ref([
+        "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+        "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+        "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+      ]);
 
-    handleThumbDownChange({id}) {
-      let post = this.getPostById(id);
-      if (post != null) {
-        //如果点过赞
-        if (post.isLiked === 1) {
-          let thumbUp = post.thumbUp - 1;
-          post.isLiked = -1;
-          post.thumbUp = thumbUp;
-        } else {
-          post.isLiked = post.isLiked === -1 ? 0 : -1;
-        }
-      }
-      console.log('post', post);
-    },
-
-    getPostById(id) {
-      // 根据id获取帖子
-      return this.comments.find(item => item.id === id);
-    },
-
-  },
-  mounted() {
-    // Your mounted hook code here
-  },
-
-
-  watch: {
-    comments: {
-      handler(newComments) {
-        // Handle the changes in the comments array here
-        console.log('Comments have changed:', newComments);
-      },
-      deep: true, // Enable deep watching for nested changes
-    },
-  },
+const handleThumbUpChange = ({id}) => {
+  let post = getPostById(id);
+  if (post != null) {
+    if (post.isLiked === -1) {
+      let thumbUp = post.thumbUp + 1;
+      post.isLiked = 1;
+      post.thumbUp = thumbUp;
+    } else {
+      let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+      post.isLiked = post.isLiked === 1 ? 0 : 1;
+      post.thumbUp = thumbUp;
+    }
+  }
+  console.log('post', post);
 };
+
+const handleThumbDownChange = ({id}) => {
+  let post = getPostById(id);
+  if (post != null) {
+    if (post.isLiked === 1) {
+      let thumbUp = post.thumbUp - 1;
+      post.isLiked = -1;
+      post.thumbUp = thumbUp;
+    } else {
+      post.isLiked = post.isLiked === -1 ? 0 : -1;
+    }
+  }
+  console.log('post', post);
+};
+
+const getPostById = (id) => {
+  return comments.find(item => item.id === id);
+};
+
+watch(comments, (newComments) => {
+  console.log('Comments have changed:', newComments);
+}, { deep: true });
+
 </script>
+
 
 <style scoped>
 .main_container {
@@ -180,7 +182,7 @@ export default {
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
-  background-color: rgb(92, 82, 82);
+  background-color: rgb(247,248,252);
   display: inline-block;
   float: left;
   margin: 20px 0 0 0;

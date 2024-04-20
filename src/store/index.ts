@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import moment from 'moment'
- 
+import createPersistedState from 'vuex-persistedstate'
+
 const store = new Vuex.Store({
   state: {
     token: null,
@@ -45,8 +46,8 @@ const store = new Vuex.Store({
     LoginOut (context) {
       context.commit('LoginOut')
     }
-  }
- 
+  },
+  plugins: [createPersistedState()]
 })
- 
+
 export default store

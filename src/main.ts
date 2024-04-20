@@ -14,6 +14,8 @@ import store from "./store/index";
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
+
+
 const vuetify = createVuetify({
     components,
     directives,
