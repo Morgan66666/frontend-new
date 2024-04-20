@@ -7,7 +7,8 @@
     <hr />
     <div class="edit_avatar_container">
       <div>
-        <img src="../../assets/霍霍.png" alt="" />
+        <input type="file" @change="avatarUpload" ref="avatarInput" style="display: none;">
+        <img @click="triggerFileInput" src="../../assets/霍霍.png" alt="" />
       </div>
     </div>
     <div class="edit_form_container">
@@ -88,6 +89,8 @@ export default {
     let signature = ref("如果真爱有颜色，那一定是绿色");
     let gender = ref("男");
     let selectGender = ref("男");
+    
+
     return {username,signature,gender,selectGender};
   },
 
@@ -105,8 +108,8 @@ export default {
         .then((signatureInfo: any) => {
           console.log("获取签名信息成功", signatureInfo);
           let formData = new FormData();
-          // const extension = file.name.split('.').pop();
-          const extension = file.file.name.split(".").pop();
+          const extension = file.name.split('.').pop();
+          // const extension = file.file.name.split(".").pop();
           const uniqueFilename = uuidv4() + "." + extension;
           console.log("uniqueFilename", uniqueFilename);
           if (extension !== "jpg" && extension !== "png") {
@@ -120,7 +123,7 @@ export default {
           formData.append("policy", signatureInfo.policy);
           formData.append("OSSAccessKeyId", signatureInfo.accessid);
           formData.append("signature", signatureInfo.signature);
-          formData.append("file", file.file);
+          formData.append("file", file);
 
           axios
             .post(signatureInfo.host, formData, {
@@ -173,6 +176,15 @@ export default {
           });
       });
     },
+    triggerFileInput() {
+      this.$refs.avatarInput.click();
+    },
+    avatarUpload(e: any) {
+      const file = e.target.files[0];
+      this.handleUpload(file);
+      console.log("file", file);
+    },
+
   },
   mounted() {
     // Your mounted hook code here

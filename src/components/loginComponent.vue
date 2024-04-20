@@ -43,6 +43,8 @@
 
 
 import store from '../store/index'
+import axios from 'axios'
+
 
 export default {
   data() {
@@ -78,6 +80,22 @@ export default {
         username: this.username,
         password: this.password
       }
+
+      console.log("开始登录");
+      axios.post('/api/auth/login', loginForm)
+        .then(response => {
+          console.log(response.data);
+          if (response.status === 200) {
+            console.log(this.getCookie('JWT'))
+            this.$router.push('/');
+          } else {
+            alert('登录失败');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
       console.log(store.getters.getIsLogin)
       let user = {
         username: 'admin',
@@ -93,7 +111,19 @@ export default {
       this.$emit('login', true)
 
     },
-  }
+
+
+
+
+      //TODO: login
+
+    },
+    getCookie(name:any) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
 }
 </script>
 <style scoped>
