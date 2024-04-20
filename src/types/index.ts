@@ -15,3 +15,12 @@ export interface Activity {
     img: string;
     price: string;
 }
+
+export interface SignatureInfo {
+    dir: string;
+    policy: string;
+    accessid: string;
+    signature: string;
+    host: string;
+    expire: number;
+}
