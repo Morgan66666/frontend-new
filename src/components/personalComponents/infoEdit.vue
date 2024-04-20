@@ -71,6 +71,8 @@
 <script lang="ts">
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { ref } from "vue";
+
 export default {
   name: "InfoEdit",
   data(): any {
@@ -81,6 +83,14 @@ export default {
       selectGender: "男",
     };
   },
+  setup() {
+    let username = ref("霍霍果");
+    let signature = ref("如果真爱有颜色，那一定是绿色");
+    let gender = ref("男");
+    let selectGender = ref("男");
+    return {username,signature,gender,selectGender};
+  },
+
   methods: {
     // Your methods here
     saveInfo() {
