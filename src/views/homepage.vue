@@ -94,7 +94,7 @@ export default {
     };
   },
   methods: {
-    handleThumbUpChange({id}) {
+    handleThumbUpChange({id}:any) {
       let post = this.getPostById(id);
       if (post != null) {
         //如果点过踩
@@ -112,7 +112,7 @@ export default {
       console.log('post', post);
     },
 
-    handleThumbDownChange({id}) {
+    handleThumbDownChange({id}:any) {
       let post = this.getPostById(id);
       if (post != null) {
         //如果点过赞
@@ -127,7 +127,7 @@ export default {
       console.log('post', post);
     },
 
-    getPostById(id) {
+    getPostById(id:any) {
       // 根据id获取帖子
         return this.comments.find(item => item.id === id);
     },
@@ -178,7 +178,7 @@ export default {
   width: 720px;
   height: 100%;
   background-color: rgb(92, 82, 82);
-  display: inline_block;
+  display: inline-block;
   float: left;
   margin: 20px 0 0 0;
 }
@@ -187,7 +187,7 @@ export default {
   height: 100%;
   background-color: transparent;
   float: right;
-  display: inline_block;
+  display: inline-block;
   margin: 20px 0 0 0;
 }
 
@@ -251,7 +251,6 @@ export default {
   font-weight: 900;
   line-height: 1.5;
   margin: 0;
-  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
   padding: 0;
   text-transform: uppercase;
 }

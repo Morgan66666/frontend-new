@@ -13,7 +13,7 @@
     </div>
 
     <div class="info-container">
-      <div class="activity-name">{{ activity.name }}</div>
+      <div class="activity-name">{{ activity.title }}</div>
 
       <div class="activity-date">
         <span class="icon data-icon"></span>
