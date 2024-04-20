@@ -54,8 +54,7 @@
                 to="/post-edit"
                 class="btn-24"
                 :class="{ active: $route.path.startsWith('/post-edit') }"
-            >发帖
-            </router-link
+            >发帖</router-link
             >
 
           </div>
@@ -76,7 +75,7 @@
 import postComment from "../components/homePageComponents/postComment.vue";
 
 export default {
-  components: {postComment},
+  components: { postComment },
   name: "HomePage",
   data() {
     return {
@@ -85,7 +84,7 @@ export default {
           id: "1",
           title: "寻找失落的提瓦特大陆",
           content:
-              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png" alt=""><img src="src/assets/霍霍果照片.png"><img src="src/assets/霍霍果照片.png">',
+              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -100,7 +99,7 @@ export default {
           id: "2",
           title: "寻找失落的提瓦特大陆",
           content:
-              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png" alt=""><img src="src/assets/霍霍果照片.png" alt=""><img src="src/assets/霍霍果照片.png" alt="">',
+              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -132,7 +131,7 @@ export default {
       //时间
       dates: ["今日", "一周内", "一月内", "不限"],
       //排序
-      temps: ["最新", "最热", '不限'],
+      temps: [  "最新", "最热",'不限'],
       selectDate: "不限",
       selectType: "不限",
       selectTemp: "不限",
@@ -149,7 +148,7 @@ export default {
       this.selectTemp = option;
     },
 
-    handleThumbUpChange({id}) {
+    handleThumbUpChange({ id }) {
       let post = this.getPostById(id);
       if (post != null) {
         //如果点过踩
@@ -167,7 +166,7 @@ export default {
       console.log("post", post);
     },
 
-    handleThumbDownChange({id}) {
+    handleThumbDownChange({ id }) {
       let post = this.getPostById(id);
       if (post != null) {
         //如果点过赞
@@ -267,17 +266,16 @@ export default {
   width: 100%;
   height: 100%;
   justify-content: center;
-  background-color: rgb(247, 248, 252);
+  background-color: rgb(247,248,252);
   box-sizing: content-box;
 }
-
 .main_container_message {
   width: 1000px;
   height: 100%;
   margin: 0 auto;
   padding-left: 100px;
   padding-right: 100px;
-  background-color: rgb(247, 248, 252);
+  background-color: rgb(247,248,252);
   box-sizing: content-box;
 }
 
@@ -287,7 +285,6 @@ export default {
   display: table;
   clear: both;
 }
-
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
@@ -296,7 +293,6 @@ export default {
   float: left;
   margin: 20px 0 0 0;
 }
-
 .main_container_rightMessage {
   width: 280px;
   height: 100%;
@@ -353,7 +349,6 @@ export default {
   border: 0 solid;
   box-sizing: border-box;
 }
-
 .btn-24 {
   -webkit-tap-highlight-color: transparent;
   -webkit-appearance: button;
@@ -368,29 +363,25 @@ export default {
   font-weight: 900;
   line-height: 1.5;
   margin: 0;
+  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
   padding: 0;
   text-transform: uppercase;
 }
-
 .btn-24:disabled {
   cursor: default;
 }
-
 .btn-24:-moz-focusring {
   outline: auto;
 }
-
 .btn-24 svg {
   display: block;
   vertical-align: middle;
 }
-
 .btn-24 [hidden] {
   display: none;
 }
-
 .btn-24 {
-  --background: rgb(255, 231, 51);
+  --background: rgb(255,231,51);
   background: none;
   overflow: hidden;
   padding: 0.8rem 3rem;
@@ -398,15 +389,13 @@ export default {
   text-decoration: none;
   width: 150px;
   margin-top: 20px;
-  color: rgb(102, 60, 0);
+  color: rgb(102,60,0);
 }
-
 .btn-24 span {
   display: block;
   position: relative;
   transition: transform 0.2s ease;
 }
-
 .btn-24:after,
 .btn-24:before {
   --tilt: 20px;
@@ -425,7 +414,6 @@ export default {
   width: 100%;
   z-index: -1;
 }
-
 .btn-24:after {
   --thickness: 5px;
   background: var(--background);
@@ -434,11 +422,9 @@ export default {
   top: var(--thickness);
   width: calc(100% - var(--thickness) * 2);
 }
-
 .btn-24:hover span {
   transform: translateX(-20px);
 }
-
 .btn-24:hover:after,
 .btn-24:hover:before {
   -webkit-clip-path: polygon(
