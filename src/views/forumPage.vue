@@ -6,10 +6,10 @@
           <div class="classified_search_item">
             <div class="classified_search_item_label">板块</div>
             <a
-              v-for="(item, index) in types"
-              :key="index"
-              @click="selectTypeOption(item)"
-              v-bind:class="selectType == item ? 'classified_search_item_a_active' : ''"
+                v-for="(item, index) in types"
+                :key="index"
+                @click="selectTypeOption(item)"
+                v-bind:class="selectType == item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -17,10 +17,10 @@
           <div class="classified_search_item">
             <div class="classified_search_item_label">时间</div>
             <a
-              v-for="(item, index) in dates"
-              :key="index"
-              @click="selectDateOption(item)"
-              :class="selectDate == item ? 'classified_search_item_a_active' : ''"
+                v-for="(item, index) in dates"
+                :key="index"
+                @click="selectDateOption(item)"
+                :class="selectDate == item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -28,10 +28,10 @@
           <div class="classified_search_item">
             <div class="classified_search_item_label">排序</div>
             <a
-              v-for="(item, index) in temps"
-              :key="index"
-              @click="selectTempOption(item)"
-              :class="selectTemp == item ? 'classified_search_item_a_active' : ''"
+                v-for="(item, index) in temps"
+                :key="index"
+                @click="selectTempOption(item)"
+                :class="selectTemp == item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -39,24 +39,24 @@
         </div>
 
         <post-comment
-          v-for="item in comments"
-          :comment="item"
-          v-bind:key="item.id"
-          @update:thumpUp="handleThumbUpChange"
-          @update:thumpDown="handleThumbDownChange"
+            v-for="item in comments"
+            :comment="item"
+            v-bind:key="item.id"
+            @update:thumpUp="handleThumbUpChange"
+            @update:thumpDown="handleThumbDownChange"
         ></post-comment>
       </div>
       <div class="main_container_rightMessage">
         <div class="main_container_mainMessage_rightMessage_card">
           <div>
-            
-              <router-link
+
+            <router-link
                 to="/post-edit"
                 class="btn-24"
                 :class="{ active: $route.path.startsWith('/post-edit') }"
-                >发帖</router-link
-              >
-            
+            >发帖</router-link
+            >
+
           </div>
           <div>
             <button class="btn-24">聊天</button>
@@ -84,7 +84,7 @@ export default {
           id: "1",
           title: "寻找失落的提瓦特大陆",
           content:
-            '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -99,7 +99,7 @@ export default {
           id: "2",
           title: "寻找失落的提瓦特大陆",
           content:
-            '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -114,7 +114,7 @@ export default {
           id: "3",
           title: "寻找失落的提瓦特大陆",
           content:
-            '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
           isLiked: 0,
@@ -158,7 +158,7 @@ export default {
           post.thumbUp = thumbUp;
         } else {
           let thumbUp =
-            post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+              post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
           post.isLiked = post.isLiked === 1 ? 0 : 1;
           post.thumbUp = thumbUp;
         }
@@ -289,7 +289,7 @@ export default {
   width: 720px;
   height: 100%;
   background-color: transparent;
-  display: inline_block;
+  display: inline-block;
   float: left;
   margin: 20px 0 0 0;
 }
@@ -298,7 +298,7 @@ export default {
   height: 100%;
   background-color: transparent;
   float: right;
-  display: inline_block;
+  display: inline-block;
   margin: 20px 0 0 0;
 }
 
@@ -357,8 +357,8 @@ export default {
   color: #fff;
   cursor: pointer;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+  Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 100%;
   font-weight: 900;
   line-height: 1.5;
@@ -428,18 +428,18 @@ export default {
 .btn-24:hover:after,
 .btn-24:hover:before {
   -webkit-clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
+      0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%
   );
   clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
+      0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%
   );
 }
 </style>

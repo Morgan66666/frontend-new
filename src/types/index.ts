@@ -8,7 +8,7 @@ export interface Product {
 
 export interface Activity {
     id: string
-    name: string;
+    title: string;
     description: string;
     location: string;
     date: string;
@@ -23,4 +23,18 @@ export interface SignatureInfo {
     signature: string;
     host: string;
     expire: number;
+}
+
+export interface ActivityDetail {
+    id: string
+    title: string;
+    description: string;
+    location: string;
+    date: string;
+    img: string;
+    price: string;
+    content: string;
+    capacity: number;
+    remaining: number;
+
 }

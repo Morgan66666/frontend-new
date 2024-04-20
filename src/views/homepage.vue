@@ -3,36 +3,22 @@
     <div class="main_container">
       <div class="main_container_message">
 
-
         <div class="main_container_mainMessage">
-          <v-carousel class="carousel" cycle height="500"
-                    hide-delimiters
-                    show-arrows="hover"
-        >
-          <v-carousel-item
-              v-for="image in images"
-              :key="image"
-              :src="image"
-          ></v-carousel-item>
-        </v-carousel>
-
-
-
           <post-comment-component
-            v-for="item in comments"
-            :comment="item"
-            v-bind:key="item.id"
-            @update:thumpUp="handleThumbUpChange"
-            @update:thumpDown="handleThumbDownChange"
+              v-for="item in comments"
+              :comment="item"
+              v-bind:key="item.id"
+              @update:thumpUp="handleThumbUpChange"
+              @update:thumpDown="handleThumbDownChange"
           ></post-comment-component>
         </div>
         <div class="main_container_rightMessage">
           <div class="main_container_mainMessage_rightMessage_card">
             <div>
-     
-                <router-link to="/post-edit" style="text-decoration: none;" class="btn-24" :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
 
-        
+              <router-link to="/post-edit" style="text-decoration: none;" class="btn-24" :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
+
+
             </div>
             <div>
               <button class="btn-24">聊天</button>
@@ -44,9 +30,9 @@
           </div>
           <div class="main_container_mainMessage_rightMessage_card">
             <img src="https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2" alt="">
-          
+
           </div>
-          
+
         </div>
       </div>
     </div>
@@ -108,10 +94,6 @@ export default {
           },
         },
       ],
-        images: [
-
-        ]
-      
     };
   },
   methods: {
@@ -129,7 +111,7 @@ export default {
           post.thumbUp = thumbUp;
         }
 
-      }    
+      }
       console.log('post', post);
     },
 
@@ -150,7 +132,7 @@ export default {
 
     getPostById(id) {
       // 根据id获取帖子
-        return this.comments.find(item => item.id === id);
+      return this.comments.find(item => item.id === id);
     },
 
   },
@@ -158,16 +140,16 @@ export default {
     // Your mounted hook code here
   },
 
-  
+
   watch: {
-        comments: {
-          handler(newComments) {
-            // Handle the changes in the comments array here
-            console.log('Comments have changed:', newComments);
-          },
-          deep: true, // Enable deep watching for nested changes
-        },
+    comments: {
+      handler(newComments) {
+        // Handle the changes in the comments array here
+        console.log('Comments have changed:', newComments);
       },
+      deep: true, // Enable deep watching for nested changes
+    },
+  },
 };
 </script>
 
@@ -198,17 +180,17 @@ export default {
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
-  background-color: rgb(247,248,252);
-  display: inline_block;
+  background-color: rgb(92, 82, 82);
+  display: inline-block;
   float: left;
-  margin: 20px 0 0 0; 
+  margin: 20px 0 0 0;
 }
 .main_container_rightMessage {
   width: 280px;
   height: 100%;
   background-color: transparent;
   float: right;
-  display: inline_block;
+  display: inline-block;
   margin: 20px 0 0 0;
 }
 
@@ -222,7 +204,7 @@ export default {
   padding-bottom: 60px;
   box-sizing: border-box;
   border-radius: 5px;
-  text-align: center;  
+  text-align: center;
   align-content: center;
 }
 .main_container_mainMessage_rightMessage_card img{
@@ -266,8 +248,8 @@ export default {
   color: #fff;
   cursor: pointer;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+  Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 100%;
   font-weight: 900;
   line-height: 1.5;
@@ -337,18 +319,18 @@ export default {
 .btn-24:hover:after,
 .btn-24:hover:before {
   -webkit-clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
+      0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%
   );
   clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
+      0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%
   );
 }
 

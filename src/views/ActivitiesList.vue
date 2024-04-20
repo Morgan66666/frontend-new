@@ -33,7 +33,7 @@ function navigateToActivityDetail(activity: Activity) {
 const activities = ref<Activity[]>([
   {
     id: '1',
-    name: '活动一',
+    title: '活动一',
     description: '这是活动一的描述',
     location: '地点一',
     date: '2024-05-01',
@@ -42,7 +42,7 @@ const activities = ref<Activity[]>([
   },
   {
     id: '2',
-    name: '活动二',
+    title: '活动二',
     description: '这是活动二的描述',
     location: '地点二',
     date: '2024-05-02',
@@ -51,7 +51,7 @@ const activities = ref<Activity[]>([
   },
   {
     id: '3',
-    name: '活动三',
+    title: '活动三',
     description: '这是活动三的描述',
     location: '地点三',
     date: '2024-05-03',

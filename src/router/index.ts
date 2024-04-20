@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import homepage from '../views/homepage.vue'
 import personalPage from '../views/personalPage.vue'
 import commentsList from '../components/personalComponents/commentsList.vue'
-import ProductDetail from "../views/ProductDetail.vue";
+import ActivityDetail from "../views/ActivityDetail.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -15,7 +15,7 @@ const router = createRouter({
         {
             path: '/activity',
             name: 'activity',
-            component: ProductDetail
+            component: ActivityDetail
         },{
             path: '/forum',
             name: 'forum',
