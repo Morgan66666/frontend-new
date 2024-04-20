@@ -1,11 +1,12 @@
 import Vuex from 'vuex'
 import moment from 'moment'
 import createPersistedState from 'vuex-persistedstate'
+import { UserInfo } from '../types'
 
 const store = new Vuex.Store({
   state: {
     token: null,
-    user: null,    
+    user: null as UserInfo | null,    
     isLogin: false
   },
   getters: {

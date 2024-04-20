@@ -14,25 +14,7 @@
       <div class="main_comments_card_content">
         <div class="content_html" v-html="comment.content"></div>
 
-        <div v-if = "comment.subComments != null" class="main_comments_card_subComments_container">
-          <div
-            v-for="subComment in comment.subComments"
-            v-bind:key="subComment.id"
-            class="main_comments_card_subComments_card"
-          >
-            <div class="main_userinfo">
-              <span>{{ subComment.userInfo.username }}</span>
-              <span>{{ subComment.userInfo.level }}</span>
-              <span>{{ subComment.userInfo.userId }}</span>
-            </div>
-            <div class="main_comments_card_content">
-              <!-- 子回复没有图片和点赞 -->
-              {{ subComment.content }}
-            </div>
-          </div>
 
-          <div  class="main_comments_card_subComments_morereply">更多回复-></div>
-        </div>
       </div>
       <div class="main_comments_card_operator_container">
         <div class="main_comments_card_operator_container_left">

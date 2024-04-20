@@ -59,134 +59,143 @@
           ></commentCardVue>
         </div>
         <div class="main_container_rightMessage">
-          <div class="main_container_mainMessage_rightMessage_card">2</div>
-          <div class="main_container_mainMessage_rightMessage_card">2</div>
-          <div class="main_container_mainMessage_rightMessage_card">2</div>
+          <postMasterComponentVue :userInfo="post.userInfo"></postMasterComponentVue>
+
+          <div class="main_container_mainMessage_rightMessage_card">
+            热门内容
+            <div>
+
+            </div>
+          </div>
+          <div class="main_container_mainMessage_rightMessage_card">
+            广告招租
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import commentCardVue from "../components/viewComponents/commentCard.vue";
-import quillComponent from "../components/editPostComponents/quillComponent.vue";
-import store from "../store";
-
-export default {
-  components: { commentCardVue, quillComponent },
-  name: "ViewPage",
-  // Your script logic here
-  data() {
-    return {
-      newContent: "",
-
-      comments: [
-        {
-          id: "1",
-          content:
-            '<img src="https://picx.zhimg.com/70/v2-9105a6b428137896ae3cfbc537d01a79_1440w.avis?source=172ae18b&biz_tag=Post" alt=""> <p>图片不错，偷了</p>',
-          img: [`imgUrl ? imgUrl : require('../../assets/霍霍果照片.png')`],
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-          },
-        },
-      ],
-      post: {
-          id: "1",
-          title: "寻找失落的提瓦特大陆",
-          content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            username: "张三",
-            avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-          },
-        },
-    };
-  },
-
-  methods: {
-    handleThumbUpChange({id}:any) {
-      let comment = this.getPostById(id);
-      if (comment != null) {
-        //如果点过踩
-        if (comment.isLiked === -1) {
-          let thumbUp = comment.thumbUp + 1;
-          comment.isLiked = 1;
-          comment.thumbUp = thumbUp;
-        } else {
-          let thumbUp = comment.isLiked === 1 ? comment.thumbUp - 1 : comment.thumbUp + 1;
-          comment.isLiked = comment.isLiked === 1 ? 0 : 1;
-          comment.thumbUp = thumbUp;
-        }
-
-      }    
-      console.log('comment', comment);
-    },
-
-    handleThumbDownChange({id}:any) {
-      let comment = this.getPostById(id);
-      if (comment != null) {
-        //如果点过赞
-        if (comment.isLiked === 1) {
-          let thumbUp = comment.thumbUp - 1;
-          comment.isLiked = -1;
-          comment.thumbUp = thumbUp;
-        } else {
-            comment.isLiked = comment.isLiked === -1 ? 0 : -1;
-        }
-      }
-      console.log('comment', comment);
-    },
-
-    getPostById(id:any) {
-      // 根据id获取帖子
-        return this.comments.find(item => item.id === id);
-    },
-
-    handleContentChange(newContent:any) {
-      console.log("awdw");
-      this.newContent = newContent;
-
-    },
-
-    //评论
-    comment(){
-        if(!store.getters.getIsLogin){
-          this.$router.push('/login');
-          return;
-        } 
-        let userInfo = store.getters.getUser;
 
 
-        let newComment:any = {
-        id: "1",
-        content: this.newContent,
+ <script lang="ts">
+ import { ref, reactive } from 'vue';
+ import commentCardVue from "../components/viewComponents/commentCard.vue";
+ import quillComponent from "../components/editPostComponents/quillComponent.vue";
+ import store from "../store";
+ import { useRouter } from "vue-router";
+import { Post } from '../types';
+import postMasterComponentVue from '../components/viewComponents/postMasterComponent.vue';
+ 
+interface Comment{
+  id: number;
+  content: string;
+  date: string;
+  thumbUp: number;
+  isLiked: number;
+  userInfo: {
+    username: string;
+    level: string;
+    userId: string;
+    userMassage: string;
+  };
+
+}
+
+ export default {
+   components: { commentCardVue, quillComponent, postMasterComponentVue },
+   name: "ViewPage",
+   setup() {
+     const newContent = ref("");
+     const comments = reactive<Comment[]>(
+     [
+      {
+        id: 1,
+        content:
+          '<img src="https://picx.zhimg.com/70/v2-9105a6b428137896ae3cfbc537d01a79_1440w.avis?source=172ae18b&biz_tag=Post" alt=""> <p>图片不错，偷了</p>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
-        userInfo: userInfo
-      };
-        console.log('newComment', newComment);
-        this.comments.push(newComment);
-    }
-
-    
-  },
-};
-</script>
-
+        userInfo: {
+          username: "张三",
+          level: "4级",
+          userId: "12110112",
+          userMassage: "这是用户的信息",
+        },
+      },
+    ]
+     );
+     const post = reactive<Post>({
+        id: 1,
+        title: "寻找失落的提瓦特大陆",
+        content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
+        date: "2022-12-12 12:12:12",
+        thumbUp: 121,
+        isLiked: 0,
+        userInfo: {
+          username: "张三",
+          avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
+          level: "4级",
+          userId: "12110112",
+          userMassage: "这是用户的信息",
+        },
+      });
+     
+     const router = useRouter();
+     function handleThumbUpChange({id}:any) {
+       let comment = getPostById(id);
+       if (comment != null) {
+         // ... your logic here
+       }
+     }
+ 
+     function handleThumbDownChange({id}:any) {
+       let comment = getPostById(id);
+       if (comment != null) {
+         // ... your logic here
+       }
+     }
+ 
+     function getPostById(id:any) {
+       return comments.find(item => item.id === id);
+     }
+ 
+     function handleContentChange(newContent:any) {
+       newContent.value = newContent;
+     }
+ 
+     function comment() {
+       if(!store.getters.getIsLogin){
+         router.push('/login');
+         return;
+       } 
+       let userInfo = store.getters.getUser;
+ 
+       let newComment:any = {
+         id: "1",
+         content: newContent.value,
+         date: "2022-12-12 12:12:12",
+         thumbUp: 121,
+         isLiked: 0,
+         userInfo: userInfo
+       };
+       comments.push(newComment);
+     }
+ 
+     return {
+       newContent,
+       comments,
+       post,
+       handleThumbUpChange,
+       handleThumbDownChange,
+       getPostById,
+       handleContentChange,
+       comment
+     };
+   }
+ };
+ </script>
 <style >
 .main_container {
   width: 100%;
@@ -226,7 +235,7 @@ export default {
 
 .main_container_mainMessage_rightMessage_card {
   width: 220px;
-  height: 300px;
+  height: auto;
   background-color: rgb(255, 255, 255);
   margin: 20px;
   padding: 10px;
@@ -374,6 +383,31 @@ export default {
   border-radius: 5px;
   margin: 5px 10px 0 5px;
   float: right;
+}
+
+.post_master{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+  height: 60%;
+  background-color: transparent ;
+  box-sizing: border-box;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 5px;
+  margin: auto;
+}
+
+
+.popular_post{
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  box-sizing: border-box;
+  border: 1px solid rgb(190, 100, 100);
+  border-radius: 5px;
+  margin: 10px;
 }
 
 
