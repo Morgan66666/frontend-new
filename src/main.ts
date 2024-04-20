@@ -19,13 +19,16 @@ const vuetify = createVuetify({
     directives,
 })
 
+axios.defaults.baseURL = 'http://localhost:23309';
+
+
 const pinia = createPinia()
 
 const app = createApp(App);
-
+app.config.globalProperties.$axios = axios;
 app.use(ElementPlus, {
     locale: zhCn,
 })
 
 
-app.use(vuetify).use(router).use(pinia).use(store).mount('#app')
+app.use(vuetify).use(router).use(pinia).use(store).use(axios).mount('#app')

@@ -29,6 +29,7 @@ import {SignatureInfo} from "../../types";
 const { appContext } = getCurrentInstance()!
 ElMessage({}, appContext)
 
+const emit = defineEmits(['update:content']);
 
 
 const editor: Ref<Quill | null> = ref(null);
@@ -90,14 +91,15 @@ async function getOssSignature(): Promise<SignatureInfo> {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  let toolbar = quill.getModule('toolbar');
-  toolbar.addHandler('uploadImage', () => {
-    selectLocalImage();
-  });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//   let toolbar = quill.getModule('toolbar');
+//   toolbar.addHandler('uploadImage', () => {
+//     selectLocalImage();
+//   });
+// });
 
 function selectLocalImage(): void {
+  console.log('Selecting image from local...');
   const input = document.createElement('input');
   input.setAttribute('type', 'file');
   input.setAttribute('accept', 'image/png, image/jpeg');
@@ -117,6 +119,7 @@ function selectLocalImage(): void {
 }
 
 function insertToEditor(url: string): void {
+  console.log('Inserting image:', url);
   const range = quill.getSelection(true);
   if (range) {
     quill.insertEmbed(range.index, 'image', url, Quill.sources.USER);
@@ -124,6 +127,10 @@ function insertToEditor(url: string): void {
 }
 
 
+
+function uploadImage() {
+  selectLocalImage();
+}
 
 
 
@@ -133,7 +140,8 @@ onMounted(() => {
   quill = new Quill(editor.value, {
     theme: 'snow',
     modules: {
-      toolbar: [
+      toolbar: {
+        container: [
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote', 'code-block'],
         [{ list: 'ordered' }, { list: 'bullet' }],
@@ -144,12 +152,22 @@ onMounted(() => {
         [{ color: [] }, { background: [] }],
         [{ font: [] }],
         [{ align: [] }],
-        // ['image', 'uploadImage'],
         ['image'],
         ['clean']
-      ]
+      ],      
+      handlers: {
+        image: uploadImage
+      }
+      }
+       
+
     }
   });
+  quill.on('text-change', function(delta, oldDelta, source) {
+    console.log('A change occurred:', delta, oldDelta, source);
+    exportHTML();
+});
+
 
 });
 
@@ -158,6 +176,7 @@ onMounted(() => {
 
 function exportHTML() {
   exportedHtml.value = editor.value.querySelector('.ql-editor').innerHTML;
+  emit('update:content', exportedHtml.value);
   return exportedHtml.value;
 }
 

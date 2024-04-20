@@ -63,6 +63,7 @@
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
 import {ref} from "vue";
 
+
 let quillContent = ref();
 let title = ref("标题");
 let content = ref("你好");
@@ -72,6 +73,10 @@ const publicPost = () => {
   console.log(title.value);
   console.log(quillContent.value.editor.querySelector('.ql-editor').innerHTML);
   console.log(selectedPlate.value);
+  //向后端发送帖子内容
+  let FormData = new FormData();
+
+
 };
 
 const handleContentChange = () => {
@@ -80,48 +85,13 @@ const handleContentChange = () => {
 
 </script>
 
-<!--<script lang="ts">
-
-
-export default {
-  components: {
-    quillComponent,
-  },
-  setup() {
-    let quillContent = ref();
-
-    return {
-      quillContent
-    }
-  },
-  data() {
-    return {
-      title: "标题",
-      content: "你好",
-      selectedPlate: "体育比赛",
-    };
-  },
-
-  methods: {
-    //发表
-    publicPost() {
-      console.log(this.title);
-      console.log(this.quillContent.value.editor);
-      console.log(this.selectedPlate);
-    },
-    handleContentChange() {
-      this.content = this.quillContent.value.querySelector('.ql-editor').innerHTML;
-    }
-  },
-};
-</script>-->
 
 <style scoped>
 .main_container {
   width: 100%;
   height: 100%;
   justify-content: center;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(247,248,252);
   box-sizing: content-box;
 }
 .main_container_message {
@@ -138,9 +108,10 @@ export default {
   height: 26.6px;
   padding: 10px;
   padding-left: 20px;
-  background-color: turquoise;
+  background-color: rgb(255, 255, 255);
   box-sizing: content-box;
-  border-bottom: 1px solid rgb(27, 24, 24);
+  border-bottom: 1px solid rgb(216, 212, 212);
+  font-weight: bold;
 }
 
 .title a {
@@ -150,7 +121,7 @@ export default {
 .edit-box {
   width: 100%;
   height: 800px;
-  background-color: rgb(197,231,230);
+  background-color: rgb(255, 255, 255);
   box-sizing: content-box;
 }
 
@@ -192,6 +163,9 @@ export default {
   width: 98%;
   height: 60%;
   margin: auto;
+  border: 1px solid rgb(207, 205, 205);
+  background: #fff;
+  border-radius: 5px;
 }
 
 .edit-box-plate {
@@ -202,6 +176,7 @@ export default {
   margin-left: 10px;
   font-size: 20px;   
    border-radius: 5px;
+  border: 1px solid rgb(163, 159, 159);
   background-color: #fff;
 
 }
@@ -265,16 +240,12 @@ export default {
 }
 
 
-input{
-  background-color: #fff;
-  border-radius: 3px;
-}
+
 
 .edit-box-textarea{
   background-color: #fff;
-  border-radius: 3px;
 }
-
+  
 </style>
 
 

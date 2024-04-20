@@ -3,7 +3,21 @@
     <div class="main_container">
       <div class="main_container_message">
 
+
         <div class="main_container_mainMessage">
+          <v-carousel class="carousel" cycle height="500"
+                    hide-delimiters
+                    show-arrows="hover"
+        >
+          <v-carousel-item
+              v-for="image in images"
+              :key="image"
+              :src="image"
+          ></v-carousel-item>
+        </v-carousel>
+
+
+
           <post-comment-component
             v-for="item in comments"
             :comment="item"
@@ -91,6 +105,10 @@ export default {
           },
         },
       ],
+        images: [
+
+        ]
+      
     };
   },
   methods: {
@@ -177,10 +195,10 @@ export default {
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
-  background-color: rgb(92, 82, 82);
+  background-color: rgb(247,248,252);
   display: inline_block;
   float: left;
-  margin: 20px 0 0 0;
+  margin: 20px 0 0 0; 
 }
 .main_container_rightMessage {
   width: 280px;
@@ -328,6 +346,14 @@ export default {
     calc(100% - var(--tilt)) 100%,
     0 100%
   );
+}
+
+.carousel {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 50px;
 }
 
 </style>
