@@ -40,49 +40,47 @@
 </template>
 
 <script lang="ts">
+import { ref, defineComponent } from 'vue';
+import store from '../store/index';
+import axios from 'axios';
 
+export default defineComponent({
+  setup(_, { emit }) {
+    const active_username = ref(false);
+    const active_password = ref(false);
+    const username = ref('');
+    const password = ref('');
+    const leftText = ref('忘记密码');
+    const rightText = ref('创建账户');
 
-import store from '../store/index'
-import axios from 'axios'
-
-
-export default {
-  data() {
-    return {
-      active_username: false,
-      active_password: false,
-      username: '',
-      password: '',
-      leftText: '忘记密码',
-      rightText: '创建账户'
+    const activateLabel_username = () => {
+      active_username.value = true;
     };
-  },
-  methods: {
-    activateLabel_username() {
-      this.active_username = true;
-    },
-    deactivateLabel_username(event:any) {
+
+    const deactivateLabel_username = (event) => {
       if (event.target.value === '') {
-        this.active_username = false;
+        active_username.value = false;
       }
-    },
-    activateLabel_password() {
-      this.active_password = true;
-    },
-    deactivateLabel_password(event:any) {
+    };
+
+    const activateLabel_password = () => {
+      active_password.value = true;
+    };
+
+    const deactivateLabel_password = (event) => {
       if (event.target.value === '') {
-        this.active_password = false;
+        active_password.value = false;
       }
-    },
-    login() {
-      // alert("login")
+    };
+
+    const login = async () => {
       let loginForm = {
-        account: this.username,
+        username: this.username,
         password: this.password
       }
 
       console.log("开始登录");
-      axios.post('http://localhost:23309/api/auth/login', loginForm)
+      axios.post('/api/auth/login', loginForm)
         .then(response => {
           console.log(response.data);
           if (response.status === 200) {
@@ -102,28 +100,29 @@ export default {
         userId: '12110112',
         userMassage: '这是用户的信息',
         level: '4级'
-      }
-      console.log(loginForm)
-      store.dispatch('LoginIn', user)
-      console.log(store.getters.getIsLogin)
+      };
+      console.log(loginForm);
+      store.dispatch('LoginIn', user);
+      console.log(store.getters.getIsLogin);
       //登录成功后跳转到首页
-      this.$emit('login', true)
+      emit('login', true);
+    };
 
-    },
-
-
-
-
-      //TODO: login
-
-    },
-    getCookie(name:any) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
+    return {
+      active_username,
+      active_password,
+      username,
+      password,
+      leftText,
+      rightText,
+      activateLabel_username,
+      deactivateLabel_username,
+      activateLabel_password,
+      deactivateLabel_password,
+      login
     }
-
-}
+  }
+});
 </script>
 <style scoped>
 .input-container {

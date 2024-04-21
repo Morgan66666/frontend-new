@@ -15,8 +15,8 @@
       <div class="header_search_container">
         <input class="header_search" type="text" name="search" id="search" placeholder="搜索">
 <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
-          <div class="userInfo_avatar" @click = "avatar">
-            <img src="../assets/霍霍.png" alt="">
+          <div class="userInfo_avatar" >
+            <img src="../assets/霍霍.png" @click = "avatar" alt="">
           </div>
 <!--        </router-link>-->
       </div>
@@ -57,6 +57,8 @@ export default {
     const login = (success:any) => {
       if(success){
         isVisible.value = false;
+        alert("登录成功");
+        console.log("登录成功")
         router.push(`/`);
       };
     }
