@@ -45,7 +45,6 @@ export default {
 
   components: {loginComponent},
   setup() {
-    let 
     let isVisible = ref(false);
     const avatar = () => {
       if(store.getters.getIsLogin){

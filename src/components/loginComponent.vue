@@ -77,12 +77,12 @@ export default {
     login() {
       // alert("login")
       let loginForm = {
-        username: this.username,
+        account: this.username,
         password: this.password
       }
 
       console.log("开始登录");
-      axios.post('/api/auth/login', loginForm)
+      axios.post('http://localhost:23309/api/auth/login', loginForm)
         .then(response => {
           console.log(response.data);
           if (response.status === 200) {

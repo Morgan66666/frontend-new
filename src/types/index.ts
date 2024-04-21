@@ -7,14 +7,24 @@ export interface Product {
 }
 
 export interface Activity {
-    id: string
+    activityId: number;
     title: string;
-    description: string;
+    content?: string;
+    bookBeginTime?: string;  // 使用ISO格式的日期字符串
+    bookEndTime?: string;    // 使用ISO格式的日期字符串
+    activityBeginTime: string;  // 使用ISO格式的日期字符串
+    activityEndTime: string;    // 使用ISO格式的日期字符串
+    createTime?: string;
+    capacity?: number;
+    participantsCount?: number;
+    price: number;
     location: string;
-    date: string;
+    type?: string;
+    organizerId?: number;
+    description: string;
     img: string;
-    price: string;
 }
+
 
 export interface SignatureInfo {
     dir: string;
@@ -26,15 +36,20 @@ export interface SignatureInfo {
 }
 
 export interface ActivityDetail {
-    id: string
+    activityId: number;
     title: string;
-    description: string;
-    location: string;
-    date: string;
-    img: string;
-    price: string;
     content: string;
+    bookBeginTime: string;  // 使用ISO格式的日期字符串
+    bookEndTime: string;    // 使用ISO格式的日期字符串
+    activityBeginTime: string;  // 使用ISO格式的日期字符串
+    activityEndTime: string;    // 使用ISO格式的日期字符串
+    createTime: string;
     capacity: number;
-    remaining: number;
-
+    participantsCount: number;
+    price: number;
+    location: string;
+    type: string;
+    organizerId: number;
+    description: string;
+    img: string;
 }

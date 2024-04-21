@@ -11,7 +11,7 @@
           <span class="title">{{ activity.title }}</span>
           <div class="time">
             <div class="time-title">时间：</div>
-            <div class="time-content">{{ activity.date }}</div>
+            <div class="time-content">{{ activity.activityBeginTime }} - {{ activity.activityEndTime }}</div>
           </div>
           <div class="location">
             <div class="location-title">地点：</div>
@@ -27,7 +27,7 @@
           </div>
           <div class="remaining">
             <div class="remaining-title">剩余：</div>
-            <div class="remaining-content">{{ activity.remaining }}</div>
+            <div class="remaining-content">{{ remaining }}</div>
           </div>
           <div class="price">
             <div class="price-title">价格：</div>
@@ -68,22 +68,37 @@
 
 <script setup lang="ts">
 import {ActivityDetail} from "../types";
-import {ref} from "vue";
-
+import {computed, onMounted, ref} from "vue";
+import axiosInstance from '@/main.ts';
 let activity = ref<ActivityDetail>({
-  id: '1',
+  activityBeginTime: "2024-05-01",
+  activityEndTime: "2024-05-01",
+  activityId: 0,
+  bookBeginTime: "",
+  bookEndTime: "",
+  createTime: "",
+  organizerId: 0,
+  participantsCount: 0,
+  type: "",
   title: '活动一',
   description: '这是活动一的描述,哈哈哈哈哈哈哈哈红红火火恍恍惚惚哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
       '哈哈哈哈哈哈哈哈红红火火恍恍惚惚哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈' +
       '哈哈哈哈哈哈哈哈红红火火恍恍惚惚哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
   location: '地点一',
-  date: '2024-05-01',
   img: 'https://www.natgeo.com.cn/pic/program_default.768.jpg',
-  price: '100',
+  price: 100,
   content: '这是活动一的内容,哈哈哈哈哈哈哈哈红红火火恍恍惚惚哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
   capacity: 100,
-  remaining: 100
+});
 
+interface Props {
+  activityId: number;
+}
+
+const props = defineProps<Props>();
+
+const remaining = computed(() => {
+  return activity.value.capacity - activity.value.participantsCount;
 });
 
 function book() {
@@ -93,6 +108,21 @@ function book() {
 function star() {
   console.log('star');
 }
+
+const getData = async (activityId: number) => {
+  try {
+    const res = await axiosInstance.get(`/activity/${activityId}`);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+onMounted(() => {
+  getData(props.activityId).then((data => {
+    activity.value = data;
+  }));
+});
 </script>
 
 
