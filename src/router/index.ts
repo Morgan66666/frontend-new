@@ -10,21 +10,26 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: homepage
+            component: homepage,
+            meta: {ShowHeader: true}
         },
         {
             path: '/activity',
             name: 'activity',
-            component: ActivityDetail
+            component: ActivityDetail,
+            meta: {ShowHeader: true},
+            props: true
         },{
             path: '/forum',
             name: 'forum',
-            component: () => import('../views/forumPage.vue')
+            component: () => import('@/views/forumPage.vue'),
+            meta: {ShowHeader: true}
         },
         {
             path: '/personal/:userId',
             name: 'personal',
             component: personalPage,
+            meta: {ShowHeader: true},
             children: [
                 {
                     path: 'posts',
@@ -33,15 +38,15 @@ const router = createRouter({
                 },
                 {
                     path: 'collected',
-                    component: () => import('../components/personalComponents/collectedList.vue')
+                    component: () => import('@/components/personalComponents/collectedList.vue')
                 },
                 {
                     path: 'comments',
-                    component: () => import('../components/personalComponents/commentsList.vue')
+                    component: () => import('@/components/personalComponents/commentsList.vue')
                 },
                 {
                     path: 'infoEdit',
-                    component: () => import('../components/personalComponents/infoEdit.vue'),
+                    component: () => import('@/components/personalComponents/infoEdit.vue'),
 
                 },
             ]
@@ -49,17 +54,26 @@ const router = createRouter({
         {
             path: '/comments/:id',
             name: 'comments',
-            component: () => import('../views/viewPage.vue')
+            component: () => import('@/views/viewPage.vue'),
+            meta: {ShowHeader: true}
         },
         {
             path: '/post-edit',
             name: 'post-edit',
-            component: () => import('../views/postEditPage.vue')
+            component: () => import('@/views/postEditPage.vue'),
+            meta: {ShowHeader: true}
         },
         {
             name: 'activities',
             path: '/activities',
-            component: () => import('../views/ActivitiesList.vue'),
+            component: () => import('@/views/ActivitiesList.vue'),
+            meta: {ShowHeader: true}
+        },
+        {
+            name: 'controlPanel',
+            path: '/control-panel',
+            component: () => import('@/views/ControlPanel.vue'),
+            meta: {ShowHeader: false}
         }
     ],
 });

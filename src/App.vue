@@ -6,7 +6,7 @@ import HeaderOfMainPage from "./components/header.vue";
 
 <template>
   <div class="container">
-    <HeaderOfMainPage></HeaderOfMainPage>
+    <HeaderOfMainPage v-if="$route.meta.ShowHeader"></HeaderOfMainPage>
     <router-view></router-view>
   </div>
 </template>
@@ -22,6 +22,14 @@ import HeaderOfMainPage from "./components/header.vue";
   align-items: center;
 }*/
 
+#app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 body {
   padding: 0;
   margin: 0 0 70px;
@@ -31,6 +39,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
 
 .container {
   height: 100%;

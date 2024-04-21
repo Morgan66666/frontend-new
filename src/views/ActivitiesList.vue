@@ -5,7 +5,7 @@
       <v-row>
         <v-col
             v-for="activity in activities"
-            :key="activity.id"
+            :key="activity.activityId"
             cols="12" sm="6" md="6" lg="6"
             class="my"
         >
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-import {Activity} from "../types";
+import {Activity} from "@/types";
 import {ref} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
@@ -32,31 +32,34 @@ function navigateToActivityDetail(activity: Activity) {
 
 const activities = ref<Activity[]>([
   {
-    id: '1',
+    activityId: 1,
     title: '活动一',
     description: '这是活动一的描述',
     location: '地点一',
-    date: '2024-05-01',
+    activityBeginTime: '2024-05-01',
+    activityEndTime: '2024-05-01',
     img: 'https://www.natgeo.com.cn/pic/program_default.768.jpg',
-    price: '100'
+    price: 100
   },
   {
-    id: '2',
+    activityId: 2,
     title: '活动二',
     description: '这是活动二的描述',
     location: '地点二',
-    date: '2024-05-02',
+    activityBeginTime: '2024-05-02',
+    activityEndTime: '2024-05-02',
     img: 'https://i.natgeofe.com/n/5d7fc2d3-30a5-475d-ba96-b35f4dc6d213/NationalGeographic_1517431_2x3.jpg?w=2880&h=4320',
-    price: '200'
+    price: 200
   },
   {
-    id: '3',
+    activityId: 23,
     title: '活动三',
     description: '这是活动三的描述',
     location: '地点三',
-    date: '2024-05-03',
+    activityBeginTime: '2024-05-03',
+    activityEndTime: '2024-05-03',
     img: 'https://i.natgeofe.com/n/519530cd-2b07-4722-86f4-1ef1887b0565/PIA10189_square.jpg?w=2880&h=2880',
-    price: '300'
+    price: 300
   },
   // ...更多活动
 ]);
