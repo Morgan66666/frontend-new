@@ -2,25 +2,30 @@
     <div class="main_container_mainMessage_rightMessage_card">
         <div class="post_master">
             <img class="post_master_avatar" :src="userInfo.avatar" alt="" />
-            <div class="post_master_username">{{ userInfo.username }}</div>
-            <div class="post_master_level">{{ userInfo.level }}</div>
+            <div class="post_master_username" @click="jumpToPersonalPage">{{ userInfo.username }}</div>
+            <div class="post_master_level" @click="jumpToPersonalPage">{{ userInfo.level }}</div>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-export default {
+<script setup lang="ts">
+import { defineProps } from 'vue'
+import { UserInfo } from '../../types'
+import { useRouter } from "vue-router";
 
-    props: {
-        userInfo: {
-            type: Object,
-            required: true
-        }
-    },
-    setup() {
+const router = useRouter()
+const props = defineProps({
+    userInfo: {
+        type: Object as () => UserInfo,
+        required: true
+    }
+})
 
-    },
+const jumpToPersonalPage = () => {
+  router.push({ path: `/personal/${props.userInfo.userId}` })
+    console.log('jump to personal page')
 }
+
 </script>
 
 <style scoped>
@@ -42,6 +47,13 @@ export default {
   text-align: center;
 }
 
+.post_master_username:hover{
+  color: rgb(255,191,0);
+  cursor: pointer;
+}
+
+
+
 .post_master_level{
   width: 60px;
   height: 20px;
@@ -50,6 +62,7 @@ export default {
   margin: 10px;
   text-align: center;
   border-radius: 5px;
+  line-height: 20px;
 }
 
 </style>

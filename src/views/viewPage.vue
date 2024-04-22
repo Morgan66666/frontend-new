@@ -63,6 +63,7 @@
 
           <div class="main_container_mainMessage_rightMessage_card">
             热门内容
+            <popularPostComponent></popularPostComponent>
             <div>
 
             </div>
@@ -87,6 +88,7 @@
  import { useRouter } from "vue-router";
 import { Post } from '../types';
 import postMasterComponentVue from '../components/viewComponents/postMasterComponent.vue';
+import popularPostComponent from '../components/viewComponents/popularPostComponent.vue';
  
 interface Comment{
   id: number;
@@ -104,7 +106,7 @@ interface Comment{
 }
 
  export default {
-   components: { commentCardVue, quillComponent, postMasterComponentVue },
+   components: { commentCardVue, quillComponent, postMasterComponentVue, popularPostComponent },
    name: "ViewPage",
    setup() {
      const newContent = ref("");
@@ -283,7 +285,7 @@ interface Comment{
 .main_main_card_content p {
   width: 100%;
   margin: 0;
-  color: black;
+  color: rgb(73,73,73);
   font-size: 1em;
   margin-top: 10px;
   word-wrap: break-word;

@@ -9,7 +9,7 @@
       }}</span>
       <span class="userInfo_level">{{ comment.userInfo.level }}</span>
     </div>
-    <router-link class="router-link" :to="'/comments/' + comment.id">
+    <router-link class="router-link" :to="'/post/' + comment.id">
       <div class="main_card_title">
         <strong>{{ comment.title }}</strong>
       </div>

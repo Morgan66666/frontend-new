@@ -52,8 +52,8 @@ const router = createRouter({
             ]
         },
         {
-            path: '/comments/:id',
-            name: 'comments',
+            path: '/post/:id',
+            name: 'post',
             component: () => import('@/views/viewPage.vue'),
             meta: {ShowHeader: true}
         },
