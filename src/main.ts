@@ -10,6 +10,8 @@ import * as directives from 'vuetify/directives'
 import router from "./router";
 import {createPinia} from "pinia";
 import store from "./store/index";
+import api from "./api/index";
+
 //@ts-ignore
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -42,6 +44,10 @@ app.config.globalProperties.$axios = axios;
 app.use(ElementPlus, {
     locale: zhCn,
 })
+app.provide('$axios', axios);
+app.provide('$api', api);
+app.provide('$store', store);
+
 
 
 app.use(vuetify).use(router).use(pinia).use(store).use(axios).mount('#app')

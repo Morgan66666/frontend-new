@@ -49,8 +49,10 @@
 import { ref, watch, reactive } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import { Post } from '../types';
+import { inject,onMounted } from 'vue';
 
-const comments = reactive<Post[]>([
+const api:any = inject('$api');
+let comments = reactive<Post[]>([
   {
     id: 1,
     title: "寻找失落的提瓦特大陆",
@@ -98,6 +100,23 @@ const comments = reactive<Post[]>([
   },
 
 ]);
+
+onMounted(async () => {
+  try {
+    const res = await api.post.getPosts();
+    comments = res.isSuccess;
+    console.log( res);
+    console.log('comments', comments);
+  } catch (error) {
+    console.log('error', error);
+  }
+});
+
+
+
+
+
+
 
 const images = ref([
   "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",

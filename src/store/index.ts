@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     },
     getIsLogin (state) {
       //return state.token !== null && state.user !== null && new Date(state.token?.expireTime) > new Date()
-      return !(state.user === null)
+      return state.user !== null
     }
   },
   mutations: {

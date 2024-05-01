@@ -1,20 +1,29 @@
 <template>
   <div class="login-card">
     <div class="login-logo">
-      <img src="../assets/LOGO.svg" alt="SUSTech Logo">
+      <img src="../assets/LOGO.svg" alt="SUSTech Logo" />
     </div>
     <h1><b>登录</b></h1>
 
     <div class="input-container">
       <label :class="{ 'label-active': active_username }">工号/学号</label>
       <!--        <input type="text" @focus="activateLabel" @blur="deactivateLabel">-->
-      <input @focus="activateLabel_username" @blur="deactivateLabel_username" v-model="username">
+      <input
+        @focus="activateLabel_username"
+        @blur="deactivateLabel_username"
+        v-model="username"
+      />
     </div>
     <!--      <input type="password" placeholder="密码">-->
     <div class="input-container">
       <label :class="{ 'label-active': active_password }">密码</label>
       <!--        <input type="text" @focus="activateLabel" @blur="deactivateLabel">-->
-      <input type="password" @focus="activateLabel_password" @blur="deactivateLabel_password" v-model="password">
+      <input
+        type="password"
+        @focus="activateLabel_password"
+        @blur="deactivateLabel_password"
+        v-model="password"
+      />
     </div>
     <!--      <p class="hint">Forgot email?</p>-->
     <!--      <div class="guest-mode">-->
@@ -26,7 +35,7 @@
     <button v-on:click="login">登录</button>
     <!--      </a>-->
 
-    <hr class="separate-line">
+    <hr class="separate-line" />
 
     <div class="tool">
       <div class="text-section">
@@ -35,30 +44,31 @@
         <router-link to="#" class="text right">{{ rightText }}</router-link>
       </div>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
-import store from '../store/index';
-import axios from 'axios';
+import { ref, defineComponent } from "vue";
+
+import { inject } from "vue";
 
 export default defineComponent({
   setup(_, { emit }) {
+    const api:any = inject("$api");
+    const store:any = inject("$store");
     const active_username = ref(false);
     const active_password = ref(false);
-    const username = ref('');
-    const password = ref('');
-    const leftText = ref('忘记密码');
-    const rightText = ref('创建账户');
+    const username = ref("");
+    const password = ref("");
+    const leftText = ref("忘记密码");
+    const rightText = ref("创建账户");
 
     const activateLabel_username = () => {
       active_username.value = true;
     };
 
-    const deactivateLabel_username = (event) => {
-      if (event.target.value === '') {
+    const deactivateLabel_username = (event:any) => {
+      if (event.target.value === "") {
         active_username.value = false;
       }
     };
@@ -67,58 +77,54 @@ export default defineComponent({
       active_password.value = true;
     };
 
-    const deactivateLabel_password = (event) => {
-      if (event.target.value === '') {
+    const deactivateLabel_password = (event:any) => {
+      if (event.target.value === "") {
         active_password.value = false;
       }
     };
 
     const getJwtFromCookie = () => {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // 如果这个 cookie 的名称是 'jwt'，返回它的值
-        if (cookie.startsWith('jwt=')) {
-          return cookie.substring(4);
-        }
-      }
-      // 如果没有找到名为 'jwt' 的 cookie，返回 null
-      return null;
-    }
+      const cookies = document.cookie.split(";");
+      const jwtCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("jwt=")
+      );
+      return jwtCookie ? jwtCookie.trim().substring(4) : undefined;
+    };
 
     const login = async () => {
       let loginForm = {
         account: username.value,
-        password: password.value
+        password: password.value,
       };
 
       console.log("开始登录");
       console.log(loginForm);
+      console.log(api);
       try {
-        const response = await axios.post('/api/auth/login', loginForm, {withCredentials: true});
-        console.log(response.data);
-        if (response.status === 200) {
-          console.log(getJwtFromCookie());
-          // this.$router.push('/'); // 在 setup 中，需要使用 useRoute 和 useRouter
-        } else {
-          alert('登录失败');
-        }
+        api.login.doLogin(loginForm).then((res: any) => {
+          if (res.status === 200) {
+            console.log(getJwtFromCookie());
+            
+          } else {
+            alert("登录失败");
+          }
+        });
       } catch (error) {
         console.log(error);
       }
 
       let user = {
-        avatar: 'https://cdn.vuetifyjs.com/images/john.jpg',
-        username: 'admin',
-        userId: '12110112',
-        userMassage: '这是用户的信息',
-        level: '4级'
+        avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
+        username: "admin",
+        userId: "12110112",
+        userMassage: "这是用户的信息",
+        level: "4级",
       };
       console.log(loginForm);
-      store.dispatch('LoginIn', user);
+      store.dispatch("LoginIn", user);
       console.log(store.getters.getIsLogin);
       //登录成功后跳转到首页
-      emit('login', true);
+      emit("login", true);
     };
 
     return {
@@ -132,9 +138,9 @@ export default defineComponent({
       deactivateLabel_username,
       activateLabel_password,
       deactivateLabel_password,
-      login
-    }
-  }
+      login,
+    };
+  },
 });
 </script>
 <style scoped>
@@ -174,7 +180,6 @@ label {
   font-size: 12px;
   color: #2b7de9;
 }
-
 
 .login-card {
   width: 100%;
@@ -222,7 +227,6 @@ input:focus {
   border-color: #1a73e8;
 }
 
-
 .guest-mode a,
 .create-account a {
   color: #1a73e8;
@@ -243,7 +247,6 @@ button {
 }
 
 button:hover {
-
   background-color: #2b7de9;
 }
 
