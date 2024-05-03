@@ -61,21 +61,36 @@
 
 <script setup lang="ts">
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
-import {ref} from "vue";
+import {ref, inject} from "vue";
+
 
 
 let quillContent = ref();
 let title = ref("标题");
 let content = ref("你好");
 let selectedPlate = ref("体育比赛");
+let api:any = inject('$api');
+
 
 const publicPost = () => {
   console.log(title.value);
   console.log(quillContent.value.editor.querySelector('.ql-editor').innerHTML);
   console.log(selectedPlate.value);
   //向后端发送帖子内容
-  let FormData = new FormData();
+  let post:any = {
+    id: 0,
+    title: title.value,
+    body: content.value,
+    thumbUp: 0,
+    isLiked: 0,
+    userId: 1,
+    userName: 12110425,
+    status: 0,
+  };
 
+  api.post.createPost(post).then((res:any) => {
+    console.log(res);
+  });
 
 };
 

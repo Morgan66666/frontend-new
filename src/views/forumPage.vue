@@ -72,18 +72,18 @@
 </template>
 
 <script>
+import { ref, reactive, watch, onMounted } from 'vue';
 import postComment from "../components/homePageComponents/postComment.vue";
 
 export default {
   components: { postComment },
   name: "HomePage",
-  data() {
-    return {
-      comments: [
+  setup() {
+    const comments = ref([
         {
           id: "1",
           title: "寻找失落的提瓦特大陆",
-          content:
+          body:
               '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
@@ -98,7 +98,7 @@ export default {
         {
           id: "2",
           title: "寻找失落的提瓦特大陆",
-          content:
+          body:
               '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
@@ -113,7 +113,7 @@ export default {
         {
           id: "3",
           title: "寻找失落的提瓦特大陆",
-          content:
+          body:
               '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
           date: "2022-12-12 12:12:12",
           thumbUp: 121,
@@ -125,51 +125,50 @@ export default {
             userMassage: "这是用户的信息",
           },
         },
-      ],
-      //板块
-      types: ["游戏", "运动", "不限"],
-      //时间
-      dates: ["今日", "一周内", "一月内", "不限"],
-      //排序
-      temps: [  "最新", "最热",'不限'],
-      selectDate: "不限",
-      selectType: "不限",
-      selectTemp: "不限",
-    };
-  },
-  methods: {
-    selectDateOption(option) {
-      this.selectDate = option;
-    },
-    selectTypeOption(option) {
-      this.selectType = option;
-    },
-    selectTempOption(option) {
-      this.selectTemp = option;
-    },
+      ]);
 
-    handleThumbUpChange({ id }) {
-      let post = this.getPostById(id);
+    const types = ref(["游戏", "运动", "不限"]);
+    const dates = ref(["今日", "一周内", "一月内", "不限"]);
+    const temps = ref(["最新", "最热",'不限']);
+    const selectDate = ref("不限");
+    const selectType = ref("不限");
+    const selectTemp = ref("不限");
+
+    onMounted(() => {
+      console.log("comments", comments.value);
+    });
+
+    const selectDateOption = (option) => {
+      selectDate.value = option;
+    };
+
+    const selectTypeOption = (option) => {
+      selectType.value = option;
+    };
+
+    const selectTempOption = (option) => {
+      selectTemp.value = option;
+    };
+
+    const handleThumbUpChange = ({ id }) => {
+      let post = getPostById(id);
       if (post != null) {
-        //如果点过踩
         if (post.isLiked === -1) {
           let thumbUp = post.thumbUp + 1;
           post.isLiked = 1;
           post.thumbUp = thumbUp;
         } else {
-          let thumbUp =
-              post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+          let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
           post.isLiked = post.isLiked === 1 ? 0 : 1;
           post.thumbUp = thumbUp;
         }
       }
       console.log("post", post);
-    },
+    };
 
-    handleThumbDownChange({ id }) {
-      let post = this.getPostById(id);
+    const handleThumbDownChange = ({ id }) => {
+      let post = getPostById(id);
       if (post != null) {
-        //如果点过赞
         if (post.isLiked === 1) {
           let thumbUp = post.thumbUp - 1;
           post.isLiked = -1;
@@ -179,30 +178,32 @@ export default {
         }
       }
       console.log("post", post);
-    },
+    };
 
-    getCommentByFlags() {
+    const getPostById = (id) => {
+      return comments.value.find((item) => item.id === id);
+    };
 
-    },
+    watch(comments, (newComments) => {
+      console.log("Comments have changed:", newComments);
+    }, { deep: true });
 
-    getPostById(id) {
-      // 根据id获取帖子
-      return this.comments.find((item) => item.id === id);
-    },
-  },
-  mounted() {
-    // Your mounted hook code here
-  },
-
-  watch: {
-    comments: {
-      handler(newComments) {
-        // Handle the changes in the comments array here
-        console.log("Comments have changed:", newComments);
-      },
-      deep: true, // Enable deep watching for nested changes
-    },
-  },
+    return {
+      comments,
+      types,
+      dates,
+      temps,
+      selectDate,
+      selectType,
+      selectTemp,
+      selectDateOption,
+      selectTypeOption,
+      selectTempOption,
+      handleThumbUpChange,
+      handleThumbDownChange,
+      getPostById
+    };
+  }
 };
 </script>
 

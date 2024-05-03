@@ -6,7 +6,7 @@
           <div class="main_main_card">
             <div class="main_main_card_title">{{ post.title }}</div>
 
-            <div class="main_main_card_content" v-html="post.content">
+            <div class="main_main_card_content" v-html="post.body">
               
             </div>
 
@@ -86,22 +86,17 @@
  import quillComponent from "../components/editPostComponents/quillComponent.vue";
  import store from "../store";
  import { useRouter } from "vue-router";
-import { Post } from '../types';
+import { Post, UserInfo } from '../types';
 import postMasterComponentVue from '../components/viewComponents/postMasterComponent.vue';
 import popularPostComponent from '../components/viewComponents/popularPostComponent.vue';
  
 interface Comment{
   id: number;
-  content: string;
+  body: string;
   date: string;
   thumbUp: number;
   isLiked: number;
-  userInfo: {
-    username: string;
-    level: string;
-    userId: string;
-    userMassage: string;
-  };
+  userInfo: UserInfo;
 
 }
 
@@ -114,16 +109,19 @@ interface Comment{
      [
       {
         id: 1,
-        content:
+        body:
           '<img src="https://picx.zhimg.com/70/v2-9105a6b428137896ae3cfbc537d01a79_1440w.avis?source=172ae18b&biz_tag=Post" alt=""> <p>图片不错，偷了</p>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
         userInfo: {
+          avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
           username: "张三",
           level: "4级",
+          gender: "男",
           userId: "12110112",
-          userMassage: "这是用户的信息",
+          signature: "这是用户的信息",
+          birth: "2022-12-12"
         },
       },
     ]
@@ -131,7 +129,7 @@ interface Comment{
      const post = reactive<Post>({
         id: 1,
         title: "寻找失落的提瓦特大陆",
-        content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
+        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
@@ -140,7 +138,9 @@ interface Comment{
           avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
           level: "4级",
           userId: "12110112",
-          userMassage: "这是用户的信息",
+          gender: "男",
+          signature: "这是用户的信息",
+          birth: "2022-12-12"
         },
       });
      
@@ -148,14 +148,26 @@ interface Comment{
      function handleThumbUpChange({id}:any) {
        let comment = getPostById(id);
        if (comment != null) {
-         // ... your logic here
+        if(comment.isLiked === 1){
+          comment.isLiked = 0;
+          comment.thumbUp--;
+        }else{
+          comment.isLiked = 1;
+          comment.thumbUp++;
+        }
        }
      }
  
      function handleThumbDownChange({id}:any) {
        let comment = getPostById(id);
        if (comment != null) {
-         // ... your logic here
+          if(comment.isLiked === -1){
+            comment.isLiked = 0;
+            comment.thumbUp++;
+          }else{
+          comment.isLiked = -1;
+          comment.thumbUp--;
+          }
        }
      }
  
@@ -163,8 +175,8 @@ interface Comment{
        return comments.find(item => item.id === id);
      }
  
-     function handleContentChange(newContent:any) {
-       newContent.value = newContent;
+     function handleContentChange(newBody:any) {
+       newContent.value = newBody;
      }
  
      function comment() {
@@ -172,11 +184,11 @@ interface Comment{
          router.push('/login');
          return;
        } 
-       let userInfo = store.getters.getUser;
+       let userInfo = store.getters.getUserInfo;
  
-       let newComment:any = {
-         id: "1",
-         content: newContent.value,
+       let newComment:Comment = {
+         id: 1,
+         body: newContent.value,
          date: "2022-12-12 12:12:12",
          thumbUp: 121,
          isLiked: 0,

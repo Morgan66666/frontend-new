@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import moment from 'moment'
 import createPersistedState from 'vuex-persistedstate'
 import { UserInfo } from '../types'
+import { getUserInfo } from '../utils/userUtil.vue'
 
 const store = new Vuex.Store({
   state: {
@@ -13,7 +14,7 @@ const store = new Vuex.Store({
     getToken (state) {
       return state.token
     },   
-    getUser (state) {
+    getUserInfo (state) {
       return state.user
     },
     getIsLogin (state) {

@@ -82,7 +82,7 @@ export default {
     )
     //根据评论内容获得图片，最多三张
     const imgs = computed(() => {
-      let content = props.comment.content;
+      let content = props.comment.body;
       let reg = /<img.*?src="(.*?)".*?>/g;
       let imgs = content.match(reg);
       //把img标签去掉，只留下src
@@ -105,7 +105,7 @@ export default {
     //先用正则表达式匹配到第一个<p>的内容，然后截取前100个字符
     const shortContent = computed(() => {
       
-      let content = props.comment.content;
+      let content = props.comment.body;
       let reg = /<p>(.*?)<\/p>/;
       let shortContent = content.match(reg);
 
@@ -126,6 +126,8 @@ export default {
   },
 };
 </script>
++
+
 
 
 

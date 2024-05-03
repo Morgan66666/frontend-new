@@ -48,7 +48,7 @@ export default {
     let isVisible = ref(false);
     const avatar = () => {
       if(store.getters.getIsLogin){
-        router.push(`/personal/${store.getters.getUser.userId}`);
+        router.push(`/personal/${store.getters.getUserInfo.userId}`);
       }else{
         isVisible.value = true;
       }

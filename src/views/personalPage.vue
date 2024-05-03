@@ -57,7 +57,7 @@ export default {
 setup() {
     const route = useRoute();
     let userId = route.params.userId;
-    let isMaster = store.getters.getIsLogin && store.getters.getUser.userId === userId;
+    let isMaster = store.getters.getIsLogin && store.getters.getUserInfo.userId === userId;
     let userInfo = ref( getUserInfo(userId));
     console.log(store.getters.getIsLogin);
     return {userInfo, isMaster};

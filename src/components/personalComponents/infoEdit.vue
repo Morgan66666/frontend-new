@@ -70,128 +70,114 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
-import { ref } from "vue";
+import { ref, onMounted, inject } from 'vue';
+import axios from 'axios';
+import store from '../../store';
+import { v4 as uuidv4 } from 'uuid';
+import { UserInfo } from '../../types';
 
 export default {
-  name: "InfoEdit",
-  data(): any {
-    return {
-      username: "霍霍果",
-      signature: "如果真爱有颜色，那一定是绿色",
-      gender: "男",
-      selectGender: "男",
-    };
-  },
+  name: 'InfoEdit',
   setup() {
-    let username = ref("霍霍果");
-    let signature = ref("如果真爱有颜色，那一定是绿色");
-    let gender = ref("男");
-    let selectGender = ref("男");
-    
+    const username = ref('霍霍果');
+    const signature = ref('如果真爱有颜色，那一定是绿色');
+    const gender = ref('男');
+    const selectGender = ref('男');
+    const imageUrl = ref('');
+    const api = inject('$api') as any;
 
-    return {username,signature,gender,selectGender};
-  },
+    const saveInfo = () => {
+      console.log(username.value);
+      username.value = document.getElementById('username')?.innerHTML || '';
+      signature.value = document.getElementById('signature')?.innerHTML || '';
+      gender.value = selectGender.value;
+      alert(`${username.value} ${signature.value}`);
+    };
 
-  methods: {
-    // Your methods here
-    saveInfo() {
-      console.log(this.username);
-      this.username = document.getElementById("username")?.innerHTML;
-      this.signature = document.getElementById("signature")?.innerHTML;
-      this.gender = this.selectGender;
-      alert(`${this.username} ${this.signature} `);
-    },
-    handleUpload(file: any) {
-      this.getOssSignature()
+    const handleUpload = (file: any) => {
+      getOssSignature()
         .then((signatureInfo: any) => {
-          console.log("获取签名信息成功", signatureInfo);
+          console.log('获取签名信息成功', signatureInfo);
           let formData = new FormData();
           const extension = file.name.split('.').pop();
-          // const extension = file.file.name.split(".").pop();
-          const uniqueFilename = uuidv4() + "." + extension;
-          console.log("uniqueFilename", uniqueFilename);
-          if (extension !== "jpg" && extension !== "png") {
-            this.$message({
-              message: "只能上传jpg/png文件",
-              type: "error",
-            });
+          const uniqueFilename = uuidv4() + '.' + extension;
+          console.log('uniqueFilename', uniqueFilename);
+          if (extension !== 'jpg' && extension !== 'png') {
+            alert('只能上传jpg/png文件');
             return;
           }
-          formData.append("key", signatureInfo.dir + uniqueFilename);
-          formData.append("policy", signatureInfo.policy);
-          formData.append("OSSAccessKeyId", signatureInfo.accessid);
-          formData.append("signature", signatureInfo.signature);
-          formData.append("file", file);
+          formData.append('key', signatureInfo.dir + uniqueFilename);
+          formData.append('policy', signatureInfo.policy);
+          formData.append('OSSAccessKeyId', signatureInfo.accessid);
+          formData.append('signature', signatureInfo.signature);
+          formData.append('file', file);
 
           axios
             .post(signatureInfo.host, formData, {
-              headers: { "Content-Type": "multipart/form-data" },
+              headers: { 'Content-Type': 'multipart/form-data' },
             })
             .then((response) => {
-              console.log("上传成功", response);
-              // 处理上传成功的逻辑
-              this.imageUrl = signatureInfo.host + "/" + uniqueFilename;
-              this.$message({
-                message: "上传成功",
-                type: "success",
-              });
+              console.log('上传成功', response);
+              imageUrl.value = signatureInfo.host + '/' + uniqueFilename;
+              alert('上传成功');
             })
             .catch((error) => {
-              console.error("上传失败", error);
-              // 处理上传失败的逻辑
-              this.$message({
-                message: "上传失败",
-                type: "error",
-              });
+              console.error('上传失败', error);
+              alert('上传失败');
             });
         })
         .catch((error: any) => {
-          console.error("获取签名信息失败", error);
-          // 处理获取签名信息失败的逻辑
-          this.$message({
-            message: "获取签名信息失败",
-            type: "error",
-          });
+          console.error('获取签名信息失败', error);
+          alert('获取签名信息失败');
         });
-    },
-    getOssSignature() {
-      // 实现获取OSS签名信息的逻辑，返回一个Promise
-      // 示例中省略了具体实现
-      return new Promise((resolve, reject) => {
-        // 假设这是您的服务器端API端点，用于获取OSS签名信息
+    };
 
-        this.$axios
-          .get("/oss")
+    const getOssSignature = () => {
+      return new Promise((resolve, reject) => {
+        axios
+          .get('/oss')
           .then((response: any) => {
             if (response.data) {
               resolve(response.data);
             } else {
-              reject("No signature data received");
+              reject('No signature data received');
             }
           })
           .catch((error: any) => {
             reject(error);
           });
       });
-    },
-    triggerFileInput() {
-      this.$refs.avatarInput.click();
-    },
-    avatarUpload(e: any) {
-      const file = e.target.files[0];
-      this.handleUpload(file);
-      console.log("file", file);
-    },
+    };
 
-  },
-  mounted() {
-    // Your mounted hook code here
+    const avatarUpload = (e: any) => {
+      const file = e.target.files[0];
+      handleUpload(file);
+      console.log('file', file);
+    };
+
+    onMounted(() => {
+      let userInfo:UserInfo = store.getters.getUserInfo;
+      username.value = userInfo.username;
+      signature.value = userInfo.signature
+        ? userInfo.signature
+        : '这个人很懒，什么都没留下';
+      gender.value = userInfo.gender;
+    });
+
+    return {
+      username,
+      signature,
+      gender,
+      selectGender,
+      saveInfo,
+      handleUpload,
+      getOssSignature,
+      avatarUpload,
+      imageUrl,
+    };
   },
 };
 </script>
-
 <style scoped>
 hr {
   margin: 0;

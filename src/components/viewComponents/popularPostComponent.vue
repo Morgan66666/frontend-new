@@ -11,7 +11,7 @@
 
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref , inject, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { Post } from '../../types'
 
@@ -19,7 +19,7 @@ let postList = ref<Post[]>([
   {
     id: 1,
     title: "寻找失落的提瓦特大陆",
-    content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
+    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
@@ -29,10 +29,11 @@ let postList = ref<Post[]>([
       level: "4级",
       userId: "12110112",
       userMassage: "这是用户的信息",
+      birth: "2022-12-12",
     }},{
     id: 2,
     title: "寻找失落的提瓦特大陆",
-    content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
+    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
@@ -42,10 +43,19 @@ let postList = ref<Post[]>([
       level: "4级",
       userId: "12110112",
       userMassage: "这是用户的信息",
+      birth: "2022-12-12",
     },
   }
   ]);
 let router = useRouter();
+const api:any = inject('$api');
+
+onMounted(() => {
+  // api.post.getPopularPost().then((res: any) => {
+  //   postList.value = res.data;
+  // });
+});
+
 let jumpToPost = (id: number) => {
   console.log(id);  
   router.push({ path: `/post/${id}` });

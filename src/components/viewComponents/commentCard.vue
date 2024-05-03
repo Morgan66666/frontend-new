@@ -12,7 +12,7 @@
         <span class="userInfo_userId">{{ comment.userInfo.userId }}</span>
       </div>
       <div class="main_comments_card_content">
-        <div class="content_html" v-html="comment.content"></div>
+        <div class="content_html" v-html="comment.body"></div>
 
 
       </div>
@@ -46,12 +46,23 @@
 
 <script lang="ts">
 import {PropType} from "vue";
+import { UserInfo } from "../../types";
+
+interface Comment {
+  id: number;
+  body: string;
+  date: string;
+  thumbUp: number;
+  isLiked: number;
+  userInfo: UserInfo;
+}
+
 
 export default {
   name: "CommentCard",
   props: {
     comment: {
-      type: Object as PropType<any>,
+      type: Object as PropType<Comment>,
       required: true,
     },
   },
@@ -129,7 +140,6 @@ export default {
 
 .main_comment_card {
   width: 100%;
-  min-height: 300px;
   background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;

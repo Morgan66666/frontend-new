@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, Ref, getCurrentInstance} from 'vue'
+import {ref, onMounted, Ref, getCurrentInstance, inject} from 'vue'
 import {Quill} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import axios from 'axios';
@@ -38,7 +38,7 @@ const exportedHtml = ref('');
 const imageUrl = ref<string>('');
 
 let quill:Quill = null;
-
+const api = inject('$api') as any;
 
 async function handleUpload(file: File) {
   try {
@@ -77,7 +77,7 @@ async function handleUpload(file: File) {
 
 async function getOssSignature(): Promise<SignatureInfo> {
   try {
-    const response = await axios.get<SignatureInfo>("/oss");
+    const response = await api.oss.getSignature("/oss");
     if (response.data) {
       return response.data;
     } else {
@@ -163,7 +163,7 @@ onMounted(() => {
 
     }
   });
-  quill.on('text-change', function(delta, oldDelta, source) {
+  quill.on('text-change', function(delta:any, oldDelta:any, source:any) {
     console.log('A change occurred:', delta, oldDelta, source);
     exportHTML();
 });

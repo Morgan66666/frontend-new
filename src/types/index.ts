@@ -57,17 +57,19 @@ export interface ActivityDetail {
 export interface UserInfo {
         avatar: string,
         username: string,
+        gender: string,
         level: string,
         userId: string,
-        userMassage: string,
+        signature: string,
+        birth: string,
 }
 
 export interface Post {
     id: number;
     title: string;
-    content: string;
+    body: string;
     date: string;
     thumbUp: number;
     isLiked: number;
     userInfo: UserInfo;
-  }
+}

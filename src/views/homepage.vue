@@ -5,7 +5,7 @@
 
         <div class="main_container_mainMessage">
 
-          <v-carousel class="carousel" cycle height="500" hide-delimiters :show-arrows="false">
+          <v-carousel class="carousel" cycle height="440" width="800" hide-delimiters :show-arrows="false">
             <v-carousel-item v-for="image in images" :key="image" :src="image"></v-carousel-item>
           </v-carousel>
 
@@ -49,6 +49,7 @@
 import { ref, watch, reactive } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import { Post } from '../types';
+import { UserInfo } from '../types';
 import { inject,onMounted } from 'vue';
 
 const api:any = inject('$api');
@@ -56,7 +57,7 @@ let comments = reactive<Post[]>([
   {
     id: 1,
     title: "寻找失落的提瓦特大陆",
-    content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
@@ -64,14 +65,16 @@ let comments = reactive<Post[]>([
       avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
       username: "张三",
       level: "4级",
+      gender: "男",
       userId: "12110112",
-      userMassage: "这是用户的信息",
+      signature: "这是用户的信息",
+      birth: "2022-12-12",
     },
   },
   {
     id: 2,
     title: "寻找失落的提瓦特大陆",
-    content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
@@ -80,13 +83,15 @@ let comments = reactive<Post[]>([
       username: "张三",
       level: "4级",
       userId: "121101142",
-      userMassage: "这是用户的信息",
+      signature: "这是用户的信息",
+      gender: "男",
+      birth: "2022-12-12",
     },
   },
   {
     id: 3,
     title: "寻找失落的提瓦特大陆",
-    content: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
@@ -95,18 +100,41 @@ let comments = reactive<Post[]>([
       username: "张三",
       level: "4级",
       userId: "121101152",
-      userMassage: "这是用户的信息",
+      gender: "男",
+      signature: "这是用户的信息",
+      birth: "2022-12-12",
     },
   },
 
 ]);
 
+const processPostFromServer = (comments:any) => {
+  comments.forEach((comment:any) => {
+    let userId = comment.userId;
+    api.user.getUserInfoByUserId({userId: userId}).then((res:any) => {
+      comment.userInfo = {
+        avatar: res.avatar,
+        username: res.userName,
+        level: "4",
+        gender: res.gender,
+        userId: res.userId,
+        signature: res.signature,
+        birth: res.birth,
+      } as UserInfo;
+    });
+  });
+}
+
 onMounted(async () => {
   try {
-    const res = await api.post.getPosts();
-    comments = res.isSuccess;
-    console.log( res);
-    console.log('comments', comments);
+    //这个时间在后端是localDateTime类型
+    let time = {
+      "start-time": "2022-12-12T12:12:12",
+      "end-time": "2025-12-12T12:12:12",
+    }
+    const res = await api.post.getPostsByTime(time);
+    processPostFromServer(res);
+    Object.assign(comments, res);
   } catch (error) {
     console.log('error', error);
   }
@@ -119,9 +147,9 @@ onMounted(async () => {
 
 
 const images = ref([
-  "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-  "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-  "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
+  "https://img.universitychina.net/userdata/image/cover/2022/09/1663686690_250073.jpg",
+  "https://img.universitychina.net/userdata/image/article/2022/09/1663684701_102979.jpg",
+  "https://img.universitychina.net/userdata/image/article/2022/09/1663684701_102979.jpg",
 ]);
 
 const handleThumbUpChange = ({ id }) => {
@@ -359,9 +387,6 @@ watch(comments, (newComments) => {
 .carousel {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
-  width: 90%;
-  height: auto;
-  margin: auto;
   margin-bottom: 50px;
 }
 </style>
