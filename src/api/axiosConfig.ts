@@ -16,6 +16,7 @@ const instance = axios.create({
     timeout: 60000,
 });
 instance.interceptors.response.use(response => {
+    console.log(response);
     return response;
 }, error => {
     console.log(error);

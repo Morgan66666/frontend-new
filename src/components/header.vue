@@ -2,73 +2,134 @@
   <div>
     <div class="header_container">
       <div class="header_log">
-
-        <img style="width: auto; height: 100%;" src="../assets/SUSTech.svg" alt="南科大">
+        <img
+          style="width: auto; height: 100%"
+          src="../assets/SUSTech.svg"
+          alt="南科大"
+        />
       </div>
       <div class="header_nav">
-        <router-link to="/" class="nav_link" :class="{ active: $route.path === '/' }">首页</router-link>
-        <router-link to="/activities" class="nav_link" :class="{ active: $route.path.startsWith('/activities') }">活动
+        <router-link
+          to="/"
+          class="nav_link"
+          :class="{ active: $route.path === '/' }"
+          >首页</router-link
+        >
+        <router-link
+          to="/activities"
+          class="nav_link"
+          :class="{ active: $route.path.startsWith('/activities') }"
+          >活动
         </router-link>
-            <router-link to="/forum" class="nav_link" :class="{ active: $route.path.startsWith('/forum') }">论坛</router-link>
-
+        <router-link
+          to="/forum"
+          class="nav_link"
+          :class="{ active: $route.path.startsWith('/forum') }"
+          >论坛</router-link
+        >
       </div>
       <div class="header_search_container">
-        <input class="header_search" type="text" name="search" id="search" placeholder="搜索">
-<!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
-          <div class="userInfo_avatar" >
-            <img src="../assets/霍霍.png" @click = "avatar" alt="">
-          </div>
-<!--        </router-link>-->
+        <input
+          class="header_search"
+          type="text"
+          name="search"
+          id="search"
+          placeholder="搜索"
+        />
+        <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
+        <div class="userInfo_avatar">
+          <img src="../assets/霍霍.png" @click="avatar" alt="" />
+        </div>
+        <div class="options" v-if="showOptions">
+          <a @click="toPersonal">个人主页</a>
+          <a @click="showChat">消息</a>
+        </div>
+
+        <!--        </router-link>-->
       </div>
       <div class="login" v-if="isVisible">
         <login-component @login="login"></login-component>
       </div>
-        
-
-
-
     </div>
-    <div class="background" v-if="isVisible" @click="isVisible = false"></div>
+    <div class="chat" v-if="chatVisible">
+      <chat-component></chat-component>
+    </div>
+
+    <div class="background" v-if="backIsVisible" @click="hide"></div>
+    <div class=""></div>
   </div>
 </template>
 
 <script lang="ts">
-
 import { ref } from "vue";
 import loginComponent from "../components/loginComponent.vue";
+import chatComponent from "./chatComponent.vue";
 import router from "../router";
 import store from "../store";
 
-
 export default {
-  name: 'headerOfMainPage',
+  name: "headerOfMainPage",
 
-  components: {loginComponent},
+  components: { loginComponent, chatComponent },
   setup() {
     let isVisible = ref(false);
+    let chatVisible = ref(false);
+    let backIsVisible = ref(false);
+    const showOptions = ref(false);
     const avatar = () => {
-      if(store.getters.getIsLogin){
-        router.push(`/personal/${store.getters.getUserInfo.userId}`);
-      }else{
+      if (store.getters.getIsLogin) {
+        showOptions.value = !showOptions.value;
+      } else {
         isVisible.value = true;
+        backIsVisible.value = true;
+        showOptions.value = false;
       }
     };
 
-    const login = (success:any) => {
-      if(success){
+    const showChat = () => {
+      chatVisible.value = !chatVisible.value;
+      backIsVisible.value = !backIsVisible.value;
+      showOptions.value = false;
+    };
+
+    const toPersonal = () => {
+      if (store.getters.getIsLogin) {
+        router.push(`/personal/${store.getters.getUserInfo.userId}`);
+        showOptions.value = false;
+      } else {
+        isVisible.value = true;
+        showOptions.value = false;
+      }
+    };
+
+    const login = (success: any) => {
+      if (success) {
         isVisible.value = false;
         alert("登录成功");
-        console.log("登录成功")
+        console.log("登录成功");
         router.push(`/`);
-      };
-    }
+      }
+    };
 
+    const hide = () => {
+      isVisible.value = false;
+      chatVisible.value = false;
+      backIsVisible.value = false;
+    };
 
-    return {avatar, isVisible, login};
+    return {
+      avatar,
+      isVisible,
+      login,
+      chatVisible,
+      backIsVisible,
+      showOptions,
+      showChat,
+      toPersonal,
+      hide,
+    };
   },
-
-
-}
+};
 </script>
 
 <style scoped>
@@ -79,25 +140,21 @@ export default {
   border-radius: 5px 5px 0 0;
   display: flex;
   justify-content: center;
-
 }
 
 .header_log {
   width: 4em;
   height: 100%;
   background-color: transparent;
-
 }
 
 .header_nav {
   width: 30em;
   height: 100%;
-  background-color: rgb(31,34,51);
+  background-color: rgb(31, 34, 51);
   justify-content: left;
   justify-items: center;
-  vertical-align: middle
-
-
+  vertical-align: middle;
 }
 
 .header_nav a {
@@ -133,7 +190,7 @@ export default {
   margin-top: 1.2em;
   height: 1.5em;
   border-radius: 5px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .userInfo_avatar img {
@@ -148,15 +205,22 @@ export default {
 }
 
 .userInfo_avatar {
-
+  position: relative;
   height: 100%;
   align-content: center;
   display: inline;
-  
 }
 
 .login {
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.chat {
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -164,7 +228,7 @@ export default {
 }
 
 .background {
-  position: absolute;
+  position: fixed;
   z-index: 10;
   top: 0;
   left: 0;
@@ -172,7 +236,33 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   display: block;
-
 }
 
+.options {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(174, 178, 199);
+  min-width: 120px;
+  right: 230px;
+  top: 55px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 120;
+}
+
+.options a {
+  color: white;
+  text-decoration: none;
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.options a:hover {
+  background-color: rgb(71, 74, 88);
+}
+
+.userInfo_avatar:hover .options {
+  display: block;
+}
 </style>

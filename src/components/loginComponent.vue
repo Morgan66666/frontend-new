@@ -93,20 +93,21 @@ export default defineComponent({
 
     const login = async () => {
       let loginForm = {
-        account: username.value,
+        username: username.value,
         password: password.value,
       };
 
       console.log("开始登录");
       console.log(loginForm);
-      console.log(api);
       try {
         api.login.doLogin(loginForm).then((res: any) => {
+          console.log(res);
           if (res.status === 200) {
-            console.log(getJwtFromCookie());
-            
+            console.log("登录成功");
+            // document.cookie = `jwt=${res.data.jwt}`;
+            console.log(res.data.token);
           } else {
-            alert("登录失败");
+            console.log("登录失败");
           }
         });
       } catch (error) {
@@ -123,7 +124,6 @@ export default defineComponent({
       console.log(loginForm);
       store.dispatch("LoginIn", user);
       console.log(store.getters.getIsLogin);
-      //登录成功后跳转到首页
       emit("login", true);
     };
 

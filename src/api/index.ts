@@ -113,20 +113,21 @@ let toApiFn = (configData: any = null) => {
               data: params,
               headers: { ...modeItem.headers, ...option.headers, token },
             }).then((res: any = {}) => {
-              let status = res.status;
-              // 获取到接口请求结果后，统一在这里处理，外面调用的时候，就不用管接口是否成功或者
-              // 失败后处理逻辑，只关注业务逻辑就好了
-              if (status == 200) {
-                let data = res.data || {};
-                if (data.code == 401) {
-                  return
-                }
-                return data;
-              }
-              return {
-                code: res.status,
-                msg: res.statusText,
-              };
+              // let status = res.status;
+              // // 获取到接口请求结果后，统一在这里处理，外面调用的时候，就不用管接口是否成功或者
+              // // 失败后处理逻辑，只关注业务逻辑就好了
+              // if (status == 200) {
+              //   let data = res.data || {};
+              //   if (data.code == 401) {
+              //     return
+              //   }
+              //   return data;
+              // }
+              // return {
+              //   code: res.status,
+              //   msg: res.statusText,
+              // };
+              return res;
             });
           }
         }
