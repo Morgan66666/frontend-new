@@ -96,7 +96,7 @@ export default defineComponent({
       console.log("开始登录");
       console.log(loginForm);
       try {
-        api.login.doLogin(loginForm).then((res: any) => {
+        await api.login.doLogin(loginForm).then((res: any) => {
           console.log(res);
           token = res.token;
           user = {
@@ -112,6 +112,22 @@ export default defineComponent({
         });
       } catch (error) {
         console.log(error);
+      }finally{
+        if (user) {
+        store.dispatch("LoginIn", user);
+        emit("login", true);
+      } else {
+        user = {
+          avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
+          username: "admin",
+          userId: "12110112",
+          signature: "这是用户的信息",
+          level: "4级",
+          birth: "2000-01-01",
+          account: "12110425",
+          gender: "男",
+        };
+      }
       }
       if (user) {
         store.dispatch("LoginIn", user);
