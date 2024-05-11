@@ -17,7 +17,7 @@ const instance = axios.create({
 });
 instance.interceptors.response.use(response => {
     console.log(response);
-    return response;
+    return response.data;
 }, error => {
     console.log(error);
     // 这里我们把错误信息扶正, 后面就不需要写 catch 了

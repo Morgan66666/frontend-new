@@ -127,7 +127,6 @@ export default defineComponent({
           account: "12110425",
           gender: "男",
         };
-      console.log(loginForm);
       store.dispatch("LoginIn", user);
       store.dispatch("SetToken", token);
       console.log(store.getters.getIsLogin);
