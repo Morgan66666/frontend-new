@@ -23,7 +23,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     SetToken (state, token) {
-      token.expireTime = moment().add(token.expires_in, 's')
+      // token.expireTime = moment().add(token.expires_in, 's')
       state.token = token
     },
     LoginIn (state, user) {

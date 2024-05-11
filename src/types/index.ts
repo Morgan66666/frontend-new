@@ -62,6 +62,7 @@ export interface UserInfo {
         userId: string,
         signature: string,
         birth: string,
+        account?: string,
 }
 
 export interface Post {

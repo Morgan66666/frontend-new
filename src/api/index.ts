@@ -59,9 +59,7 @@ let apiConfig = {
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
-  return null
-  getTokenFn();
-  return store.state.token;
+  return {authorization: `Bearer ${store.getters.getToken}`} || "";
 }
 // 格式化参数
 /*
@@ -106,8 +104,7 @@ let toApiFn = (configData: any = null) => {
             option: { method: string | null, url: string | null, headers: { [key: string]: string } | null } = { method: null, url: null, headers: null }) => {
             // option 调用接口时，可以自定义一些配置项
             // params 参数
-            // let token = modeItem.noToken ? "" : getTokenFn();
-            let token = null;
+            let token = modeItem.noToken ? "" : getTokenFn();
             return axios({
               method: option.method ?? modeItem.method ?? 'post',
               url: option.url ?? getUrlFn(params, modeItem),

@@ -101,6 +101,7 @@ const handleContentChange = () => {
   content.value = quillContent.value.editor.querySelector('.ql-editor').innerHTML;
 };
 
+
 </script>
 
 

@@ -51,11 +51,12 @@
 import { ref, defineComponent } from "vue";
 
 import { inject } from "vue";
+import { UserInfo } from "../types";
 
 export default defineComponent({
   setup(_, { emit }) {
-    const api:any = inject("$api");
-    const store:any = inject("$store");
+    const api: any = inject("$api");
+    const store: any = inject("$store");
     const active_username = ref(false);
     const active_password = ref(false);
     const username = ref("");
@@ -67,7 +68,7 @@ export default defineComponent({
       active_username.value = true;
     };
 
-    const deactivateLabel_username = (event:any) => {
+    const deactivateLabel_username = (event: any) => {
       if (event.target.value === "") {
         active_username.value = false;
       }
@@ -77,21 +78,16 @@ export default defineComponent({
       active_password.value = true;
     };
 
-    const deactivateLabel_password = (event:any) => {
+    const deactivateLabel_password = (event: any) => {
       if (event.target.value === "") {
         active_password.value = false;
       }
     };
 
-    const getJwtFromCookie = () => {
-      const cookies = document.cookie.split(";");
-      const jwtCookie = cookies.find((cookie) =>
-        cookie.trim().startsWith("jwt=")
-      );
-      return jwtCookie ? jwtCookie.trim().substring(4) : undefined;
-    };
-
     const login = async () => {
+      let user: UserInfo = null;
+      let token = null;
+
       let loginForm = {
         username: username.value,
         password: password.value,
@@ -102,28 +98,42 @@ export default defineComponent({
       try {
         api.login.doLogin(loginForm).then((res: any) => {
           console.log(res);
-          if (res.status === 200) {
-            console.log("登录成功");
-            // document.cookie = `jwt=${res.data.jwt}`;
-            console.log(res.data.token);
-          } else {
-            console.log("登录失败");
-          }
+          token = res.token;
+          user = {
+            userId: res.userId,
+            username: res.userName,
+            avatar: res.avatar,
+            signature: res.intro,
+            birth: res.birth,
+            account: res.account,
+            gender: res.gender,
+            level: "4",
+          };
         });
       } catch (error) {
         console.log(error);
       }
+      if (user) {
+        store.dispatch("LoginIn", user);
+        emit("login", true);
+      } else {
+        user = {
+          avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
+          username: "admin",
+          userId: "12110112",
+          signature: "这是用户的信息",
+          level: "4级",
+          birth: "2000-01-01",
+          account: "12110425",
+          gender: "男",
+        };
+      }
 
-      let user = {
-        avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
-        username: "admin",
-        userId: "12110112",
-        userMassage: "这是用户的信息",
-        level: "4级",
-      };
       console.log(loginForm);
       store.dispatch("LoginIn", user);
+      store.dispatch("SetToken", token);
       console.log(store.getters.getIsLogin);
+      console.log(store.getters.getUserInfo);
       emit("login", true);
     };
 
