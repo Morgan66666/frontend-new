@@ -62,6 +62,8 @@
 <script setup lang="ts">
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
 import {ref, inject} from "vue";
+import { UserInfo } from "../types";
+import store from "../store";
 
 
 
@@ -70,12 +72,13 @@ let title = ref("标题");
 let content = ref("你好");
 let selectedPlate = ref("体育比赛");
 let api:any = inject('$api');
-
+let userInfo:UserInfo = store.getters.userInfo;
 
 const publicPost = () => {
   console.log(title.value);
   console.log(quillContent.value.editor.querySelector('.ql-editor').innerHTML);
   console.log(selectedPlate.value);
+
   //向后端发送帖子内容
   let post:any = {
     id: 0,
@@ -83,8 +86,8 @@ const publicPost = () => {
     body: content.value,
     thumbUp: 0,
     isLiked: 0,
-    userId: 1,
-    userName: 12110425,
+    userId: userInfo.userId,
+    userName: userInfo.username,
     status: 0,
   };
 
@@ -109,6 +112,9 @@ const handleContentChange = () => {
   background-color: rgb(247,248,252);
   box-sizing: content-box;
 }
+
+
+
 .main_container_message {
   width: 1000px;
   height: 100%;
@@ -178,6 +184,7 @@ const handleContentChange = () => {
   width: 98%;
   height: 60%;
   margin: auto;
+  padding-left: 15px;
   border: 1px solid rgb(207, 205, 205);
   background: #fff;
   border-radius: 5px;
@@ -247,10 +254,10 @@ const handleContentChange = () => {
   width: 200px;
   height: 50px;
   font-size: 20px;
-  background-color: red;
+  background-color: rgb(255,231,51);
   border: 1px solid rgb(27, 24, 24);
   border-radius: 5px;
-  color: white;
+  color: rgb(102,60,0);
   cursor: pointer;
 }
 

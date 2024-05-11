@@ -1,7 +1,12 @@
 <template>
   <div class="main_container">
+    
     <div class="main_container_message">
       <div class="main_container_mainMessage">
+        <div class="searchBar-container">
+          <input type="text" v-model="searchText" autocomplete="off" class="searchBar-input">
+          <button class="searchBar-button" @click="Search">搜索</button>
+        </div>
         <div class="classified_search">
           <div class="classified_search_item">
             <div class="classified_search_item_label">板块</div>
@@ -37,14 +42,16 @@
             </a>
           </div>
         </div>
-
-        <post-comment
+        <div class="post-container">
+                  <post-comment
             v-for="item in comments"
             :comment="item"
             v-bind:key="item.id"
             @update:thumpUp="handleThumbUpChange"
             @update:thumpDown="handleThumbDownChange"
         ></post-comment>
+        </div>
+
       </div>
       <div class="main_container_rightMessage">
         <div class="main_container_mainMessage_rightMessage_card">
@@ -74,9 +81,10 @@
 <script>
 import { ref, reactive, watch, onMounted } from 'vue';
 import postComment from "../components/homePageComponents/postComment.vue";
+import SearchBar from "../components/SearchBar.vue";
 
 export default {
-  components: { postComment },
+  components: { postComment, SearchBar},
   name: "HomePage",
   setup() {
     const comments = ref([
@@ -126,7 +134,8 @@ export default {
           },
         },
       ]);
-
+    
+    const searchText = ref("");  
     const types = ref(["游戏", "运动", "不限"]);
     const dates = ref(["今日", "一周内", "一月内", "不限"]);
     const temps = ref(["最新", "最热",'不限']);
@@ -184,6 +193,13 @@ export default {
       return comments.value.find((item) => item.id === id);
     };
 
+    const Search = () => {
+      if (searchText.value === "") {
+        return;
+      }
+
+      console.log(searchText.value);
+    };
     watch(comments, (newComments) => {
       console.log("Comments have changed:", newComments);
     }, { deep: true });
@@ -201,7 +217,9 @@ export default {
       selectTempOption,
       handleThumbUpChange,
       handleThumbDownChange,
-      getPostById
+      getPostById,
+      Search,
+      searchText
     };
   }
 };
@@ -216,6 +234,8 @@ export default {
   border-bottom: 1px solid rgb(200, 200, 200);
   margin-bottom: 20px;
   margin-top: 20px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .classified_search_item {
@@ -263,13 +283,23 @@ export default {
   line-height: 50px;
 }
 
+.post-container {
+  width: 100%;
+  height: auto;
+  background-color: transparent;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
 .main_container {
   width: 100%;
-  height: 100%;
+  height: auto;
   justify-content: center;
   background-color: rgb(247,248,252);
   box-sizing: content-box;
 }
+
+
 .main_container_message {
   width: 1000px;
   height: 100%;
@@ -280,12 +310,12 @@ export default {
   box-sizing: content-box;
 }
 
-
 .main_container::after {
   content: "";
   display: table;
   clear: both;
 }
+
 .main_container_mainMessage {
   width: 720px;
   height: 100%;
@@ -294,6 +324,8 @@ export default {
   float: left;
   margin: 20px 0 0 0;
 }
+
+ 
 .main_container_rightMessage {
   width: 280px;
   height: 100%;
@@ -338,6 +370,44 @@ export default {
 .right_nav_link {
   color: black;
   text-decoration: none;
+}
+
+
+.searchBar-container {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border-bottom: 1px solid rgb(200, 200, 200);
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.searchBar-input {
+    display: inline-block;
+    height: 100%;
+    border: none;
+    padding: 0 30px;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    outline: none;
+}
+
+.searchBar-button {
+    display: inline-block;
+    height: 100%;
+    width: 120px;
+    background-color: rgb(254,231,50);
+    color: rgb(106,61,0);
+    border: none;
+    cursor: pointer;
+}
+
+.searchBar-button:hover {
+  background-color: rgb(249, 228, 64);
+  color: rgb(106,61,0);
 }
 
 /* 按钮样式 */

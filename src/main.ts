@@ -48,6 +48,8 @@ app.provide('$axios', axios);
 app.provide('$api', api);
 app.provide('$store', store);
 
-
-
-app.use(vuetify).use(router).use(pinia).use(store).use(axios).mount('#app')
+app.use(vuetify);
+app.use(router);
+app.use(pinia);
+app.use(store);
+app.mount('#app');

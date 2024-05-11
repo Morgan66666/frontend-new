@@ -29,17 +29,18 @@
         >
       </div>
       <div class="header_search_container">
-        <input
+        <!-- <input
           class="header_search"
           type="text"
           name="search"
           id="search"
           placeholder="搜索"
-        />
+        /> -->
         <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
         <div class="userInfo_avatar">
           <img src="../assets/霍霍.png" @click="avatar" alt="" />
         </div>
+        <div class="userInfo-username">{{ userInfo.username }}</div>
         <div class="options" v-if="showOptions">
           <a @click="toPersonal">个人主页</a>
           <a @click="showChat">消息</a>
@@ -66,6 +67,7 @@ import loginComponent from "../components/loginComponent.vue";
 import chatComponent from "./chatComponent.vue";
 import router from "../router";
 import store from "../store";
+import { UserInfo } from "../types";
 
 export default {
   name: "headerOfMainPage",
@@ -101,10 +103,26 @@ export default {
         showOptions.value = false;
       }
     };
+    const defaultUserInfo:UserInfo = {
+      userId: "123456",
+      username: "未登录",
+      signature: "这个人很懒，什么都没写",
+      avatar: "",
+      gender: "保密",
+      level: "4",
+      birth: "2000-01-01",
+    }
+
+    const userInfo = ref(defaultUserInfo);
+    if (store.getters.getIsLogin) {
+      userInfo.value = store.getters.getUserInfo;
+    }
+    
 
     const login = (success: any) => {
       if (success) {
         isVisible.value = false;
+        userInfo.value = store.getters.getUserInfo;
         alert("登录成功");
         console.log("登录成功");
         router.push(`/`);
@@ -127,6 +145,7 @@ export default {
       showChat,
       toPersonal,
       hide,
+      userInfo,
     };
   },
 };
@@ -155,6 +174,7 @@ export default {
   justify-content: left;
   justify-items: center;
   vertical-align: middle;
+  display: flex;
 }
 
 .header_nav a {
@@ -164,12 +184,14 @@ export default {
   height: 100%;
   text-align: center;
   display: inline-block;
-  line-height: 2.2em;
-  font-size: 1.5em;
+  line-height: 3.1em;
+  font-size: 1.1em;
 }
 
 .header_nav a.active {
   background-color: rgb(71, 74, 88);
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .header_nav a:hover {
@@ -211,6 +233,16 @@ export default {
   display: inline;
 }
 
+.userInfo-username {
+  height: 100%;
+  width: 10em;
+  background-color: rgb(31, 34, 51);
+  display: inline;
+  margin-left: 0.5em;
+  line-height: 3.5em;
+  color: white;
+}
+
 .login {
   position: fixed;
   top: 50%;
@@ -244,7 +276,7 @@ export default {
   flex-direction: column;
   background-color: rgb(174, 178, 199);
   min-width: 120px;
-  right: 230px;
+  right: 310px;
   top: 55px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 120;

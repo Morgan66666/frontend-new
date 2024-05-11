@@ -77,7 +77,7 @@ let pageTotal = ref(1);
 let router = useRouter();
 
 onMounted(() => {
-  api.post.getPostByUserId({userId: props.userId}).then((res: any) => {
+  api.post.getPostsByUserId({userId: props.userId}).then((res: any) => {
     Object.assign(postsShow, res);
   });
 })

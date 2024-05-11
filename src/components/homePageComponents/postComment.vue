@@ -164,6 +164,10 @@ export default {
   font-weight: bold;
 }
 
+.main_card_title:hover {
+  color: #1a73e8;
+}
+
 .main_card_content {
   line-height: 18px;
   margin-top: 8px;

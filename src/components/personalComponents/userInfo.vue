@@ -6,7 +6,7 @@
 
                     <div class="main_container_user_info">
                         <div class="main_container_user_info_name">{{ userInfo.username }}</div>
-                        <div class="main_container_user_info_id">{{ userInfo.userId }}</div>
+                        <div class="main_container_user_info_id">ID: {{ userInfo.userId }}</div>
                         <p class="main_container_user_info_signature">
                             {{ userInfo.signature }}
                         </p>
@@ -91,14 +91,14 @@ export default {
 }
 
 .main_container_user_info_id{
-    line-height: 0.8em;
+    line-height: 1.1em;
     margin-left: 10px;
     align-items: center;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     display: flex;
-    font-size: 0.8em;
+    font-size: 1.1em;
 }
 
 .main_container_user_info_signature{

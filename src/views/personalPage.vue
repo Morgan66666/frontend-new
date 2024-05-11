@@ -69,7 +69,7 @@ setup() {
 
 .main_container{
     width: 100%;
-    height: 100%;
+    height: auto;
     justify-content: center;
     background-color: rgb(245, 245, 245);   
     box-sizing: content-box;
@@ -94,7 +94,7 @@ setup() {
 
 .main_container_user_function_container{
     width: 980px;
-    height: 800px;
+    height: auto;
     background-color: transparent;
     margin-top: 10px;
 }

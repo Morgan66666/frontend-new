@@ -107,7 +107,7 @@ let comments = reactive<Post[]>([
   },
 
 ]);
-
+//要么后端发帖子信息的时候打包一起发过来，要么我跟服务器爆了
 const processPostFromServer = (comments:any) => {
   comments.forEach((comment:any) => {
     let userId = comment.userId;
@@ -210,6 +210,7 @@ watch(comments, (newComments) => {
   padding-right: 100px;
   background-color: rgb(247, 248, 252);
   box-sizing: content-box;
+  border-radius: 5px;
 }
 
 .main_container::after {
