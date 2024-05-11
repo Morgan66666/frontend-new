@@ -121,9 +121,8 @@ export default {
 
     const login = (success: any) => {
       if (success) {
-        isVisible.value = false;
+        hide();
         userInfo.value = store.getters.getUserInfo;
-        alert("登录成功");
         console.log("登录成功");
         router.push(`/`);
       }

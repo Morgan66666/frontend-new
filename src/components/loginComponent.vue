@@ -112,35 +112,28 @@ export default defineComponent({
         });
       } catch (error) {
         console.log(error);
-      }finally{
-      if (user) {
-        store.dispatch("LoginIn", user);
-        emit("login", true);
-      } else {
-        user = {
-          avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
-          username: "admin",
-          userId: "12110112",
-          signature: "这是用户的信息",
-          level: "4级",
-          birth: "2000-01-01",
-          account: "12110425",
-          gender: "男",
-        };
-      store.dispatch("LoginIn", user);
-      store.dispatch("SetToken", token);
-      console.log(store.getters.getIsLogin);
-      console.log(store.getters.getUserInfo);
-      emit("login", true);
+      } finally {
+        if (user) {
+          store.dispatch("LoginIn", user);
+          emit("login", true);
+        } else {
+          user = {
+            avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
+            username: "admin",
+            userId: "12110112",
+            signature: "这是用户的信息",
+            level: "4级",
+            birth: "2000-01-01",
+            account: "12110425",
+            gender: "男",
+          };
+          store.dispatch("LoginIn", user);
+          store.dispatch("SetToken", token);
+          console.log(store.getters.getIsLogin);
+          console.log(store.getters.getUserInfo);
+          emit("login", true);
+        }
       }
-      }
-
-      console.log(loginForm);
-      store.dispatch("LoginIn", user);
-      store.dispatch("SetToken", token);
-      console.log(store.getters.getIsLogin);
-      console.log(store.getters.getUserInfo);
-      emit("login", true);
     };
 
     return {
