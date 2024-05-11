@@ -20,7 +20,7 @@ let apiConfig = {
   post: [
     { name: "createPost", method: "post", url: "/api/posts/create" },//创建帖子
     { name: "getPostByPostId", method: "get", url: "/api/posts/{postId}" },//根据帖子id获得帖子
-    { name: "getPopularPost", method:"get", url:"/api/posts/popular"},//获取热门帖子
+    { name: "getPopularPost", method: "get", url: "/api/posts/popular" },//获取热门帖子
     { name: "updatePost", method: "put", url: "/api/posts/update" },//修改帖子
     { name: "deletePost", method: "delete", url: "/api/posts/{postId}" },//删除帖子
     { name: "getPosts", method: "get", url: "/api/posts", noToken: true },//获得帖子,什么参数都不给，就是随便拿一些帖子
@@ -59,7 +59,7 @@ let apiConfig = {
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
-  return {authorization: `Bearer ${store.getters.getToken}`} || "";
+  return { authorization: `Bearer ${store.getters.getToken}` } || "";
 }
 // 格式化参数
 /*

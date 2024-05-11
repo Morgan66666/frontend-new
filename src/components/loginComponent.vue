@@ -89,7 +89,7 @@ export default defineComponent({
       let token = null;
 
       let loginForm = {
-        username: username.value,
+        account: username.value,
         password: password.value,
       };
 
