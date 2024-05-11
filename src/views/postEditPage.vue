@@ -182,17 +182,18 @@ const handleContentChange = () => {
 
 .edit-box-title-input {
   width: 98%;
-  height: 60%;
+  height: 100%;
   margin: auto;
   padding-left: 15px;
   border: 1px solid rgb(207, 205, 205);
   background: #fff;
   border-radius: 5px;
+  outline: none;
 }
 
 .edit-box-plate {
   width: 18%;
-  height: 70%;
+  height: 100%;
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 10px;
