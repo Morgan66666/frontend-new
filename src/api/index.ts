@@ -23,13 +23,13 @@ let apiConfig = {
     { name: "getPopularPost", method: "get", url: "/api/posts/popular" },//获取热门帖子
     { name: "updatePost", method: "put", url: "/api/posts/update" },//修改帖子
     { name: "deletePost", method: "delete", url: "/api/posts/{postId}" },//删除帖子
-    { name: "getPosts", method: "get", url: "/api/posts", noToken: true },//获得帖子,什么参数都不给，就是随便拿一些帖子
-    { name: "getPostsByTime", method: "get", url: "/api/posts", noToken: true },//根据帖子时间搜索
-    { name: "getPostsByUserId", method: "get", url: "/api/posts", noToken: true },//根据用户id获得帖子
-    { name: "getPostsByTitle", method: "get", url: "/api/posts", noToken: true },//根据标题获得帖子
-    { name: "getPostsByType", method: "get", url: "/api/posts", noToken: true },//根据类型获得帖子
-    { name: "getPostsByBody", method: "", url: "/api/posts", noToken: true },//根据帖子内容获得帖子
-    { name: "getCommentsByPostId", method: "get", url: "/api/posts/{postId}/comments", noToken: true },//根据帖子id获得评论
+    { name: "getPosts", method: "get", url: "/api/posts" },//获得帖子,什么参数都不给，就是随便拿一些帖子
+    { name: "getPostsByTime", method: "get", url: "/api/posts"  },//根据帖子时间搜索
+    { name: "getPostsByUserId", method: "get", url: "/api/posts" },//根据用户id获得帖子
+    { name: "getPostsByTitle", method: "get", url: "/api/posts" },//根据标题获得帖子
+    { name: "getPostsByType", method: "get", url: "/api/posts" },//根据类型获得帖子
+    { name: "getPostsByBody", method: "", url: "/api/posts" },//根据帖子内容获得帖子
+    { name: "getCommentsByPostId", method: "get", url: "/api/posts/{postId}/comments" },//根据帖子id获得评论
   ],
   //管理员相关
   admin: [
@@ -59,7 +59,10 @@ let apiConfig = {
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
-  return { authorization: `Bearer ${store.getters.getToken}` } || "";
+  if (!store.getters.LoginIn) {
+    return "";
+  }
+  return { authorization: `Bearer ${store.getters.getToken}` };
 }
 // 格式化参数
 /*
