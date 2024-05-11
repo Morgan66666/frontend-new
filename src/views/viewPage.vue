@@ -147,7 +147,7 @@ interface Comment{
      const router = useRouter();
      function handleThumbUpChange({id}:any) {
        let comment = getPostById(id);
-       if (comment != null) {
+       if (comment != undefined) {
         if(comment.isLiked === 1){
           comment.isLiked = 0;
           comment.thumbUp--;
@@ -296,10 +296,9 @@ interface Comment{
 
 .main_main_card_content p {
   width: 100%;
-  margin: 0;
   color: rgb(73,73,73);
   font-size: 1em;
-  margin-top: 10px;
+  margin: 10px 0 0;
   word-wrap: break-word;
   word-break: break-all;
 }

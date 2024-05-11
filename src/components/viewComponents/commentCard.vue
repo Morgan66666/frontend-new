@@ -229,7 +229,7 @@ export default {
   border-radius: 5px;
 }
 
-.main_comments_card_subComments_morereply {
+.main_comments_card_subComments_more_reply {
   width: 100%;
   height: 20px;
   background-color: transparent;

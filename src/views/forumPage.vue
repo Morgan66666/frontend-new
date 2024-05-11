@@ -14,7 +14,7 @@
                 v-for="(item, index) in types"
                 :key="index"
                 @click="selectTypeOption(item)"
-                v-bind:class="selectType == item ? 'classified_search_item_a_active' : ''"
+                v-bind:class="selectType === item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -25,7 +25,7 @@
                 v-for="(item, index) in dates"
                 :key="index"
                 @click="selectDateOption(item)"
-                :class="selectDate == item ? 'classified_search_item_a_active' : ''"
+                :class="selectDate === item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -36,7 +36,7 @@
                 v-for="(item, index) in temps"
                 :key="index"
                 @click="selectTempOption(item)"
-                :class="selectTemp == item ? 'classified_search_item_a_active' : ''"
+                :class="selectTemp === item ? 'classified_search_item_a_active' : ''"
             >
               {{ item }}
             </a>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import postComment from "../components/homePageComponents/postComment.vue";
 import SearchBar from "../components/SearchBar.vue";
 
@@ -340,9 +340,7 @@ export default {
   height: auto;
   background-color: rgb(255, 255, 255);
   margin: 20px;
-  padding: 10px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding: 60px 10px;
   box-sizing: border-box;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
@@ -480,7 +478,6 @@ export default {
   position: absolute;
   top: 0;
   transition: -webkit-clip-path 0.2s ease;
-  transition: clip-path 0.2s ease;
   transition: clip-path 0.2s ease, -webkit-clip-path 0.2s ease;
   width: 100%;
   z-index: -1;

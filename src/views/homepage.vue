@@ -152,7 +152,7 @@ const images = ref([
   "https://img.universitychina.net/userdata/image/article/2022/09/1663684701_102979.jpg",
 ]);
 
-const handleThumbUpChange = ({ id }) => {
+const handleThumbUpChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === -1) {
@@ -168,7 +168,7 @@ const handleThumbUpChange = ({ id }) => {
   console.log('post', post);
 };
 
-const handleThumbDownChange = ({ id }) => {
+const handleThumbDownChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === 1) {
@@ -182,7 +182,7 @@ const handleThumbDownChange = ({ id }) => {
   console.log('post', post);
 };
 
-const getPostById = (id) => {
+const getPostById = (id:any) => {
   return comments.find(item => item.id === id);
 };
 
@@ -242,9 +242,7 @@ watch(comments, (newComments) => {
   height: auto;
   background-color: rgb(255, 255, 255);
   margin: 20px;
-  padding: 10px;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding: 60px 10px;
   box-sizing: border-box;
   border-radius: 5px;
   text-align: center;
@@ -352,7 +350,6 @@ watch(comments, (newComments) => {
   position: absolute;
   top: 0;
   transition: -webkit-clip-path 0.2s ease;
-  transition: clip-path 0.2s ease;
   transition: clip-path 0.2s ease, -webkit-clip-path 0.2s ease;
   width: 100%;
   z-index: -1;

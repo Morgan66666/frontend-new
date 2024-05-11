@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-import {Activity} from "@/types";
+import {Activity} from "../types";
 import {ref} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";

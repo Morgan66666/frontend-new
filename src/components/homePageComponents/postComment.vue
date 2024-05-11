@@ -30,7 +30,7 @@
           @click="thumbUp"
         />
         <img  v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" alt=""/>
-        <div class="other_info_operations_number" alt="">{{ comment.thumbUp }}</div>
+        <div class="other_info_operations_number" >{{ comment.thumbUp }}</div>
         <img
           v-if="comment.isLiked === -1"
           src="../../assets/icon/thumb-down1.svg"

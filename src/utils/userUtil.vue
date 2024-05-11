@@ -10,15 +10,14 @@
     //     id: id,
     //   },
     // });
-     let userInfo = {
+    return {
         avatar: '霍霍.png',
-        account:"1234567890", // "账号" 
+        account: "1234567890", // "账号"
         username: '花开富贵',
         userId: id,
         signature: '个性签名',
-      }
-      return userInfo;
-    };
+      };
+    }
 
   // 暴露出这些属性
 </script>

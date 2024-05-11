@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import {ActivityDetail} from "../types";
 import {computed, onMounted, ref} from "vue";
-import axiosInstance from '@/main.ts';
+import axiosInstance from '../main.ts';
 let activity = ref<ActivityDetail>({
   activityBeginTime: "2024-05-01",
   activityEndTime: "2024-05-01",

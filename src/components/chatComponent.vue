@@ -8,7 +8,7 @@
         @click="selectedItem = item"
         :class="{ active: item === selectedItem }"
       >
-        <img class="list-item-avator" :src="item.avator" />
+        <img class="list-item-avatar" :src="item.avatar"  alt=""/>
         <a class="list-item-username">{{ item.username }}</a>
       </div>
     </div>
@@ -22,15 +22,15 @@
         >
           <img
             v-if="item.userId !== userId"
-            class="message-list-item-avator"
-            :src="selectedItem.avator"
-          />
+            class="message-list-item-avatar"
+            :src="selectedItem.avatar"
+           alt=""/>
           <div class="message-list-item-content">{{ item.content }}</div>
           <img
             v-if="item.userId === userId"
-            class="message-list-item-avator"
-            :src="selectedItem.avator"
-          />
+            class="message-list-item-avatar"
+            :src="selectedItem.avatar"
+           alt=""/>
         </div>
       </div>
       <div id="message-input">
@@ -51,7 +51,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import store from "../store";
 
 interface message {
   id: string;
@@ -66,7 +65,7 @@ const items = ref([
   {
     id: "Item 1",
     username: "This is item 1",
-    avator: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
+    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
     messageList: [
       {
         id: "Item 1",
@@ -92,7 +91,7 @@ const items = ref([
   {
     id: "Item 2",
     username: "This is item 2",
-    avator: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
+    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
     messageList: [
       {
         id: "Item 1",
@@ -105,7 +104,7 @@ const items = ref([
   {
     id: "Item 3",
     username: "This is item 3",
-    avator: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png   ",
+    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png   ",
     messageList: [
       {
         id: "Item 1",
@@ -120,7 +119,7 @@ const items = ref([
 const selectedItem = ref({
   id: "",
   username: "",
-  avator: "",
+  avatar: "",
   messageList: [] as message[],
 });
 const message = ref("");
@@ -177,7 +176,7 @@ const sendMessage = () => {
   background-color: transparent;
 }
 
-.list-item-avator {
+.list-item-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -235,7 +234,7 @@ const sendMessage = () => {
   justify-content: flex-end;
 }
 
-.message-list-item-avator {
+.message-list-item-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;

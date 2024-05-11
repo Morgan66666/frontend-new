@@ -126,9 +126,8 @@ const handleContentChange = () => {
 }
 .title {
   width: calc(100% - 30px);
-  height: 26.6px;
-  padding: 10px;
-  padding-left: 20px;
+  height: 27px;
+  padding: 10px 10px 10px 20px;
   background-color: rgb(255, 255, 255);
   box-sizing: content-box;
   border-bottom: 1px solid rgb(216, 212, 212);
