@@ -8,10 +8,10 @@ const instance = axios.create({
     //     // Do whatever you want to transform the data
     //     return data;
     // }],
-    baseURL: 'http://192.168.3.13:23309',
+    baseURL: 'http://localhost:23309',
     withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
     },
     timeout: 2000,
 });
