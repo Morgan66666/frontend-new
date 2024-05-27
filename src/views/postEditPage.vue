@@ -72,7 +72,7 @@ let title = ref("标题");
 let content = ref("你好");
 let selectedPlate = ref("体育比赛");
 let api:any = inject('$api');
-let userInfo:UserInfo = store.getters.userInfo;
+let userInfo:UserInfo = store.getters.getUserInfo;
 
 const publicPost = () => {
   console.log(title.value);
@@ -93,6 +93,8 @@ const publicPost = () => {
 
   api.post.createPost(post).then((res:any) => {
     console.log(res);
+    alert("创建成功");
+
   });
 
 };

@@ -74,19 +74,4 @@ export interface UserInfo {
         account?: string,
 }
 
-export interface Post {
-    id: number;
-    title: string;
-    body: string;
-    date: string;
-    thumbUp: number;
-    isLiked: number;
-    userInfo: UserInfo;
-    avatar: string,
-    birth: string,
-    gender: string,
-    level: string,
-    signature: string,
-    userId: string,
-    username: string,
-}
+

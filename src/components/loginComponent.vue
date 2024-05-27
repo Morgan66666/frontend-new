@@ -115,6 +115,7 @@ export default defineComponent({
       } finally {
         if (user) {
           store.dispatch("LoginIn", user);
+          store.dispatch("SetToken", token);
           emit("login", true);
         } else {
           user = {
@@ -131,6 +132,7 @@ export default defineComponent({
           store.dispatch("SetToken", token);
           console.log(store.getters.getIsLogin);
           console.log(store.getters.getUserInfo);
+          console.log(store.getters.getToken);
           emit("login", true);
         }
       }

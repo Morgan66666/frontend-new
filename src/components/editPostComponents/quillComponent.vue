@@ -77,9 +77,9 @@ async function handleUpload(file: File) {
 
 async function getOssSignature(): Promise<SignatureInfo> {
   try {
-    const response = await api.oss.getSignature("/oss");
-    if (response.data) {
-      return response.data;
+    const response = await api.oss.getSignature();
+    if (response) {
+      return response;
     } else {
       throw new Error("获取签名信息失败");
     }

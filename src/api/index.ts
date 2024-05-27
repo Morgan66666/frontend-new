@@ -56,15 +56,13 @@ let apiConfig = {
   ],
   //oss相关
   oss: [
-    { name: "getSignature", method: "get", url: "/api/oss/signature" },//获得oss签名
+    { name: "getSignature", method: "get", url: "/api/oss" },//获得oss签名
   ]
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
-  if (!store.getters.LoginIn) {
-    return "";
-  }
-  return { authorization: `Bearer ${store.getters.getToken}` };
+  console.log("添加token" + store.getters.getToken)
+  return { "authorization": `Bearer ${store.getters.getToken}` };
 }
 // 格式化参数
 /*
@@ -109,12 +107,12 @@ let toApiFn = (configData: any = null) => {
             option: { method: string | null, url: string | null, headers: { [key: string]: string } | null } = { method: null, url: null, headers: null }) => {
             // option 调用接口时，可以自定义一些配置项
             // params 参数
-            let token = modeItem.noToken ? "" : getTokenFn();
+            let token = getTokenFn();
             return axios({
               method: option.method ?? modeItem.method ?? 'post',
               url: option.url ?? getUrlFn(params, modeItem),
               data: params,
-              headers: { ...modeItem.headers, ...option.headers, token },
+              headers: { ...modeItem.headers, ...option.headers, ...token },
             }).then((res: any = {}) => {
               // let status = res.status;
               // // 获取到接口请求结果后，统一在这里处理，外面调用的时候，就不用管接口是否成功或者

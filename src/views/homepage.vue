@@ -132,7 +132,9 @@ onMounted(async () => {
       "start-time": "2022-12-12T12:12:12",
       "end-time": "2025-12-12T12:12:12",
     }
-    const res = await api.post.getPostsByTime(time);
+    let res = await api.post.getPosts(time);
+    res = res.data.records
+    console.log(res)
     processPostFromServer(res);
     Object.assign(comments, res);
   } catch (error) {
