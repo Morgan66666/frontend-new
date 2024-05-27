@@ -1,57 +1,66 @@
-export interface Product {
-    name: string;
-    category: string;
-    price: string;
-    options: string[];
-    description: string;
-}
-
 export interface Activity {
-    activityId: number;
-    title: string;
-    content?: string;
-    bookBeginTime?: string;  // 使用ISO格式的日期字符串
-    bookEndTime?: string;    // 使用ISO格式的日期字符串
     activityBeginTime: string;  // 使用ISO格式的日期字符串
     activityEndTime: string;    // 使用ISO格式的日期字符串
-    createTime?: string;
+    activityId: number;
+    bookBeginTime?: string;  // 使用ISO格式的日期字符串
+    bookEndTime?: string;    // 使用ISO格式的日期字符串
     capacity?: number;
-    participantsCount?: number;
-    price: number;
-    location: string;
-    type?: string;
-    organizerId?: number;
+    content?: string;
+    createTime?: string;
     description: string;
     img: string;
-}
-
-
-export interface SignatureInfo {
-    dir: string;
-    policy: string;
-    accessid: string;
-    signature: string;
-    host: string;
-    expire: number;
+    location: string;
+    organizerId?: number;
+    participantsCount?: number;
+    price: number;
+    title: string;
+    type?: string;
 }
 
 export interface ActivityDetail {
-    activityId: number;
-    title: string;
-    content: string;
-    bookBeginTime: string;  // 使用ISO格式的日期字符串
-    bookEndTime: string;    // 使用ISO格式的日期字符串
     activityBeginTime: string;  // 使用ISO格式的日期字符串
     activityEndTime: string;    // 使用ISO格式的日期字符串
-    createTime: string;
+    activityId: number;
+    bookBeginTime: string;  // 使用ISO格式的日期字符串
+    bookEndTime: string;    // 使用ISO格式的日期字符串
     capacity: number;
-    participantsCount: number;
-    price: number;
-    location: string;
-    type: string;
-    organizerId: number;
+    content: string;
+    createTime: string;
     description: string;
     img: string;
+    location: string;
+    organizerId: number;
+    participantsCount: number;
+    price: number;
+    title: string;
+    type: string;
+}
+
+export interface Post {
+    body: string;
+    date: string;
+    id: number;
+    isLiked: number;
+    thumbUp: number;
+    title: string;
+    userInfo: UserInfo;
+}
+
+export interface Product {
+    category: string;
+    description: string;
+    name: string;
+    options: string[];
+    price: string;
+}
+
+export interface SignatureInfo {
+    accessid: string;
+    dir: string;
+    expire: number;
+    host: string;
+    policy: string;
+    signature: string;
 }
 
 export interface UserInfo {
@@ -73,4 +82,11 @@ export interface Post {
     thumbUp: number;
     isLiked: number;
     userInfo: UserInfo;
+    avatar: string,
+    birth: string,
+    gender: string,
+    level: string,
+    signature: string,
+    userId: string,
+    username: string,
 }

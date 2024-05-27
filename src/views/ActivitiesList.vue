@@ -19,16 +19,23 @@
 <script setup lang="ts">
 
 import {Activity} from "../types";
-import {ref} from "vue";
+import {onMounted, ref, inject} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
 import router from "../router";
+
 
 function navigateToActivityDetail(activity: Activity) {
   console.log('跳转到活动详情页', activity);
   router.push(`/activity`);
 
 }
+const api:any = inject("$api");
+onMounted(async () => {
+  api.activity.getActivities().then((res:any) => {
+    activities.value = res
+  })
+})
 
 const activities = ref<Activity[]>([
   {
@@ -78,7 +85,7 @@ function Search() {
 
 .background-container{
   width: 100%;
-  height: 100%;
+  height: auto;
   background-color: #f4f5f7;
 }
 

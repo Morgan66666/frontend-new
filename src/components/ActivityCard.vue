@@ -17,7 +17,7 @@
 
       <div class="activity-date">
         <span class="icon data-icon"></span>
-        {{ activity.date }}
+        {{ activity.activityBeginTime }}
       </div>
       <div class="activity-location">
         <span class="icon location-icon"></span>

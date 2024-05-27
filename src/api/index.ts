@@ -6,7 +6,7 @@ import store from "../store/index.ts";
 //注意，后端apifox中定义的id有时候简写有时候全写，这里要要求全部使用全写，如id写出userId
 let apiConfig = {
   login: [
-    //登入登出相关
+  //登入登出相关
     { name: "doLogin", method: "post", url: "/api/auth/login", headers: null, noToken: true }, //登入
     { name: "doLogout", method: "post", url: "/api/auth/logout", headers: null },
     { name: "doRegister", method: "post", url: "/api/auth/register", headers: null, noToken: true}
