@@ -8,23 +8,25 @@ let apiConfig = {
   login: [
     //登入登出相关
     { name: "doLogin", method: "post", url: "/api/auth/login", headers: null, noToken: true }, //登入
-    { name: "doLogout", method: "post", url: "/api/auth/logout", headers: null }], //登出
+    { name: "doLogout", method: "post", url: "/api/auth/logout", headers: null },
+    { name: "doRegister", method: "post", url: "/api/auth/register", headers: null, noToken: true}
+  ], //登出
+    
   //用户模块相关
   user: [{ name: "getUserInfoByUserId", method: "get", url: "/api/users/{userId}" },//根据id获得用户信息
   { name: "getUserInfoByUserName", method: "get", url: "/api/users" },//根据名字获得用户信息
-  { name: "updateUser", method: "put", url: "/api/users/update" },//更新用户信息
-  { name: "updateUserPassword", method: "put", url: "/api/users/{userId}/password" }, //更新用户密码
+  { name: "updateUser", method: "patch", url: "/api/users/update" },//更新用户信息
+  { name: "updateUserPassword", method: "patch", url: "/api/users/{userId}/password" }, //更新用户密码
   { name: "getCommentsByUserId", method: "get", url: "/api/users/{userId}/comments" },//根据id获得用户评论
   ],
   //帖子相关
   post: [
-    { name: "createPost", method: "post", url: "/api/posts/create" },//创建帖子
+    { name: "createPost", method: "post", url: "/api/posts" },//创建帖子
     { name: "getPostByPostId", method: "get", url: "/api/posts/{postId}" },//根据帖子id获得帖子
     { name: "getPopularPost", method: "get", url: "/api/posts/popular" },//获取热门帖子
     { name: "updatePost", method: "put", url: "/api/posts/update" },//修改帖子
     { name: "deletePost", method: "delete", url: "/api/posts/{postId}" },//删除帖子
     { name: "getPosts", method: "get", url: "/api/posts" },//获得帖子,什么参数都不给，就是随便拿一些帖子
-    { name: "getPostsByTime", method: "get", url: "/api/posts"  },//根据帖子时间搜索
     { name: "getPostsByUserId", method: "get", url: "/api/posts" },//根据用户id获得帖子
     { name: "getPostsByTitle", method: "get", url: "/api/posts" },//根据标题获得帖子
     { name: "getPostsByType", method: "get", url: "/api/posts" },//根据类型获得帖子

@@ -1,15 +1,20 @@
 <template>
   <div>
     <div class="main_comment_card">
-      <div class="main_userinfo">
+      <div class="main_userInfo">
         <div
           class="userInfo_avatar"
           @click="enterUserPage(comment.userInfo.userId)"
         >
+                <img
+          :src="comment.userInfo.avatar"
+          alt="头像"
+          @click="enterUserPage(comment.userInfo.userId)">
         </div>
+
         <span class="userInfo_username">{{ comment.userInfo.username }}</span>
         <span class="userInfo_level">{{ comment.userInfo.level }}</span>
-        <span class="userInfo_userId">{{ comment.userInfo.userId }}</span>
+        <!-- <span class="userInfo_userId">{{ comment.userInfo.userId }}</span> -->
       </div>
       <div class="main_comments_card_content">
         <div class="content_html" v-html="comment.body"></div>
@@ -94,20 +99,21 @@ export default {
 </script>
 
 <style scoped>
-.main_userinfo {
+.main_userInfo {
   width: 100%;
-  height: 30px;
+  height: 35px;
   background-color: transparent;
   align-items: center;
-  border-bottom: 1px solid rgb(162, 160, 160);
+  /* border-bottom: 1px solid rgb(162, 160, 160); */
 }
 
 .userInfo_avatar img {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(252, 252, 252, 0.846);
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
   display: inline;
   float: left;
+  margin-left: 10px;
   border-radius: 50%;
 }
 
@@ -122,7 +128,8 @@ export default {
   color: rgb(151,151,151);
   align-items: center;
   font-size: 0.95em;
-  margin-left: 18px;
+  margin-left: 10px;
+  margin-top: 5px;
 }
 .userInfo_level {
   background-color:rgb(176, 231, 109);
@@ -130,6 +137,7 @@ export default {
   text-align: center;
   font: 0.8em sans-serif;
   margin-left: 10px;
+  border-radius: 5px;
 }
 
 .userInfo_userId {
@@ -148,7 +156,7 @@ export default {
 
 .main_comments_card_content {
   line-height: 18px;
-  margin-top: 8px;
+  margin-top: 18px;
   margin-left: 30px;
   background-color: transparent;
 }
@@ -181,6 +189,8 @@ export default {
   width: 40%;
   height: 25px;
   background-color: transparent;
+  color: rgb(151,151,151);
+  font: 0.8em sans-serif;
   float: left;
 }
 
@@ -283,7 +293,7 @@ export default {
 :deep(.content_html p) {
   width: 100%;
   margin-top: 8px;
-  color: black;
+  color: rgb(51,51,51);
   font-size: 1em;
   word-wrap: break-word;
   word-break: break-all;

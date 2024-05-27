@@ -1,20 +1,26 @@
 <template>
   <div class="main_container">
-    
     <div class="main_container_message">
       <div class="main_container_mainMessage">
         <div class="searchBar-container">
-          <input type="text" v-model="searchText" autocomplete="off" class="searchBar-input">
+          <input
+            type="text"
+            v-model="searchText"
+            autocomplete="off"
+            class="searchBar-input"
+          />
           <button class="searchBar-button" @click="Search">搜索</button>
         </div>
         <div class="classified_search">
           <div class="classified_search_item">
             <div class="classified_search_item_label">板块</div>
             <a
-                v-for="(item, index) in types"
-                :key="index"
-                @click="selectTypeOption(item)"
-                v-bind:class="selectType === item ? 'classified_search_item_a_active' : ''"
+              v-for="(item, index) in types"
+              :key="index"
+              @click="selectTypeOption(item)"
+              v-bind:class="
+                selectType === item ? 'classified_search_item_a_active' : ''
+              "
             >
               {{ item }}
             </a>
@@ -22,10 +28,12 @@
           <div class="classified_search_item">
             <div class="classified_search_item_label">时间</div>
             <a
-                v-for="(item, index) in dates"
-                :key="index"
-                @click="selectDateOption(item)"
-                :class="selectDate === item ? 'classified_search_item_a_active' : ''"
+              v-for="(item, index) in dates"
+              :key="index"
+              @click="selectDateOption(item)"
+              :class="
+                selectDate === item ? 'classified_search_item_a_active' : ''
+              "
             >
               {{ item }}
             </a>
@@ -33,37 +41,36 @@
           <div class="classified_search_item">
             <div class="classified_search_item_label">排序</div>
             <a
-                v-for="(item, index) in temps"
-                :key="index"
-                @click="selectTempOption(item)"
-                :class="selectTemp === item ? 'classified_search_item_a_active' : ''"
+              v-for="(item, index) in temps"
+              :key="index"
+              @click="selectTempOption(item)"
+              :class="
+                selectTemp === item ? 'classified_search_item_a_active' : ''
+              "
             >
               {{ item }}
             </a>
           </div>
         </div>
         <div class="post-container">
-                  <post-comment
+          <post-comment
             v-for="item in comments"
             :comment="item"
             v-bind:key="item.id"
             @update:thumpUp="handleThumbUpChange"
             @update:thumpDown="handleThumbDownChange"
-        ></post-comment>
+          ></post-comment>
         </div>
-
       </div>
       <div class="main_container_rightMessage">
         <div class="main_container_mainMessage_rightMessage_card">
           <div>
-
             <router-link
-                to="/post-edit"
-                class="btn-24"
-                :class="{ active: $route.path.startsWith('/post-edit') }"
-            >发帖</router-link
+              to="/post-edit"
+              class="btn-24"
+              :class="{ active: $route.path.startsWith('/post-edit') }"
+              >发帖</router-link
             >
-
           </div>
           <div>
             <button class="btn-24">聊天</button>
@@ -79,72 +86,92 @@
 </template>
 
 <script>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, inject, computed } from "vue";
 import postComment from "../components/homePageComponents/postComment.vue";
 import SearchBar from "../components/SearchBar.vue";
 
 export default {
-  components: { postComment, SearchBar},
+  components: { postComment, SearchBar },
   name: "HomePage",
   setup() {
+    const api = inject("$api");
     const comments = ref([
-        {
-          id: "1",
-          title: "寻找失落的提瓦特大陆",
-          body:
-              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-          },
+      {
+        id: "1",
+        title: "寻找失落的提瓦特大陆",
+        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+        date: "2022-12-12 12:12:12",
+        thumbUp: 121,
+        isLiked: 0,
+        userInfo: {
+          username: "张三",
+          level: "4级",
+          userId: "12110112",
+          userMassage: "这是用户的信息",
         },
-        {
-          id: "2",
-          title: "寻找失落的提瓦特大陆",
-          body:
-              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-          },
+      },
+      {
+        id: "2",
+        title: "寻找失落的提瓦特大陆",
+        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+        date: "2022-12-12 12:12:12",
+        thumbUp: 121,
+        isLiked: 0,
+        userInfo: {
+          username: "张三",
+          level: "4级",
+          userId: "12110112",
+          userMassage: "这是用户的信息",
         },
-        {
-          id: "3",
-          title: "寻找失落的提瓦特大陆",
-          body:
-              '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-          },
+      },
+      {
+        id: "3",
+        title: "寻找失落的提瓦特大陆",
+        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
+        date: "2022-12-12 12:12:12",
+        thumbUp: 121,
+        isLiked: 0,
+        userInfo: {
+          username: "张三",
+          level: "4级",
+          userId: "12110112",
+          userMassage: "这是用户的信息",
         },
-      ]);
-    
-    const searchText = ref("");  
+      },
+    ]);
+    const searchText = ref("");
     const types = ref(["游戏", "运动", "不限"]);
     const dates = ref(["今日", "一周内", "一月内", "不限"]);
-    const temps = ref(["最新", "最热",'不限']);
+    const temps = ref(["最新", "最热", "不限"]);
     const selectDate = ref("不限");
     const selectType = ref("不限");
     const selectTemp = ref("不限");
 
     onMounted(() => {
       console.log("comments", comments.value);
+    });
+
+    const filteredComments = computed(() => {
+      return comments.value.filter(
+        (comment) => {
+          // 这个过滤器还有问题，需要修改
+          if (selectDate.value !== "不限" && comment.date !== selectDate.value) {
+            return false;
+          }
+          return !(selectType.value !== "不限" && comment.userInfo.username !== selectType.value);
+        }
+      );
+    });
+
+    const sortedComments = computed(() => {
+      if (selectTemp.value === "最热") {
+        return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
+      }
+      if (selectTemp.value === "最新") {
+        return filteredComments.value.sort((a, b) => a.date - b.date);
+      }
+      return filteredComments.value;
+
     });
 
     const selectDateOption = (option) => {
@@ -167,7 +194,8 @@ export default {
           post.isLiked = 1;
           post.thumbUp = thumbUp;
         } else {
-          let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+          let thumbUp =
+            post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
           post.isLiked = post.isLiked === 1 ? 0 : 1;
           post.thumbUp = thumbUp;
         }
@@ -197,12 +225,27 @@ export default {
       if (searchText.value === "") {
         return;
       }
+      let searchForm = {
+        searchText: searchText.value,
+        selectDate: selectDate.value,
+        selectType: selectType.value,
+        selectTemp: selectTemp.value,
+      };
+
+      api.Post.getPosts(searchForm).then((res) => {
+        console.log(res);
+        comments.value = res;
+      });
 
       console.log(searchText.value);
     };
-    watch(comments, (newComments) => {
-      console.log("Comments have changed:", newComments);
-    }, { deep: true });
+    watch(
+      comments,
+      (newComments) => {
+        console.log("Comments have changed:", newComments);
+      },
+      { deep: true }
+    );
 
     return {
       comments,
@@ -219,9 +262,9 @@ export default {
       handleThumbDownChange,
       getPostById,
       Search,
-      searchText
+      searchText,
     };
-  }
+  },
 };
 </script>
 
@@ -266,7 +309,6 @@ export default {
 }
 
 .classified_search_item_a_active {
-
   border-radius: 5px;
   color: rgb(0, 0, 0);
   background-color: rgb(210, 209, 216);
@@ -295,10 +337,9 @@ export default {
   width: 100%;
   height: auto;
   justify-content: center;
-  background-color: rgb(247,248,252);
+  background-color: rgb(247, 248, 252);
   box-sizing: content-box;
 }
-
 
 .main_container_message {
   width: 1000px;
@@ -306,7 +347,7 @@ export default {
   margin: 0 auto;
   padding-left: 100px;
   padding-right: 100px;
-  background-color: rgb(247,248,252);
+  background-color: rgb(247, 248, 252);
   box-sizing: content-box;
 }
 
@@ -325,7 +366,6 @@ export default {
   margin: 20px 0 0 0;
 }
 
- 
 .main_container_rightMessage {
   width: 280px;
   height: 100%;
@@ -348,7 +388,6 @@ export default {
   align-content: center;
 }
 
-
 .right_op_button {
   width: 100px;
   height: 30px;
@@ -370,7 +409,6 @@ export default {
   text-decoration: none;
 }
 
-
 .searchBar-container {
   width: 100%;
   height: 50px;
@@ -383,29 +421,29 @@ export default {
 }
 
 .searchBar-input {
-    display: inline-block;
-    height: 100%;
-    border: none;
-    padding: 0 30px;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    outline: none;
+  display: inline-block;
+  height: 100%;
+  border: none;
+  padding: 0 30px;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  outline: none;
 }
 
 .searchBar-button {
-    display: inline-block;
-    height: 100%;
-    width: 120px;
-    background-color: rgb(254,231,50);
-    color: rgb(106,61,0);
-    border: none;
-    cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  width: 120px;
+  background-color: rgb(254, 231, 50);
+  color: rgb(106, 61, 0);
+  border: none;
+  cursor: pointer;
 }
 
 .searchBar-button:hover {
   background-color: rgb(249, 228, 64);
-  color: rgb(106,61,0);
+  color: rgb(106, 61, 0);
 }
 
 /* 按钮样式 */
@@ -426,8 +464,8 @@ export default {
   color: #fff;
   cursor: pointer;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-  Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-  Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 100%;
   font-weight: 900;
   line-height: 1.5;
@@ -450,7 +488,7 @@ export default {
   display: none;
 }
 .btn-24 {
-  --background: rgb(255,231,51);
+  --background: rgb(255, 231, 51);
   background: none;
   overflow: hidden;
   padding: 0.8rem 3rem;
@@ -458,7 +496,7 @@ export default {
   text-decoration: none;
   width: 150px;
   margin-top: 20px;
-  color: rgb(102,60,0);
+  color: rgb(102, 60, 0);
 }
 .btn-24 span {
   display: block;
@@ -496,18 +534,18 @@ export default {
 .btn-24:hover:after,
 .btn-24:hover:before {
   -webkit-clip-path: polygon(
-      0 0,
-      calc(100% - var(--tilt)) 0,
-      100% 50%,
-      calc(100% - var(--tilt)) 100%,
-      0 100%
+    0 0,
+    calc(100% - var(--tilt)) 0,
+    100% 50%,
+    calc(100% - var(--tilt)) 100%,
+    0 100%
   );
   clip-path: polygon(
-      0 0,
-      calc(100% - var(--tilt)) 0,
-      100% 50%,
-      calc(100% - var(--tilt)) 100%,
-      0 100%
+    0 0,
+    calc(100% - var(--tilt)) 0,
+    100% 50%,
+    calc(100% - var(--tilt)) 100%,
+    0 100%
   );
 }
 </style>

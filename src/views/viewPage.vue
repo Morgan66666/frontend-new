@@ -23,7 +23,7 @@
                 </div>
              
               <div class="main_main_card_comment_operator_container">
-                <div class="main_main_card_comment_operator_container_operator">
+                <!-- <div class="main_main_card_comment_operator_container_operator">
                   <img
                     class="main_icon_svg"
                     src="../assets/icon/time.svg"
@@ -44,7 +44,7 @@
                     src="../assets/icon/thunder.svg"
                     alt=""
                   />
-                </div>
+                </div> -->
                 <button @click="comment">评论</button>
               </div>
             </div>
@@ -70,6 +70,7 @@
           </div>
           <div class="main_container_mainMessage_rightMessage_card">
             广告招租
+            
           </div>
 
         </div>
@@ -181,7 +182,8 @@ interface Comment{
  
      function comment() {
        if(!store.getters.getIsLogin){
-         router.push('/login');
+        //  router.push('/login');
+        alert("请先登录");
          return;
        } 
        let userInfo = store.getters.getUserInfo;
@@ -394,7 +396,7 @@ interface Comment{
   color: white;
   border: none;
   border-radius: 5px;
-  margin: 5px 10px 0 5px;
+  margin: 5px 20px 0 5px;
   float: right;
 }
 
