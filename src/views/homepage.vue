@@ -19,7 +19,6 @@
               <router-link to="/post-edit" style="text-decoration: none;" class="btn-24"
                 :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
 
-
             </div>
             <div>
               <button class="btn-24">聊天</button>
