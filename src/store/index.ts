@@ -1,5 +1,4 @@
 import Vuex from 'vuex'
-import moment from 'moment'
 import createPersistedState from 'vuex-persistedstate'
 import { UserInfo } from '../types'
 

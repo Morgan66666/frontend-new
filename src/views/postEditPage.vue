@@ -47,7 +47,7 @@
               </select>
             </div>
           </div>
-          
+
           <div class="edit-box-button">
           <button @click="publicPost">发表</button>
           </div>
@@ -199,7 +199,7 @@ const handleContentChange = () => {
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 10px;
-  font-size: 20px;   
+  font-size: 20px;
    border-radius: 5px;
   border: 1px solid rgb(163, 159, 159);
   background-color: #fff;
@@ -270,7 +270,7 @@ const handleContentChange = () => {
 .edit-box-textarea{
   background-color: #fff;
 }
-  
+
 </style>
 
 

@@ -24,7 +24,6 @@ export interface ActivityDetail {
     bookBeginTime: string;  // 使用ISO格式的日期字符串
     bookEndTime: string;    // 使用ISO格式的日期字符串
     capacity: number;
-    content: string;
     createTime: string;
     description: string;
     img: string;
@@ -34,6 +33,8 @@ export interface ActivityDetail {
     price: number;
     title: string;
     type: string;
+    status: string;
+    content: string;
 }
 
 export interface Post {
