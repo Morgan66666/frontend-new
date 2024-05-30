@@ -116,11 +116,13 @@ export default {
         return "";
       }
       let reg = /<p>(.*?)<\/p>/;
+      let regTag = /<(.*?)>/
       content = content.replace(imgReg, "");
       let shortContent = content.match(reg);
-
+      
       if(shortContent != null){
         shortContent = shortContent[1].slice(0, 30);
+        shortContent = shortContent.replace(regTag, "");
       }
 
       return shortContent;
@@ -182,7 +184,7 @@ export default {
 
 .main_card_title {
   line-height: 20px;
-  margin-top: 8px;
+  margin-top: 18px;
   align-items: center;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -197,7 +199,7 @@ export default {
 
 .main_card_content {
   line-height: 18px;
-  margin-top: 8px;
+  margin-top: 10px;
   align-items: center;
   text-overflow: ellipsis;
   overflow: hidden;

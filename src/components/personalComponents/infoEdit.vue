@@ -3,11 +3,39 @@
     <div class="main_container_user_title">
       <a>编辑资料</a>
     </div>
+    <div>
+      <v-dialog v-model="dialog" width="500">
+        <v-card>
+          <v-card-title class="headline">上传图片</v-card-title>
+          <v-card-text>
+            <div
+              id="dropzone"
+              @dragover.prevent
+              @dragenter.prevent
+              @drop="onDrop"
+            >
+              拖拽图片到这里上传
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialog = false"
+              >关闭</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
 
     <hr />
     <div class="edit_avatar_container">
       <div>
-        <input type="file" @change="avatarUpload" ref="avatarInput" style="display: none;">
+        <input
+          type="file"
+          @change="avatarUpload"
+          ref="avatarInput"
+          style="display: none"
+        />
         <img @click="triggerFileInput" src="../../assets/霍霍.png" alt="" />
       </div>
     </div>
@@ -70,97 +98,137 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, inject } from 'vue';
-import axios from 'axios';
-import store from '../../store';
-import { v4 as uuidv4 } from 'uuid';
-import { UserInfo } from '../../types';
+import { ref, onMounted, inject } from "vue";
+import axios from "axios";
+import store from "../../store";
+import { v4 as uuidv4 } from "uuid";
+import { UserInfo } from "../../types";
+import { getUserInfo } from "../../utils/userUtil.vue";
 
 export default {
-  name: 'InfoEdit',
+  name: "InfoEdit",
+  userInfo: {
+    type: Object,
+    required: true,
+  },
+
   setup() {
-    const username = ref('霍霍果');
-    const signature = ref('如果真爱有颜色，那一定是绿色');
-    const gender = ref('男');
-    const selectGender = ref('男');
-    const imageUrl = ref('');
-    const api = inject('$api') as any;
+    const username = ref("霍霍果");
+    const signature = ref("如果真爱有颜色，那一定是绿色");
+    const gender = ref("男");
+    const selectGender = ref("男");
+    const imageUrl = ref("");
+    const api = inject("$api") as any;
+    const dialog = ref(false);
 
     const saveInfo = () => {
       console.log(username.value);
-      username.value = document.getElementById('username')?.innerHTML || '';
-      signature.value = document.getElementById('signature')?.innerHTML || '';
+      username.value = document.getElementById("username")?.innerHTML || "";
+      signature.value = document.getElementById("signature")?.innerHTML || "";
       gender.value = selectGender.value;
       alert(`${username.value} ${signature.value}`);
+      let userId = store.getters.getUserInfo.userId;
+      let newUserInfo = {
+        userId : userId,
+        userName: username.value,
+        intro: signature.value,
+        gender: gender.value,
+        avatar: imageUrl.value,
+      }
+
+      console.log("newUserInfo", newUserInfo);
+
+      api.user.updateUser(newUserInfo).then((response: any) => {
+        console.log("更新用户信息成功", response);
+        alert("更新用户信息成功");
+        // 重新登录
+        getUserInfo(userId).then(res  => {
+          console.log("重新登录成功", res);
+          store.dispatch("LoginIn", res);
+          
+        })
+      }).catch((error: any) => {
+        console.error("更新用户信息失败", error);
+        alert("更新用户信息失败");
+      });
     };
 
     const handleUpload = (file: any) => {
       getOssSignature()
         .then((signatureInfo: any) => {
-          console.log('获取签名信息成功', signatureInfo);
+          console.log("获取签名信息成功", signatureInfo);
           let formData = new FormData();
-          const extension = file.name.split('.').pop();
-          const uniqueFilename = uuidv4() + '.' + extension;
-          console.log('uniqueFilename', uniqueFilename);
-          if (extension !== 'jpg' && extension !== 'png') {
-            alert('只能上传jpg/png文件');
+          const extension = file.name.split(".").pop();
+          const uniqueFilename = uuidv4() + "." + extension;
+          console.log("uniqueFilename", uniqueFilename);
+          if (extension !== "jpg" && extension !== "png") {
+            alert("只能上传jpg/png文件");
             return;
           }
-          formData.append('key', signatureInfo.dir + uniqueFilename);
-          formData.append('policy', signatureInfo.policy);
-          formData.append('OSSAccessKeyId', signatureInfo.accessid);
-          formData.append('signature', signatureInfo.signature);
-          formData.append('file', file);
+          formData.append("key", signatureInfo.dir + uniqueFilename);
+          formData.append("policy", signatureInfo.policy);
+          formData.append("OSSAccessKeyId", signatureInfo.accessid);
+          formData.append("signature", signatureInfo.signature);
+          formData.append("file", file);
 
           axios
             .post(signatureInfo.host, formData, {
-              headers: { 'Content-Type': 'multipart/form-data' },
+              headers: { "Content-Type": "multipart/form-data" },
             })
             .then((response) => {
-              console.log('上传成功', response);
-              imageUrl.value = signatureInfo.host + '/' + uniqueFilename;
-              alert('上传成功');
+              console.log("上传成功", response);
+              imageUrl.value = signatureInfo.host + "/" + uniqueFilename;
+              alert("上传成功");
             })
             .catch((error) => {
-              console.error('上传失败', error);
-              alert('上传失败');
+              console.error("上传失败", error);
+              alert("上传失败");
             });
         })
         .catch((error: any) => {
-          console.error('获取签名信息失败', error);
-          alert('获取签名信息失败');
+          console.error("获取签名信息失败", error);
+          alert("获取签名信息失败");
         });
     };
 
     const getOssSignature = () => {
-      return new Promise((resolve, reject) => {
-        axios
-          .get('/oss')
-          .then((response: any) => {
-            if (response.data) {
-              resolve(response.data);
-            } else {
-              reject('No signature data received');
-            }
-          })
-          .catch((error: any) => {
-            reject(error);
-          });
-      });
+      try {
+        const response = api.oss.getSignature();
+        if (response) {
+          console.log("获取签名信息成功", response);
+          return response;
+        } else {
+          throw new Error("获取签名信息失败");
+        }
+      } catch (error) {
+        throw error;
+      }
     };
 
     const avatarUpload = (e: any) => {
       const file = e.target.files[0];
       handleUpload(file);
-      console.log('file', file);
+      console.log("file", file);
+    };
+
+    const onDrop = (e: any) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (!files.length) return;
+      handleUpload(files[0]);
+      console.log(files);
+    };
+
+    const triggerFileInput = () => {
+      dialog.value = true;
     };
 
     onMounted(() => {
-      let userInfo:UserInfo = store.getters.getUserInfo;
-      username.value = userInfo.username;
+      let userInfo: UserInfo = store.getters.getUserInfo;
+      username.value = userInfo.userName;
       signature.value = userInfo.signature
         ? userInfo.signature
-        : '这个人很懒，什么都没留下';
+        : "这个人很懒，什么都没留下";
       gender.value = userInfo.gender;
     });
 
@@ -174,6 +242,9 @@ export default {
       getOssSignature,
       avatarUpload,
       imageUrl,
+      dialog,
+      onDrop,
+      triggerFileInput,
     };
   },
 };
@@ -255,7 +326,7 @@ div.center {
   margin-left: 20px;
   margin-right: 20px;
   background-color: transparent;
-  color: rgb(153,153,166);
+  color: rgb(153, 153, 166);
 }
 
 .edit_form_item_input {
@@ -286,7 +357,7 @@ div.center {
 .radioDiv_input {
   height: 30px;
   background-color: transparent;
-  color: rgb(153,153,166);
+  color: rgb(153, 153, 166);
   margin-left: 20px;
   align-content: center;
   justify-content: center;

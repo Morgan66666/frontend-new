@@ -68,7 +68,7 @@ import store from "../store";
 
 
 let quillContent = ref();
-let title = ref("标题");
+let title = ref("");
 let content = ref("你好");
 let selectedPlate = ref("体育比赛");
 let api:any = inject('$api');
@@ -87,14 +87,13 @@ const publicPost = () => {
     thumbUp: 0,
     isLiked: 0,
     userId: userInfo.userId,
-    userName: userInfo.username,
+    userName: userInfo.userName,
     status: 0,
   };
 
   api.post.createPost(post).then((res:any) => {
     console.log(res);
     alert("创建成功");
-
   });
 
 };

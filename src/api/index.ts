@@ -17,8 +17,8 @@ let apiConfig = {
   user:
    [{ name: "getUserInfoByUserId", method: "get", url: "/api/users/{userId}" },//根据id获得用户信息
   { name: "getUserInfoByUserName", method: "get", url: "/api/users" },//根据名字获得用户信息
-  { name: "updateUser", method: "patch", url: "/api/users/update" },//更新用户信息
-  { name: "updateUserPassword", method: "patch", url: "/api/users/{userId}/password" }, //更新用户密码
+  { name: "updateUser", method: "put", url: "/api/users" },//更新用户信息
+  { name: "updateUserPassword", method: "put", url: "/api/users/{userId}/password" }, //更新用户密码
   { name: "getCommentsByUserId", method: "get", url: "/api/users/{userId}/comments" },//根据id获得用户评论
 
   ],

@@ -5,10 +5,10 @@
                     </div>
 
                     <div class="main_container_user_info">
-                        <div class="main_container_user_info_name">{{ userInfo.username }}</div>
+                        <div class="main_container_user_info_name">{{ userInfo.userName }}</div>
                         <div class="main_container_user_info_id">ID: {{ userInfo.userId }}</div>
                         <p class="main_container_user_info_signature">
-                            {{ userInfo.signature }}
+                            {{ userInfo.intro }}
                         </p>
                     </div>
                     
@@ -29,11 +29,11 @@ export default {
       }
 
   },
-  setup(props:any) {
-    let userInfo = ref(props.userInfo);
-    console.log(userInfo.value);
-    return {userInfo};
-  },
+//   setup(props:any) {
+    
+//     console.log("信息展示卡",userInfo.value);
+//     return {userInfo};
+//   },
 
 };
 </script>

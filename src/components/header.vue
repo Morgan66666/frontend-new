@@ -38,9 +38,9 @@
         /> -->
         <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
         <div class="userInfo_avatar">
-          <img src="../assets/霍霍.png" @click="avatar" alt="" />
+          <img :src=userInfo.avatar @click="avatar" alt="" />
         </div>
-        <div class="userInfo-username">{{ userInfo.username }}</div>
+        <div class="userInfo-username">{{ userInfo.userName }}</div>
         <div class="options" v-if="showOptions">
           <a @click="toPersonal">个人主页</a>
           <a @click="showChat">消息</a>
@@ -108,7 +108,7 @@ export default {
 
     const defaultUserInfo:UserInfo = {
       userId: "123456",
-      username: "未登录",
+      userName: "未登录",
       signature: "这个人很懒，什么都没写",
       avatar: "",
       gender: "保密",
