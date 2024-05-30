@@ -14,7 +14,6 @@
         v-model="username"
       />
     </div>
-    <!--      <input type="password" placeholder="密码">-->
     <div class="input-container">
       <label :class="{ 'label-active': active_password }">密码</label>
       <!--        <input type="text" @focus="activateLabel" @blur="deactivateLabel">-->
@@ -25,15 +24,9 @@
         v-model="password"
       />
     </div>
-    <!--      <p class="hint">Forgot email?</p>-->
-    <!--      <div class="guest-mode">-->
-    <!--        <p>Not your computer? Use Guest mode to sign in privately.</p>-->
-    <!--        <a href="#">Learn more</a>-->
-    <!--      </div>-->
 
-    <!--      <a href="/home">-->
     <button v-on:click="login">登录</button>
-    <!--      </a>-->
+
 
     <hr class="separate-line" />
 
@@ -96,12 +89,17 @@ export default defineComponent({
       console.log("开始登录");
       console.log(loginForm);
       try {
+        await api.login.getUserExistByAccount({ account: loginForm.account }).then((res: any) => {
+          console.log(res);
+        });
+
+
         await api.login.doLogin(loginForm).then((res: any) => {
           console.log(res);
           token = res.token;
           user = {
             userId: res.userResponse.userId,
-            username: res.userResponse.userName,
+            userName: res.userResponse.userName,
             avatar: res.userResponse.avatar,
             signature: res.userResponse.intro,
             birth: res.userResponse.birth,
@@ -120,7 +118,7 @@ export default defineComponent({
         } else {
           user = {
             avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
-            username: "admin",
+            userName: "admin",
             userId: "12110112",
             signature: "这是用户的信息",
             level: "4级",

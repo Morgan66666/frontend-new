@@ -9,7 +9,7 @@
             <v-carousel-item v-for="image in images" :key="image" :src="image"></v-carousel-item>
           </v-carousel>
 
-          <post-comment-component v-for="item in comments" :comment="item" v-bind:key="item.id"
+          <post-comment-component v-for="item in comments" :comment="item" v-bind:key="item.postId"
             @update:thumpUp="handleThumbUpChange" @update:thumpDown="handleThumbDownChange"></post-comment-component>
         </div>
         <div class="main_container_rightMessage">
@@ -49,13 +49,12 @@
 import { ref, watch, reactive } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import { Post } from '../types';
-import { UserInfo } from '../types';
 import { inject,onMounted } from 'vue';
 
 const api:any = inject('$api');
 let comments = reactive<Post[]>([
   {
-    id: 1,
+    postId: 1,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
@@ -63,7 +62,7 @@ let comments = reactive<Post[]>([
     isLiked: 0,
     userInfo: {
       avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
+      userName: "张三",
       level: "4级",
       gender: "男",
       userId: "12110112",
@@ -72,7 +71,7 @@ let comments = reactive<Post[]>([
     },
   },
   {
-    id: 2,
+    postId: 2,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
@@ -80,7 +79,7 @@ let comments = reactive<Post[]>([
     isLiked: 0,
     userInfo: {
       avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
+      userName: "张三",
       level: "4级",
       userId: "121101142",
       signature: "这是用户的信息",
@@ -89,7 +88,7 @@ let comments = reactive<Post[]>([
     },
   },
   {
-    id: 3,
+    postId: 3,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
     date: "2022-12-12 12:12:12",
@@ -97,7 +96,7 @@ let comments = reactive<Post[]>([
     isLiked: 0,
     userInfo: {
       avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
+      userName: "张三",
       level: "4级",
       userId: "121101152",
       gender: "男",
@@ -108,22 +107,24 @@ let comments = reactive<Post[]>([
 
 ]);
 //要么后端发帖子信息的时候打包一起发过来，要么我跟服务器爆了
-const processPostFromServer = (comments:any) => {
-  comments.forEach((comment:any) => {
-    let userId = comment.userId;
-    api.user.getUserInfoByUserId({userId: userId}).then((res:any) => {
-      comment.userInfo = {
-        avatar: res.avatar,
-        username: res.userName,
-        level: "4",
-        gender: res.gender,
-        userId: res.userId,
-        signature: res.signature,
-        birth: res.birth,
-      } as UserInfo;
-    });
-  });
-}
+// const processPostFromServer = (comments:any) => {
+//   comments.forEach((comment:any) => {
+//     let userId = comment.userId;
+//     comment.date = comment.createTime;
+//     comment.id = comment.postId;
+//     api.user.getUserInfoByUserId({userId: userId}).then((res:any) => {
+//       comment.userInfo = {
+//         avatar: res.avatar,
+//         username: res.userName,
+//         level: "4",
+//         gender: "未知",
+//         userId: res.userId,
+//         signature: "",
+//         birth: "",
+//       } as UserInfo;
+//     });
+//   });
+// }
 
 onMounted(async () => {
   try {
@@ -133,10 +134,8 @@ onMounted(async () => {
       "end-time": "2025-12-12T12:12:12",
     }
     let res = await api.post.getPosts(time);
-    res = res.data.records
-    console.log(res)
-    processPostFromServer(res);
-    Object.assign(comments, res);
+    res = res.records
+    comments.push(...res);
   } catch (error) {
     console.log('error', error);
   }
@@ -185,7 +184,7 @@ const handleThumbDownChange = ({ id }:any) => {
 };
 
 const getPostById = (id:any) => {
-  return comments.find(item => item.id === id);
+  return comments.find(item => item.postId === id);
 };
 
 watch(comments, (newComments) => {

@@ -44,6 +44,7 @@
         <div class="options" v-if="showOptions">
           <a @click="toPersonal">个人主页</a>
           <a @click="showChat">消息</a>
+          <a @click="logOut">登出</a>
         </div>
 
         <!--        </router-link>-->
@@ -103,6 +104,8 @@ export default {
         showOptions.value = false;
       }
     };
+
+
     const defaultUserInfo:UserInfo = {
       userId: "123456",
       username: "未登录",
@@ -113,6 +116,14 @@ export default {
       birth: "2000-01-01",
     }
 
+    
+    const logOut = () => {
+      store.dispatch("LoginOut");
+      userInfo.value = defaultUserInfo;
+      hide();
+      showOptions.value = false;
+      alert("登出成功");
+    }
     const userInfo = ref(defaultUserInfo);
     if (store.getters.getIsLogin) {
       userInfo.value = store.getters.getUserInfo;
@@ -145,6 +156,7 @@ export default {
       toPersonal,
       hide,
       userInfo,
+      logOut
     };
   },
 };

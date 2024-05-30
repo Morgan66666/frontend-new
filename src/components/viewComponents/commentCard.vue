@@ -12,8 +12,8 @@
           @click="enterUserPage(comment.userInfo.userId)">
         </div>
 
-        <span class="userInfo_username">{{ comment.userInfo.username }}</span>
-        <span class="userInfo_level">{{ comment.userInfo.level }}</span>
+        <span class="userInfo_username">{{ comment.userInfo.userName }}</span>
+        <span class="userInfo_level">5级</span>
         <!-- <span class="userInfo_userId">{{ comment.userInfo.userId }}</span> -->
       </div>
       <div class="main_comments_card_content">
@@ -23,7 +23,7 @@
       </div>
       <div class="main_comments_card_operator_container">
         <div class="main_comments_card_operator_container_left">
-          {{ comment.date }}
+          {{ comment.createTime }}
         </div>
         <div class="main_comments_card_operator_container_right">
           <img alt="点赞"
@@ -56,7 +56,7 @@ import { UserInfo } from "../../types";
 interface Comment {
   id: number;
   body: string;
-  date: string;
+  createTime: string;
   thumbUp: number;
   isLiked: number;
   userInfo: UserInfo;
@@ -73,12 +73,15 @@ export default {
   },
 
   setup(props:any, cxy:any) {
+    // const comment = JSON.parse(JSON.stringify(props.comment));
+    // props.comment = comment;
     const thumbUp = () => {
       //根据id获得 评论, 调用父组件的方法
       cxy.emit("update:thumpUp", {
         id: props.comment.id,
       });
     };
+    console.log(props.comment)
 
     const thumbDown = () => {
       //根据id获得 评论
@@ -92,7 +95,7 @@ export default {
       console.log(id);
     };
 
-    return { thumbUp, thumbDown, enterUserPage };
+    return { thumbUp, thumbDown, enterUserPage};
   },
 
 };
@@ -137,6 +140,8 @@ export default {
   text-align: center;
   font: 0.8em sans-serif;
   margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-radius: 5px;
 }
 

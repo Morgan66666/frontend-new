@@ -39,7 +39,7 @@ export interface ActivityDetail {
 export interface Post {
     body: string;
     date: string;
-    id: number;
+    postId: number;
     isLiked: number;
     thumbUp: number;
     title: string;
@@ -65,7 +65,7 @@ export interface SignatureInfo {
 
 export interface UserInfo {
         avatar: string,
-        username: string,
+        userName: string,
         gender: string,
         level: string,
         userId: string,

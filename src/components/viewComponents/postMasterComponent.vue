@@ -2,7 +2,7 @@
     <div class="main_container_mainMessage_rightMessage_card">
         <div class="post_master">
             <img class="post_master_avatar" :src="userInfo.avatar" alt="" />
-            <div class="post_master_username" @click="jumpToPersonalPage">{{ userInfo.username }}</div>
+            <div class="post_master_username" @click="jumpToPersonalPage">{{ userInfo.userName }}</div>
             <div class="post_master_level" @click="jumpToPersonalPage">{{ userInfo.level }}</div>
         </div>
     </div>

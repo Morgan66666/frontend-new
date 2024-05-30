@@ -2,14 +2,14 @@
   <div class="comment_card">
     <div class="main_userinfo">
       <div class="userInfo_avatar" @click="enterUserPage()">
-        <img :src= "comment.userInfo.avatar" alt="" />
+        <img :src= "userInfo.avatar" alt="" />
       </div>
       <span class="userInfo_username" @click="enterUserPage()">{{
-        comment.userInfo.username
+        userInfo.userName
       }}</span>
-      <span class="userInfo_level">{{ comment.userInfo.level }}</span>
+      <span class="userInfo_level">4级</span>
     </div>
-    <router-link class="router-link" :to="'/post/' + comment.id">
+    <router-link class="router-link" :to="'/post/' + comment.postId">
       <div class="main_card_title">
         <strong>{{ comment.title }}</strong>
       </div>
@@ -43,8 +43,8 @@
 </template>
 
 <script lang="ts">
-import {PropType, ref} from "vue";
-import { computed } from "vue";
+import {onMounted, PropType, ref} from "vue";
+import { computed} from "vue";
 import { getUserInfo } from "../../utils/userUtil.vue";
 import router from "../../router"
 
@@ -57,11 +57,13 @@ export default {
       required: true,
     },
   },
+
+  
   setup(props:any, cxy:any) {
     const thumbUp = () => {
       //根据id获得 评论
       cxy.emit("update:thumpUp", {
-        id: props.comment.id,
+        id: props.comment.postId,
       });
     };
 
@@ -69,20 +71,23 @@ export default {
       //根据id获得 评论
       console.log("thumbDown");
       cxy.emit("update:thumpDown", {
-        id: props.comment.id,
+        id: props.comment.postId,
       });
     };
 
 
     const enterUserPage = ref(
       function () {
-        router.push(`/personal/${props.comment.userInfo.userId}`);
+        router.push(`/personal/${props.comment.userId}`);
         alert("进入用户页面");
       }
     )
     //根据评论内容获得图片，最多三张
     const imgs = computed(() => {
       let content = props.comment.body;
+      if(content == null){
+        return [];
+      }
       let reg = /<img.*?src="(.*?)".*?>/g;
       let imgs = content.match(reg);
       //把img标签去掉，只留下src
@@ -102,26 +107,48 @@ export default {
 
       return imgs;
     });
-    //先用正则表达式匹配到第一个<p>的内容，然后截取前100个字符
+    // 先用正则表达式去掉所有img
+    // 先用正则表达式匹配到第一个<p>的内容，然后截取前100个字符
     const shortContent = computed(() => {
-      
+      let imgReg = /<img(.*?)>/
       let content = props.comment.body;
+      if(content == null){
+        return "";
+      }
       let reg = /<p>(.*?)<\/p>/;
+      content = content.replace(imgReg, "");
       let shortContent = content.match(reg);
 
       if(shortContent != null){
-        shortContent = shortContent[1].slice(0, 20);
+        shortContent = shortContent[1].slice(0, 30);
       }
 
       return shortContent;
     });
-
+    
+    let id = props.comment.userId;
+    let userInfo = ref({
+    "userId": 1,
+    "userName": "",
+    "gender": "男",
+    "birth": null,
+    "account": "",
+    "intro": "",
+    "avatar": ""
+})
     //根据评论id获得用户信息，显示用户头像等
-    const userInfo = computed(() => {
-      let id = props.comment.userInfo.userId;
-      let userInfo = getUserInfo(id);
-      return userInfo;
-    });
+
+    onMounted(() => {
+        getUserInfo(id).then(res => {
+        console.log("res", res)
+        userInfo.value = res;
+        console.log(userInfo.value)
+    })
+    })
+
+
+
+      
     return { thumbUp, thumbDown, imgs, enterUserPage, userInfo , shortContent};
   },
 };
