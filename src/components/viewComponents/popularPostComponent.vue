@@ -22,7 +22,7 @@ import { useRouter } from "vue-router";
 import { Post } from "../../types";
 
 let postList = ref<Post[]>([]);
-  const router = inject("router") as ReturnType<typeof useRouter>;
+  const router = inject("$router") as ReturnType<typeof useRouter>;
 const api: any = inject("$api");
 
 onMounted(() => {

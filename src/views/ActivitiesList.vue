@@ -22,9 +22,8 @@ import {Activity} from "../types";
 import {onMounted, ref, inject} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
-import router from "../router";
 
-
+const router:any = inject("$router");
 
 function navigateToActivityDetail(activity: Activity) {
   console.log('跳转到活动详情页', activity);

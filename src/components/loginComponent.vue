@@ -30,7 +30,7 @@
     <v-dialog v-model="dialog" max-width="290" width="300">
       <v-card>
         <v-card-title class="headline">提示</v-card-title>
-        <v-card-text>你是否要使用当前的账号密码进行注册？</v-card-text>
+        <v-card-text>用户不存在, 你是否要使用当前的账号密码进行注册？</v-card-text>
         <v-card-actions>
           <div class="button-container">
             <button class="confirm-button" @click="handleConfirm">确定</button>

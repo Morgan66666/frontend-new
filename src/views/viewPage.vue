@@ -61,7 +61,7 @@
 
 
 <script lang="ts">
-import { ref, reactive, inject, onMounted, watchEffect } from "vue";
+import { ref, reactive, inject, onMounted, watchEffect, getCurrentInstance} from "vue";
 import commentCardVue from "../components/viewComponents/commentCard.vue";
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
 import store from "../store";
@@ -93,6 +93,9 @@ export default {
     const newContent = ref("");
     const comments = reactive<Comment[]>([
     ]);
+    const instance = getCurrentInstance();
+    const proxy = instance?.proxy;
+
     const post = reactive<Post>({
       postId: 1,
       title: "寻找失落的提瓦特大陆",
@@ -166,9 +169,6 @@ export default {
       });
     };
 
-    onMounted(() => {
-      
-    });
 
     watchEffect(() => {
       postId = router.currentRoute.value.params.id;
@@ -199,12 +199,16 @@ export default {
 
     function comment() {
       if (!store.getters.getIsLogin) {
-        //  router.push('/login');
-        alert("请先登录");
+        store.dispatch("SetShowLogin", true);
+        proxy.$message.error("请先登录");
         return;
       }
       if (!show.value) {
         show.value = true;
+        return;
+      }
+      if(newContent.value === ""){
+        proxy.$message.error("评论内容不能为空");
         return;
       }
       let newCommentForm = {
@@ -224,9 +228,11 @@ export default {
               userInfo.level = "4级";
               res.userInfo = userInfo;
               res.createTime = new Date(res.createTime).toLocaleString();
+              
               comments.push(res);
             });
           });
+          show.value = false;
       });
 
       // 代理类转普通类
