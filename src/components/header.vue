@@ -12,31 +12,23 @@
         <router-link
           to="/"
           class="nav_link"
-          :class="{ active: $route.path === '/' }"
+          :class="{ active:  router.currentRoute.value.path === '/' }"
           >首页</router-link
         >
         <router-link
           to="/activities"
           class="nav_link"
-          :class="{ active: $route.path.startsWith('/activities') }"
+          :class="{ active: router.currentRoute.value.path.startsWith('/activities') }"
           >活动
         </router-link>
         <router-link
           to="/forum"
           class="nav_link"
-          :class="{ active: $route.path.startsWith('/forum') }"
+          :class="{ active: router.currentRoute.value.path.startsWith('/forum') }"
           >论坛</router-link
         >
       </div>
       <div class="header_search_container">
-        <!-- <input
-          class="header_search"
-          type="text"
-          name="search"
-          id="search"
-          placeholder="搜索"
-        /> -->
-        <!--        <router-link to="/personal" class="nav_link" :class="{ active: $route.path.startsWith('/personal') }">-->
         <div class="userInfo_avatar">
           <img :src=userInfo.avatar @click="avatar" alt="" />
         </div>
@@ -46,8 +38,6 @@
           <a @click="showChat">消息</a>
           <a @click="logOut">登出</a>
         </div>
-
-        <!--        </router-link>-->
       </div>
       <div class="login" v-if="isVisible">
         <login-component @login="login"></login-component>
@@ -66,9 +56,9 @@
 import { ref } from "vue";
 import loginComponent from "../components/loginComponent.vue";
 import chatComponent from "./chatComponent.vue";
-import router from "../router";
 import store from "../store";
 import { UserInfo } from "../types";
+import { useRouter } from "vue-router";
 
 export default {
   name: "headerOfMainPage",
@@ -78,6 +68,7 @@ export default {
     let isVisible = ref(false);
     let chatVisible = ref(false);
     let backIsVisible = ref(false);
+    let router = useRouter();
     const showOptions = ref(false);
     const avatar = () => {
       if (store.getters.getIsLogin) {
@@ -156,7 +147,8 @@ export default {
       toPersonal,
       hide,
       userInfo,
-      logOut
+      logOut,
+      router
     };
   },
 };
@@ -217,6 +209,7 @@ export default {
   justify-items: center;
   vertical-align: middle;
   display: flex;
+  position: relative;
 }
 
 .header_search {
@@ -285,10 +278,10 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  background-color: rgb(174, 178, 199);
+  background-color: rgb(31,34,51);
   min-width: 120px;
-  right: 310px;
-  top: 55px;
+  right: 0px;
+  top: 3.5em;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 120;
 }

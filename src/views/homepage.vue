@@ -51,63 +51,10 @@ import { Post } from '../types';
 import { inject,onMounted } from 'vue';
 
 const api:any = inject('$api');
-let comments = reactive<Post[]>([
-  {
-    postId: 1,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      userName: "张三",
-      level: "4级",
-      gender: "男",
-      userId: "12110112",
-      signature: "这是用户的信息",
-      birth: "2022-12-12",
-    },
-  },
-  {
-    postId: 2,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      userName: "张三",
-      level: "4级",
-      userId: "121101142",
-      signature: "这是用户的信息",
-      gender: "男",
-      birth: "2022-12-12",
-    },
-  },
-  {
-    postId: 3,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      userName: "张三",
-      level: "4级",
-      userId: "121101152",
-      gender: "男",
-      signature: "这是用户的信息",
-      birth: "2022-12-12",
-    },
-  },
-
-]);
+let comments = reactive<Post[]>([]);
 
 let pageNum = 1
-let pageSize = 1
+let pageSize = 10
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
   try {

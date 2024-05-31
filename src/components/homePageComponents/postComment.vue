@@ -88,7 +88,7 @@ export default {
       if(content == null){
         return [];
       }
-      let reg = /<img.*?src="(.*?)".*?>/g;
+      let reg = /<img(.*?)>/g;
       let imgs = content.match(reg);
       //把img标签去掉，只留下src
       
@@ -110,19 +110,27 @@ export default {
     // 先用正则表达式去掉所有img
     // 先用正则表达式匹配到第一个<p>的内容，然后截取前100个字符
     const shortContent = computed(() => {
-      let imgReg = /<img(.*?)>/
+      let imgReg = /<img(.*?)>/g
+      let tabReg = /\s/g;
+      let emptyReg = /<p><\/p>/g;
       let content = props.comment.body;
       if(content == null){
         return "";
       }
-      let reg = /<p>(.*?)<\/p>/;
-      let regTag = /<(.*?)>/
+      let reg = /<p>(.*?)<\/p>/g;
+      let regTag = /<(.*?)>/g
       content = content.replace(imgReg, "");
+      content = content.replace("<br>", "");
+      content = content.replace(tabReg, "");
+      content = content.replace(emptyReg, "");
+      console.log("content", content);
       let shortContent = content.match(reg);
       
+      console.log("shortContent", shortContent);
       if(shortContent != null){
-        shortContent = shortContent[1].slice(0, 30);
-        shortContent = shortContent.replace(regTag, "");
+        shortContent = shortContent[0].replace(regTag, "");
+        shortContent = shortContent.slice(0, 30);
+        
       }
 
       return shortContent;

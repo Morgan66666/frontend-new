@@ -14,7 +14,7 @@
               {{ item }}
             </a>
           </div>
-          <!-- <div class="classified_search_item">
+          <div class="classified_search_item">
             <div class="classified_search_item_label">时间</div>
             <a
               v-for="(item, index) in dates"
@@ -26,7 +26,7 @@
             >
               {{ item }}
             </a>
-          </div> -->
+          </div>
           <div class="classified_search_item">
             <div class="classified_search_item_label">排序</div>
             <a v-for="(item, index) in temps" :key="index" @click="selectTempOption(item)" :class="selectTemp === item ? 'classified_search_item_a_active' : ''
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="post-container">
-          <post-comment v-for="item in comments" :comment="item" v-bind:key="item.id"
+          <post-comment v-for="item in sortedComments" :comment="item" v-bind:key="item.id"
             @update:thumpUp="handleThumbUpChange" @update:thumpDown="handleThumbDownChange"></post-comment>
         </div>
       </div>
@@ -69,46 +69,6 @@ export default {
   setup() {
     const api = inject("$api");
     const comments = ref([
-      {
-        postId: 1,
-        title: "寻找失落的提瓦特大陆",
-        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-        date: "2022-12-12 12:12:12",
-        thumbUp: 121,
-        isLiked: 0,
-        userInfo: {
-          userName: "张三",
-          level: "4级",
-          userId: "12110112",
-          userMassage: "这是用户的信息",
-        },
-      },
-      {
-        postId: "2",
-        title: "寻找失落的提瓦特大陆",
-        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-        date: "2022-12-12 12:12:12",
-        thumbUp: 121,
-        isLiked: 0,
-        userInfo: {
-          userName: "张三",
-          level: "4级",
-          userId: "12110112",
-        },
-      },
-      {
-        postId: "3",
-        title: "寻找失落的提瓦特大陆",
-        body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-        date: "2022-12-12 12:12:12",
-        thumbUp: 121,
-        isLiked: 0,
-        userInfo: {
-          userName: "张三",
-          level: "4级",
-          userId: "12110112",
-        },
-      },
     ]);
     const searchText = ref("");
     const types = ref(["游戏", "运动", "不限"]);
@@ -128,34 +88,36 @@ export default {
         }
         let res = await api.post.getPosts(time);
         res = res.records
-        comments.val.push(...res);
+        comments.value.push(...res);
       } catch (error) {
         console.log('error', error);
       }
     });
 
     const filteredComments = computed(() => {
+      console.log("comments过滤", comments.value);
       return comments.value.filter(
         (comment) => {
           // 这个过滤器还有问题，需要修改
           if (selectDate.value !== "不限" && comment.date !== selectDate.value) {
             return false;
           }
-          return !(selectType.value !== "不限" && comment.userInfo.username !== selectType.value);
+          return !(selectType.value !== "不限" && comment.userInfo.userName !== selectType.value);
         }
       );
     });
 
-    // const sortedComments = computed(() => {
-    //   if (selectTemp.value === "最热") {
-    //     return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
-    //   }
-    //   if (selectTemp.value === "最新") {
-    //     return filteredComments.value.sort((a, b) => a.date - b.date);
-    //   }
-    //   return filteredComments.value;
+    const sortedComments = computed(() => {
+      console.log("comments排序", filteredComments.value);
+      if (selectTemp.value === "最热") {
+        return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
+      }
+      if (selectTemp.value === "最新") {
+        return filteredComments.value.sort((a, b) => a.date - b.date);
+      }
+      return filteredComments.value;
 
-    // });
+    });
 
     const selectDateOption = (option) => {
       selectDate.value = option;
@@ -246,6 +208,8 @@ export default {
       getPostById,
       Search,
       searchText,
+      filteredComments,
+      sortedComments
     };
   },
 };

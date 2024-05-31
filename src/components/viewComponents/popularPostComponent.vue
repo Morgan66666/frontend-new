@@ -1,8 +1,14 @@
 <template>
   <div class="post_master">
-    <div v-for="(item, index) in postList" :key="index" class="post_master_item">
-      <img class="post_master_item_img" src="../../assets/霍霍果照片.png" alt="">
-      <div class="post_master_item_title" @click="jumpToPost(item.id)">{{ item.title }}</div>
+    <div
+      v-for="(item, index) in postList"
+      :key="index"
+      class="post_master_item"
+    >
+      <img class="post_master_item_img" :src="item.userInfo.avatar" alt="" />
+      <div class="post_master_item_title" @click="jumpToPost(item.postId)">
+        {{ item.title }}
+      </div>
     </div>
   </div>
 </template>
@@ -11,9 +17,9 @@
 
 
 <script setup lang="ts">
-import { ref , inject, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
-import { Post } from '../../types'
+import { ref, inject, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { Post } from "../../types";
 
 let postList = ref<Post[]>([
   {
@@ -30,8 +36,10 @@ let postList = ref<Post[]>([
       userId: "12110112",
       birth: "2022-12-12",
       gender: "男",
-      intro: "这个人很懒，什么都没有留下"
-    }},{
+      intro: "这个人很懒，什么都没有留下",
+    },
+  },
+  {
     postId: 2,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
@@ -45,24 +53,38 @@ let postList = ref<Post[]>([
       userId: "12110112",
       birth: "2022-12-12",
       gender: "男",
-      intro: "这个人很懒，什么都没有留下"
+      intro: "这个人很懒，什么都没有留下",
     },
-  }
-  ]);
+  },
+]);
 let router = useRouter();
-const api:any = inject('$api');
+const api: any = inject("$api");
 
 onMounted(() => {
   // api.post.getPopularPost().then((res: any) => {
   //   postList.value = res.data;
   // });
+  api.post.getPosts().then((res: any) => {
+    Promise.all(
+      res.records.map((item: { userId: any; userInfo: any }) => {
+        
+        return api.user.getUserInfoByUserId({userId:item.userId}).then((res: any) => {
+          console.log(item);
+          item.userInfo = res;
+          return item;
+        });
+      })
+    ).then((records) => {
+      console.log("获取popularPost成功", records);
+      postList.value = records;
+    });
+  });
 });
 
 let jumpToPost = (id: number) => {
-  console.log(id);  
-  router.push({ path: `/post/${id}` });
-}
-
+  console.log(id);
+router.push({ path: `/post/${id}` });
+};
 </script>
 
 <style scoped>
@@ -109,7 +131,7 @@ let jumpToPost = (id: number) => {
   background-color: rgb(255, 255, 255);
   font-size: 0.8em;
   line-height: 30px;
-  color: rgb(73,73,73);
+  color: rgb(73, 73, 73);
   margin-left: 7px;
   overflow: hidden; /* 隐藏超出元素宽度的内容 */
   text-overflow: ellipsis; /* 将溢出的文本显示为省略号 (...) */
@@ -117,11 +139,10 @@ let jumpToPost = (id: number) => {
   font-family: Arial, sans-serif;
 }
 
-.post_master_item_title:hover{
+.post_master_item_title:hover {
   color: #1a73e8;
   cursor: pointer;
 }
-
 
 .post_master_item_img {
   width: 30px;
