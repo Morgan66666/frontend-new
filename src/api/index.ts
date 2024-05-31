@@ -9,15 +9,18 @@ let apiConfig = {
   //登入登出相关
     { name: "doLogin", method: "post", url: "/api/auth/login", headers: null, noToken: true }, //登入
     { name: "doLogout", method: "post", url: "/api/auth/logout", headers: null },
-    { name: "doRegister", method: "post", url: "/api/auth/register", headers: null, noToken: true}
+    { name: "doRegister", method: "post", url: "/api/auth/register", headers: null, noToken: true},
+    { name: "getUserExistByAccount", method: "get", url: "/api/auth/{account}/exist",noToken: true},//根据账号判断用户是否存在
   ], //登出
     
   //用户模块相关
-  user: [{ name: "getUserInfoByUserId", method: "get", url: "/api/users/{userId}" },//根据id获得用户信息
+  user:
+   [{ name: "getUserInfoByUserId", method: "get", url: "/api/users/{userId}" },//根据id获得用户信息
   { name: "getUserInfoByUserName", method: "get", url: "/api/users" },//根据名字获得用户信息
-  { name: "updateUser", method: "patch", url: "/api/users/update" },//更新用户信息
-  { name: "updateUserPassword", method: "patch", url: "/api/users/{userId}/password" }, //更新用户密码
+  { name: "updateUser", method: "put", url: "/api/users" },//更新用户信息
+  { name: "updateUserPassword", method: "put", url: "/api/users/{userId}/password" }, //更新用户密码
   { name: "getCommentsByUserId", method: "get", url: "/api/users/{userId}/comments" },//根据id获得用户评论
+
   ],
   //帖子相关
   post: [
@@ -32,6 +35,9 @@ let apiConfig = {
     { name: "getPostsByType", method: "get", url: "/api/posts" },//根据类型获得帖子
     { name: "getPostsByBody", method: "", url: "/api/posts" },//根据帖子内容获得帖子
     { name: "getCommentsByPostId", method: "get", url: "/api/posts/{postId}/comments" },//根据帖子id获得评论
+    { name: "updatePostLike", method:"post", url:"/api/posts/{postId}/like"},//更新帖子点赞数
+    { name: "getIfUserLikePost", method:"get", url:"/api/posts/{postId}/like"},//获取用户是否点赞帖子
+    { name: "getSortedPostsByLike", method:"get", url:"/api/posts/hot"},//获取按照点赞数排序的帖子
   ],
   //管理员相关
   admin: [
@@ -64,7 +70,6 @@ let apiConfig = {
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
-  console.log("添加token" + store.getters.getToken)
   return { "authorization": `Bearer ${store.getters.getToken}` };
 }
 // 格式化参数
@@ -73,7 +78,6 @@ let getTokenFn = () => {
 */
 let formatParamsFn = (params: any) => {
   let str = [];
-  console.log("调用了formatParamsFn");
   for (let key in params) {
     str.push(`${key}=${params[key]}`);
   }

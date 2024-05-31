@@ -14,7 +14,6 @@
         v-model="username"
       />
     </div>
-    <!--      <input type="password" placeholder="密码">-->
     <div class="input-container">
       <label :class="{ 'label-active': active_password }">密码</label>
       <!--        <input type="text" @focus="activateLabel" @blur="deactivateLabel">-->
@@ -25,15 +24,23 @@
         v-model="password"
       />
     </div>
-    <!--      <p class="hint">Forgot email?</p>-->
-    <!--      <div class="guest-mode">-->
-    <!--        <p>Not your computer? Use Guest mode to sign in privately.</p>-->
-    <!--        <a href="#">Learn more</a>-->
-    <!--      </div>-->
 
-    <!--      <a href="/home">-->
     <button v-on:click="login">登录</button>
-    <!--      </a>-->
+
+    <v-dialog v-model="dialog" max-width="290" width="300">
+      <v-card>
+        <v-card-title class="headline">提示</v-card-title>
+        <v-card-text>你是否要使用当前的账号密码进行注册？</v-card-text>
+        <v-card-actions>
+          <div class="button-container">
+            <button class="confirm-button" @click="handleConfirm">确定</button>
+          <button class="cannel-button" @click="dialog = false">取消</button>
+          </div>
+          
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    
 
     <hr class="separate-line" />
 
@@ -48,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from "vue";
+import { ref, defineComponent, getCurrentInstance } from "vue";
 
 import { inject } from "vue";
 import { UserInfo } from "../types";
@@ -61,9 +68,11 @@ export default defineComponent({
     const active_password = ref(false);
     const username = ref("");
     const password = ref("");
+    const instance = getCurrentInstance();
+    const proxy = instance?.proxy;
     const leftText = ref("忘记密码");
     const rightText = ref("创建账户");
-
+    const dialog = ref(false);
     const activateLabel_username = () => {
       active_username.value = true;
     };
@@ -93,49 +102,48 @@ export default defineComponent({
         password: password.value,
       };
 
-      console.log("开始登录");
       console.log(loginForm);
       try {
         await api.login.doLogin(loginForm).then((res: any) => {
           console.log(res);
+          console.log(res?.data?.message == "Unauthorized: 用户不存在")
+          if(res?.data?.message == "Unauthorized: 用户不存在"){
+            // 弹窗询问是否注册
+            dialog.value = true;
+            return
+          }else if (res?.data?.message.startsWith("Unauthorized")){
+            proxy?.$message.error('登录失败, 密码错误')
+            return
+          }
           token = res.token;
           user = {
             userId: res.userResponse.userId,
-            username: res.userResponse.userName,
+            userName: res.userResponse.userName,
             avatar: res.userResponse.avatar,
-            signature: res.userResponse.intro,
+            intro: res.userResponse.intro,
             birth: res.userResponse.birth,
             account: res.userResponse.account,
             gender: res.userResponse.gender,
             level: "4",
           };
         });
-      } catch (error) {
+      } catch (error:any) {
         console.log(error);
       } finally {
         if (user) {
           store.dispatch("LoginIn", user);
           store.dispatch("SetToken", token);
-          emit("login", true);
-        } else {
-          user = {
-            avatar: "https://cdn.vuetifyjs.com/images/john.jpg",
-            username: "admin",
-            userId: "12110112",
-            signature: "这是用户的信息",
-            level: "4级",
-            birth: "2000-01-01",
-            account: "12110425",
-            gender: "男",
-          };
-          store.dispatch("LoginIn", user);
-          store.dispatch("SetToken", token);
-          console.log(store.getters.getIsLogin);
-          console.log(store.getters.getUserInfo);
-          console.log(store.getters.getToken);
+          proxy?.$message.success('登录成功')
           emit("login", true);
         }
       }
+    };
+    const handleConfirm = () => {
+      api.login.doRegister({ account: username.value, password: password.value }).then((res: any) => {
+        console.log(res);
+        proxy?.$message.success('注册成功, 请重新登录')
+        dialog.value = false;
+      });
     };
 
     return {
@@ -150,6 +158,8 @@ export default defineComponent({
       activateLabel_password,
       deactivateLabel_password,
       login,
+      dialog,
+      handleConfirm
     };
   },
 });
@@ -300,5 +310,44 @@ button:hover {
 
 .left {
   margin-right: 120px;
+}
+
+.confirm-button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  width: 100px;
+  height: 35px;
+  margin-right: 10px;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background-color: #2b7de9;
+}
+
+.cannel-button {
+  background-color: #f1f1f1;
+  color: black;
+  border: none;
+  width: 100px;
+  height: 35px;
+  margin-left: 10px;  
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.cannel-button:hover {
+  background-color: #e0e0e0;
+}
+
+.button-container{
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin: auto;
 }
 </style>

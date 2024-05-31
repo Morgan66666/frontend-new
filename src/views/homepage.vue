@@ -9,7 +9,7 @@
             <v-carousel-item v-for="image in images" :key="image" :src="image"></v-carousel-item>
           </v-carousel>
 
-          <post-comment-component v-for="item in comments" :comment="item" v-bind:key="item.id"
+          <post-comment-component v-for="item in comments" :comment="item" v-bind:key="item.postId"
             @update:thumpUp="handleThumbUpChange" @update:thumpDown="handleThumbDownChange"></post-comment-component>
         </div>
         <div class="main_container_rightMessage">
@@ -18,10 +18,9 @@
 
               <router-link to="/post-edit" style="text-decoration: none;" class="btn-24"
                 :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
-
             </div>
             <div>
-              <button class="btn-24">聊天</button>
+              <button class="btn-24" @click="store.dispatch('SetShowChatWindow', true)">聊天</button>
             </div>
             <div>
               <button class="btn-24">A I</button>
@@ -38,6 +37,10 @@
         </div>
       </div>
     </div>
+
+    <div class="chat" v-if="chatVisible">
+      <chat-component></chat-component>
+    </div>
   </div>
 </template>
 
@@ -45,102 +48,65 @@
 
 
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
+import chatComponent from '../components/chatComponent.vue';
 import { Post } from '../types';
-import { UserInfo } from '../types';
 import { inject,onMounted } from 'vue';
+import store from '../store';
 
 const api:any = inject('$api');
-let comments = reactive<Post[]>([
-  {
-    id: 1,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
-      level: "4级",
-      gender: "男",
-      userId: "12110112",
-      signature: "这是用户的信息",
-      birth: "2022-12-12",
-    },
-  },
-  {
-    id: 2,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
-      level: "4级",
-      userId: "121101142",
-      signature: "这是用户的信息",
-      gender: "男",
-      birth: "2022-12-12",
-    },
-  },
-  {
-    id: 3,
-    title: "寻找失落的提瓦特大陆",
-    body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-    date: "2022-12-12 12:12:12",
-    thumbUp: 121,
-    isLiked: 0,
-    userInfo: {
-      avatar: "https://ts4.cn.mm.bing.net/th?id=OIP-C.jpOTpQl-fzreeiqXA9bNQAHaH_&w=240&h=259&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
-      username: "张三",
-      level: "4级",
-      userId: "121101152",
-      gender: "男",
-      signature: "这是用户的信息",
-      birth: "2022-12-12",
-    },
-  },
+let comments = reactive<Post[]>([]);
 
-]);
-//要么后端发帖子信息的时候打包一起发过来，要么我跟服务器爆了
-const processPostFromServer = (comments:any) => {
-  comments.forEach((comment:any) => {
-    let userId = comment.userId;
-    api.user.getUserInfoByUserId({userId: userId}).then((res:any) => {
-      comment.userInfo = {
-        avatar: res.avatar,
-        username: res.userName,
-        level: "4",
-        gender: res.gender,
-        userId: res.userId,
-        signature: res.signature,
-        birth: res.birth,
-      } as UserInfo;
-    });
-  });
-}
-
+let pageNum = 1
+let pageSize = 10
+let chatVisible = ref(false);
 onMounted(async () => {
+  window.addEventListener('scroll', handleScroll);
   try {
     //这个时间在后端是localDateTime类型
     let time = {
       "start-time": "2022-12-12T12:12:12",
       "end-time": "2025-12-12T12:12:12",
+      "pageNum": pageNum,
+      "pageSize":pageSize
     }
     let res = await api.post.getPosts(time);
-    res = res.data.records
-    console.log(res)
-    processPostFromServer(res);
-    Object.assign(comments, res);
+    res = res.records
+    comments.push(...res);
   } catch (error) {
     console.log('error', error);
   }
 });
 
+const handleScroll = async () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (scrollTop + clientHeight >= scrollHeight - 1) {
+    console.log('滚动到底部了');
+
+    try {
+        //这个时间在后端是localDateTime类型
+        let time = {
+          "start-time": "2022-12-12T12:12:12",
+          "end-time": "2025-12-12T12:12:12",
+          "pageNum": ++pageNum,
+          "pageSize": pageSize
+        }
+        let res = await api.post.getPosts(time);
+        res = res.records
+        comments.push(...res);
+      } catch (error) {
+        console.log('error', error);
+      }
+    // 在这里加载更多数据
+  }
+};
+
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
 
 
@@ -157,13 +123,13 @@ const handleThumbUpChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === -1) {
-      let thumbUp = post.thumbUp + 1;
+      let likes = post.likes + 1;
       post.isLiked = 1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     } else {
-      let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+      let likes = post.isLiked === 1 ? post.likes - 1 : post.likes + 1;
       post.isLiked = post.isLiked === 1 ? 0 : 1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     }
   }
   console.log('post', post);
@@ -173,9 +139,9 @@ const handleThumbDownChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === 1) {
-      let thumbUp = post.thumbUp - 1;
+      let likes = post.likes - 1;
       post.isLiked = -1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     } else {
       post.isLiked = post.isLiked === -1 ? 0 : -1;
     }
@@ -184,7 +150,7 @@ const handleThumbDownChange = ({ id }:any) => {
 };
 
 const getPostById = (id:any) => {
-  return comments.find(item => item.id === id);
+  return comments.find(item => item.postId === id);
 };
 
 watch(comments, (newComments) => {

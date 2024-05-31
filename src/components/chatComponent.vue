@@ -137,45 +137,45 @@ const autoGrow = () => {
 
 let socket;
 
-onMounted(() => {
-  socket = new WebSocket('ws://your-websocket-url');
-  socket.onopen = (event) => {
-    console.log('WebSocket is open now.');
-  };
-  socket.onmessage = (event) => {
-  // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
+// onMounted(() => {
+//   socket = new WebSocket('ws://your-websocket-url');
+//   socket.onopen = (event) => {
+//     console.log('WebSocket is open now.');
+//   };
+//   socket.onmessage = (event) => {
+//   // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
 
 
 
 
-    const message = JSON.parse(event.data);
-    for (const element of items.value) {
-      if (element.id === message.id) {
-        element.messageList.push(message);
-        return;
-      }
-    }
-    // 这里的头像地址是假的，实际开发中应该从后端获取，但是没想好怎么获取，所以就先这样了
-    let newItem = {
-      id: message.id,
-      username: message.username,
-      avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
-      messageList: [message],
-    };
-    items.value.push(newItem);
+//     const message = JSON.parse(event.data);
+//     for (const element of items.value) {
+//       if (element.id === message.id) {
+//         element.messageList.push(message);
+//         return;
+//       }
+//     }
+//     // 这里的头像地址是假的，实际开发中应该从后端获取，但是没想好怎么获取，所以就先这样了
+//     let newItem = {
+//       id: message.id,
+//       username: message.username,
+//       avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
+//       messageList: [message],
+//     };
+//     items.value.push(newItem);
 
 
-    console.log('WebSocket message received:', event);
-  };
+//     console.log('WebSocket message received:', event);
+//   };
 
-  socket.onclose = (event) => {
-    console.log('WebSocket is closed now.');
-  };
+//   socket.onclose = (event) => {
+//     console.log('WebSocket is closed now.');
+//   };
 
-  socket.onerror = (event) => {
-    console.error('WebSocket error observed:', event);
-  };
-});
+//   socket.onerror = (event) => {
+//     console.error('WebSocket error observed:', event);
+//   };
+// });
 
 const sendMessage = () => {
   if (message.value === "") {
@@ -201,6 +201,12 @@ const sendMessage = () => {
 
 </script>
 
+<script lang="ts">
+export default {
+  name: 'ChatComponent',
+  // 其他选项...
+};
+</script>
 
 <style scoped>
 .main_container {
@@ -266,7 +272,7 @@ const sendMessage = () => {
 }
 
 .message-list {
-  height: 73%;
+  height: 68%;
   background-color: transparent;
   overflow-y: auto;
   
@@ -315,7 +321,7 @@ const sendMessage = () => {
 
 #message-input {
   border-top: 1px solid rgb(163, 163, 163);
-  height: 27%;
+  height: 20%;
   background-color: transparent;
 }
 

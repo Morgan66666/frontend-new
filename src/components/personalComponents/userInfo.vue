@@ -1,14 +1,14 @@
 <template>
                 <div class="main_container_userInfo_container">
                     <div class="main_container_user_avatar_container">
-                        <img src="../../assets/霍霍.png" class="main_container_user_avatar" alt="">
+                        <img :src=userInfo.avatar class="main_container_user_avatar" alt="">
                     </div>
 
                     <div class="main_container_user_info">
-                        <div class="main_container_user_info_name">{{ userInfo.username }}</div>
+                        <div class="main_container_user_info_name">{{ userInfo.userName }}</div>
                         <div class="main_container_user_info_id">ID: {{ userInfo.userId }}</div>
                         <p class="main_container_user_info_signature">
-                            {{ userInfo.signature }}
+                            {{ userInfo.intro }}
                         </p>
                     </div>
                     
@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
 
 
 
@@ -29,11 +28,11 @@ export default {
       }
 
   },
-  setup(props:any) {
-    let userInfo = ref(props.userInfo);
-    console.log(userInfo.value);
-    return {userInfo};
-  },
+//   setup(props:any) {
+    
+//     console.log("信息展示卡",userInfo.value);
+//     return {userInfo};
+//   },
 
 };
 </script>
@@ -64,6 +63,7 @@ export default {
     height: 150px;
     margin-top: 20px;
     margin-left: 20px;
+    border: 1px solid #9f9f9f;
 }
 
 .main_container_user_info{

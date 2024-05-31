@@ -45,9 +45,11 @@ app.use(ElementPlus, {
 app.provide('$axios', axios)
 app.provide('$api', api)
 app.provide('$store', store)
+app.provide('$router', router)
 
-app.use(vuetify)
 app.use(router)
+app.use(vuetify)
+
 app.use(pinia)
 app.use(store)
 app.mount('#app')

@@ -61,14 +61,24 @@
 
 <script setup lang="ts">
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
-import {ref, inject} from "vue";
+import {ref, inject, onMounted, getCurrentInstance} from "vue";
 import { UserInfo } from "../types";
 import store from "../store";
 
-
+// 先检查用户是否登录，没登录就跳转到登录页面
+onMounted(() => {
+  let proxy = getCurrentInstance()?.proxy;
+  if (!store.getters.getIsLogin){
+    proxy.$message.success("请先登录")
+    store.dispatch("SetShowLoginWindow", true);
+    let router:any = inject("$router") as any;
+    router.push('/');
+  }
+  console.log(userInfo);
+});
 
 let quillContent = ref();
-let title = ref("标题");
+let title = ref("");
 let content = ref("你好");
 let selectedPlate = ref("体育比赛");
 let api:any = inject('$api');
@@ -81,20 +91,19 @@ const publicPost = () => {
 
   //向后端发送帖子内容
   let post:any = {
-    id: 0,
     title: title.value,
     body: content.value,
-    thumbUp: 0,
+    likes: 0,
     isLiked: 0,
     userId: userInfo.userId,
-    userName: userInfo.username,
-    status: 0,
+    userName: userInfo.userName,
+    type: selectedPlate.value,
+    status: 0
   };
 
   api.post.createPost(post).then((res:any) => {
     console.log(res);
     alert("创建成功");
-
   });
 
 };

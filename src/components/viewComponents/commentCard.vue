@@ -12,52 +12,29 @@
           @click="enterUserPage(comment.userInfo.userId)">
         </div>
 
-        <span class="userInfo_username">{{ comment.userInfo.username }}</span>
-        <span class="userInfo_level">{{ comment.userInfo.level }}</span>
+        <span class="userInfo_username">{{ comment.userInfo.userName }}</span>
+        <span class="userInfo_level">5级</span>
         <!-- <span class="userInfo_userId">{{ comment.userInfo.userId }}</span> -->
       </div>
       <div class="main_comments_card_content">
         <div class="content_html" v-html="comment.body"></div>
-
-
       </div>
       <div class="main_comments_card_operator_container">
-        <div class="main_comments_card_operator_container_left">
-          {{ comment.date }}
-        </div>
-        <div class="main_comments_card_operator_container_right">
-          <img alt="点赞"
-            v-if="comment.isLiked === 1"
-            src="../../assets/icon/thumb-up1.svg"
-            @click="thumbUp"
-          />
-          <img alt="点赞" v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
-          <div class="other_info_operations_number">{{ comment.thumbUp }}</div>
-          <img alt="点踩"
-            v-if="comment.isLiked === -1"
-            src="../../assets/icon/thumb-down1.svg"
-            @click="thumbDown"
-          />
-          <img
-            v-else alt="点踩"
-            src="../../assets/icon/thumb-down.svg"
-            @click="thumbDown"
-          />
-        </div>
+         <div class="data">{{comment.createTime}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {PropType} from "vue";
+import {PropType, inject} from "vue";
 import { UserInfo } from "../../types";
 
 interface Comment {
   id: number;
   body: string;
-  date: string;
-  thumbUp: number;
+  createTime: string;
+  likes: number;
   isLiked: number;
   userInfo: UserInfo;
 }
@@ -73,12 +50,16 @@ export default {
   },
 
   setup(props:any, cxy:any) {
-    const thumbUp = () => {
+    // const comment = JSON.parse(JSON.stringify(props.comment));
+    // props.comment = comment;
+    const route:any = inject("$router");
+    const likes = () => {
       //根据id获得 评论, 调用父组件的方法
       cxy.emit("update:thumpUp", {
         id: props.comment.id,
       });
     };
+    console.log(props.comment)
 
     const thumbDown = () => {
       //根据id获得 评论
@@ -90,9 +71,13 @@ export default {
 
     const enterUserPage = (id:any) => {
       console.log(id);
+      cxy.emit("enterUserPage", {
+        id: id,
+      });
+      route.push({ path: `/personal/${id}` });
     };
 
-    return { thumbUp, thumbDown, enterUserPage };
+    return { likes, thumbDown, enterUserPage};
   },
 
 };
@@ -137,6 +122,8 @@ export default {
   text-align: center;
   font: 0.8em sans-serif;
   margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-radius: 5px;
 }
 

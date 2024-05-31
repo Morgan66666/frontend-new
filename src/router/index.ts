@@ -4,7 +4,7 @@ import personalPage from '../views/personalPage.vue'
 import commentsList from '../components/personalComponents/commentsList.vue'
 import ActivityDetail from "../views/ActivityDetail.vue";
 
-const router = createRouter({
+var router = createRouter({
     history: createWebHistory(),
     routes: [
         {

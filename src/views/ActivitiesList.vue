@@ -28,6 +28,7 @@ import router from "../router";
 const api:any = inject("$api");
 
 
+
 function navigateToActivityDetail(activity: Activity) {
   console.log('跳转到活动详情页', activity);
   router.push(`/activity`);

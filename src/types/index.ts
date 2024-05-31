@@ -38,12 +38,14 @@ export interface ActivityDetail {
 }
 
 export interface Post {
+    userId?: string;
     body: string;
     date: string;
-    id: number;
+    postId: number;
     isLiked: number;
-    thumbUp: number;
+    likes: number;
     title: string;
+    type: string;
     userInfo: UserInfo;
 }
 
@@ -61,16 +63,16 @@ export interface SignatureInfo {
     expire: number;
     host: string;
     policy: string;
-    signature: string;
+    intro: string;
 }
 
 export interface UserInfo {
         avatar: string,
-        username: string,
+        userName: string,
         gender: string,
         level: string,
         userId: string,
-        signature: string,
+        intro: string,
         birth: string,
         account?: string,
 }

@@ -16,7 +16,7 @@ const instance = axios.create({
     timeout: 2000,
 });
 instance.interceptors.response.use(response => {
-    console.log(response);
+    // console.log(response);
     return response.data;
 }, error => {
     console.log(error);
@@ -25,6 +25,7 @@ instance.interceptors.response.use(response => {
         isSuccess: false,
         status: error.response ? error.response?.statusText : "",
         statusText: error.response?.statusText,
+        data: error.response ? error.response?.data : "",
     });
 });
 export default instance;

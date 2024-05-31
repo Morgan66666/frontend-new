@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="main_container_user_title">
-        <a>其他</a>
+        <a>帖子记录</a>
         <div style="height: 6px;"></div>
         
-        <postComment v-for="item in postsShow" :comment="item" v-bind:key="item.id"></postComment>
+        <postComment v-for="item in postsShow" :comment="item" v-bind:key="item.postId"></postComment>
       
     </div>
   </div>
@@ -13,72 +13,16 @@
 <script setup lang="ts">
 import { ref, inject, onMounted} from 'vue'
 import { useRouter } from 'vue-router';
-import { Post } from '../../types'
 import postComment from '../homePageComponents/postComment.vue'
 
-const props = defineProps({
-  userId: String,
-});
 
 const api:any = inject('$api');
-let postsShow = ref<Post[]>([
-        {
-          id: 1,
-          title: "寻找失落的提瓦特大陆",
-          body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-            birth: "2022-12-12",
-          },
-        },
-        {
-          id: 1,
-          title: "寻找失落的提瓦特大陆",
-          body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-            birth: "2022-12-12",
-          },
-        },
-        {
-          id: 1,
-          title: "寻找失落的提瓦特大陆",
-          body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
-          date: "2022-12-12 12:12:12",
-          thumbUp: 121,
-          isLiked: 0,
-          userInfo: {
-            avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
-            username: "张三",
-            level: "4级",
-            userId: "12110112",
-            userMassage: "这是用户的信息",
-            birth: "2022-12-12",
-          },
-        },
-      ])
-let page = ref(1);
-let pageSize = ref(10);
-let pageTotal = ref(1);
-let router = useRouter();
-
+let postsShow = ref([])
+const router:any = inject("$router") as ReturnType<typeof useRouter>;
+const userId = router.currentRoute.value.params.userId; 
 onMounted(() => {
-  api.post.getPostsByUserId({userId: props.userId}).then((res: any) => {
-    Object.assign(postsShow, res);
+  api.post.getPosts({userId: userId}).then((res: any) => {
+    postsShow.value.push(...res.records);
   });
 })
 
