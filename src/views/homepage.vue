@@ -99,7 +99,7 @@ let comments = reactive<Post[]>([
       level: "4级",
       userId: "121101152",
       gender: "男",
-      signature: "这是用户的信息",
+      intro: "这是用户的信息",
       birth: "2022-12-12",
     },
   },
