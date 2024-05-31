@@ -70,10 +70,22 @@ const router = createRouter({
             meta: {ShowHeader: true}
         },
         {
+            name: 'createActivity',
+            path: '/create-activity',
+            component: () => import('@/views/createActivity.vue'),
+            meta: {ShowHeader: true}
+        },
+        {
             name: 'controlPanel',
             path: '/control-panel',
             component: () => import('@/views/ControlPanel.vue'),
             meta: {ShowHeader: false}
+        },
+        {
+            name: 'ConfirmOrder',
+            path: '/confirm-order',
+            component: () => import('@/views/ConfirmPage.vue'),
+            meta: {ShowHeader: true}
         }
     ],
 });

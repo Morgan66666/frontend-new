@@ -57,6 +57,9 @@ let apiConfig = {
   //oss相关
   oss: [
     { name: "getSignature", method: "get", url: "/api/oss" },//获得oss签名
+  ],
+  order: [
+
   ]
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
