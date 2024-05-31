@@ -36,7 +36,7 @@
           ref="avatarInput"
           style="display: none"
         />
-        <img @click="triggerFileInput" src="../../assets/霍霍.png" alt="" />
+        <img @click="triggerFileInput" :src=imageUrl  alt="" />
       </div>
     </div>
     <div class="edit_form_container">
@@ -55,12 +55,12 @@
       <div class="edit_form_item">
         <div class="edit_form_item_label">个性签名</div>
         <div
-          id="signature"
+          id="intro"
           contenteditable="true"
           class="edit_form_item_input_area"
           type="text"
           placeholder="个性签名"
-        ></div>
+        >{{intro}}</div>
       </div>
       <div class="edit_form_item">
         <div class="edit_form_item_label">性别</div>
@@ -113,25 +113,27 @@ export default {
   },
 
   setup() {
-    const username = ref("霍霍果");
-    const signature = ref("如果真爱有颜色，那一定是绿色");
-    const gender = ref("男");
+
+    let userInfo = store.getters.getUserInfo
+    const username = ref(userInfo.userName);
+    const intro = ref(userInfo.intro);
+    const gender = ref(userInfo.gender);
     const selectGender = ref("男");
-    const imageUrl = ref("");
+    const imageUrl = ref(userInfo.avatar);
     const api = inject("$api") as any;
     const dialog = ref(false);
 
     const saveInfo = () => {
       console.log(username.value);
       username.value = document.getElementById("username")?.innerHTML || "";
-      signature.value = document.getElementById("signature")?.innerHTML || "";
+      intro.value = document.getElementById("intro")?.innerHTML || "";
       gender.value = selectGender.value;
-      alert(`${username.value} ${signature.value}`);
+      alert(`${username.value} ${intro.value}`);
       let userId = store.getters.getUserInfo.userId;
       let newUserInfo = {
         userId : userId,
         userName: username.value,
-        intro: signature.value,
+        intro: intro.value,
         gender: gender.value,
         avatar: imageUrl.value,
       }
@@ -178,6 +180,7 @@ export default {
             .then((response) => {
               console.log("上传成功", response);
               imageUrl.value = signatureInfo.host + "/" + uniqueFilename;
+              
               alert("上传成功");
             })
             .catch((error) => {
@@ -226,15 +229,16 @@ export default {
     onMounted(() => {
       let userInfo: UserInfo = store.getters.getUserInfo;
       username.value = userInfo.userName;
-      signature.value = userInfo.signature
-        ? userInfo.signature
+      intro.value = userInfo.intro
+        ? userInfo.intro
         : "这个人很懒，什么都没留下";
       gender.value = userInfo.gender;
     });
 
     return {
+      userInfo,
       username,
-      signature,
+      intro,
       gender,
       selectGender,
       saveInfo,
@@ -299,6 +303,7 @@ div.center {
   height: 150px;
   overflow: hidden;
   border-radius: 50%;
+  border: 1px solid #9f9f9f;
   background-color: transparent;
 }
 

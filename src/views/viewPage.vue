@@ -14,12 +14,17 @@
               <div class="main_main_card_other_info_left">{{ post.date }}</div>
               <div class="main_main_card_other_info_right"></div>
             </div>
-            <div class="main_main_card_comment_input_container">
+            <div>
 
-              <div style="margin-left: 20px; margin-right: 20px;">
-                <quillComponent @update:content="handleContentChange"></quillComponent>
-              </div>
+              <transition style="overflow: hidden" name="slide">
+                <div class="main_main_card_comment_input_container" v-show="show">
+                  <div style="margin-left: 20px; margin-right: 20px;">
+                    <quillComponent @update:content="handleContentChange"></quillComponent>
+                  </div>
 
+
+                </div>
+              </transition>
               <div class="main_main_card_comment_operator_container">
                 <button @click="comment">评论</button>
               </div>
@@ -78,6 +83,7 @@ export default {
   components: { commentCardVue, quillComponent, postMasterComponentVue, popularPostComponent },
   name: "ViewPage",
   setup() {
+    const show = ref(false)
     const newContent = ref("");
     const comments = reactive<Comment[]>(
       [
@@ -94,7 +100,7 @@ export default {
             level: "4级",
             gender: "男",
             userId: "1",
-            signature: "这是用户的信息",
+            intro: "这是用户的信息",
             birth: "2022-12-12"
           },
         },
@@ -113,7 +119,7 @@ export default {
         level: "4级",
         userId: "12110112",
         gender: "男",
-        signature: "这是用户的信息",
+        intro: "这是用户的信息",
         birth: "2022-12-12"
       },
     });
@@ -198,6 +204,10 @@ export default {
         alert("请先登录");
         return;
       }
+      if(!show.value){
+        show.value = true;
+        return
+      }
       let newCommentForm = {
         body: newContent.value,
         postId: postId,
@@ -208,7 +218,7 @@ export default {
       api.comment.createComment(newCommentForm).then((res: any) => {
         console.log("commentId", res)
         api.comment.getCommentByCommentId({ commentId: res }).then((res: any) => {
-          
+
           getUserInfo(res.userId).then((userInfo: any) => {
             userInfo.level = "4级";
             res.userInfo = userInfo;
@@ -216,23 +226,12 @@ export default {
             comments.push(res);
           })
 
-          
+
         })
       })
 
       // 代理类转普通类
-      let userInfo: UserInfo = JSON.parse(JSON.stringify(store.getters.getUserInfo));
-      console.log(userInfo);
-      let newComment: Comment = {
-        id: 1,
-        body: newContent.value,
-        date: "2022-12-12 12:12:12",
-        thumbUp: 121,
-        isLiked: 0,
-        userInfo: userInfo
-      };
-      console.log(newComment);
-      comments.push(newComment);
+
     }
 
     return {
@@ -243,7 +242,8 @@ export default {
       handleThumbDownChange,
       getPostById,
       handleContentChange,
-      comment
+      comment,
+      show
     };
   }
 };
@@ -306,7 +306,7 @@ export default {
 
 .main_main_card {
   width: 100%;
-  min-height: 300px;
+  /* min-height: 300px; */
   background-color: rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;
@@ -463,5 +463,21 @@ export default {
   border: 1px solid rgb(190, 100, 100);
   border-radius: 5px;
   margin: 10px;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: max-height 0.5s ease-in-out;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  max-height: 0;
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  max-height: 500px;
+  /* 你需要根据实际情况调整这个值 */
 }
 </style>

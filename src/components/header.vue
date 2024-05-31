@@ -109,7 +109,7 @@ export default {
     const defaultUserInfo:UserInfo = {
       userId: "123456",
       userName: "未登录",
-      signature: "这个人很懒，什么都没写",
+      intro: "这个人很懒，什么都没写",
       avatar: "",
       gender: "保密",
       level: "4",

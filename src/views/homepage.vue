@@ -45,7 +45,7 @@
 
 
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue';
+import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import { Post } from '../types';
 import { inject,onMounted } from 'vue';
@@ -105,32 +105,18 @@ let comments = reactive<Post[]>([
   },
 
 ]);
-//要么后端发帖子信息的时候打包一起发过来，要么我跟服务器爆了
-// const processPostFromServer = (comments:any) => {
-//   comments.forEach((comment:any) => {
-//     let userId = comment.userId;
-//     comment.date = comment.createTime;
-//     comment.id = comment.postId;
-//     api.user.getUserInfoByUserId({userId: userId}).then((res:any) => {
-//       comment.userInfo = {
-//         avatar: res.avatar,
-//         username: res.userName,
-//         level: "4",
-//         gender: "未知",
-//         userId: res.userId,
-//         signature: "",
-//         birth: "",
-//       } as UserInfo;
-//     });
-//   });
-// }
 
+let pageNum = 1
+let pageSize = 1
 onMounted(async () => {
+  window.addEventListener('scroll', handleScroll);
   try {
     //这个时间在后端是localDateTime类型
     let time = {
       "start-time": "2022-12-12T12:12:12",
       "end-time": "2025-12-12T12:12:12",
+      "pageNum": pageNum,
+      "pageSize":pageSize
     }
     let res = await api.post.getPosts(time);
     res = res.records
@@ -140,6 +126,34 @@ onMounted(async () => {
   }
 });
 
+const handleScroll = async () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (scrollTop + clientHeight >= scrollHeight - 1) {
+    console.log('滚动到底部了');
+
+    try {
+        //这个时间在后端是localDateTime类型
+        let time = {
+          "start-time": "2022-12-12T12:12:12",
+          "end-time": "2025-12-12T12:12:12",
+          "pageNum": ++pageNum,
+          "pageSize": pageSize
+        }
+        let res = await api.post.getPosts(time);
+        res = res.records
+        comments.push(...res);
+      } catch (error) {
+        console.log('error', error);
+      }
+    // 在这里加载更多数据
+  }
+};
+
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
 
 

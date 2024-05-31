@@ -3,29 +3,18 @@
     <div class="main_container_message">
       <div class="main_container_mainMessage">
         <div class="searchBar-container">
-          <input
-            type="text"
-            v-model="searchText"
-            autocomplete="off"
-            class="searchBar-input"
-          />
+          <input type="text" v-model="searchText" autocomplete="off" class="searchBar-input" />
           <button class="searchBar-button" @click="Search">搜索</button>
         </div>
         <div class="classified_search">
           <div class="classified_search_item">
             <div class="classified_search_item_label">板块</div>
-            <a
-              v-for="(item, index) in types"
-              :key="index"
-              @click="selectTypeOption(item)"
-              v-bind:class="
-                selectType === item ? 'classified_search_item_a_active' : ''
-              "
-            >
+            <a v-for="(item, index) in types" :key="index" @click="selectTypeOption(item)" v-bind:class="selectType === item ? 'classified_search_item_a_active' : ''
+            ">
               {{ item }}
             </a>
           </div>
-          <div class="classified_search_item">
+          <!-- <div class="classified_search_item">
             <div class="classified_search_item_label">时间</div>
             <a
               v-for="(item, index) in dates"
@@ -37,40 +26,25 @@
             >
               {{ item }}
             </a>
-          </div>
+          </div> -->
           <div class="classified_search_item">
             <div class="classified_search_item_label">排序</div>
-            <a
-              v-for="(item, index) in temps"
-              :key="index"
-              @click="selectTempOption(item)"
-              :class="
-                selectTemp === item ? 'classified_search_item_a_active' : ''
-              "
-            >
+            <a v-for="(item, index) in temps" :key="index" @click="selectTempOption(item)" :class="selectTemp === item ? 'classified_search_item_a_active' : ''
+            ">
               {{ item }}
             </a>
           </div>
         </div>
         <div class="post-container">
-          <post-comment
-            v-for="item in comments"
-            :comment="item"
-            v-bind:key="item.id"
-            @update:thumpUp="handleThumbUpChange"
-            @update:thumpDown="handleThumbDownChange"
-          ></post-comment>
+          <post-comment v-for="item in comments" :comment="item" v-bind:key="item.id"
+            @update:thumpUp="handleThumbUpChange" @update:thumpDown="handleThumbDownChange"></post-comment>
         </div>
       </div>
       <div class="main_container_rightMessage">
         <div class="main_container_mainMessage_rightMessage_card">
           <div>
-            <router-link
-              to="/post-edit"
-              class="btn-24"
-              :class="{ active: $route.path.startsWith('/post-edit') }"
-              >发帖</router-link
-            >
+            <router-link to="/post-edit" class="btn-24"
+              :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
           </div>
           <div>
             <button class="btn-24">聊天</button>
@@ -89,53 +63,50 @@
 import { ref, watch, onMounted, inject, computed } from "vue";
 import postComment from "../components/homePageComponents/postComment.vue";
 import SearchBar from "../components/SearchBar.vue";
-
 export default {
   components: { postComment, SearchBar },
-  name: "HomePage",
+  name: "forumPage",
   setup() {
     const api = inject("$api");
     const comments = ref([
       {
-        id: "1",
+        postId: 1,
         title: "寻找失落的提瓦特大陆",
         body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
         userInfo: {
-          username: "张三",
+          userName: "张三",
           level: "4级",
           userId: "12110112",
           userMassage: "这是用户的信息",
         },
       },
       {
-        id: "2",
+        postId: "2",
         title: "寻找失落的提瓦特大陆",
         body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
         userInfo: {
-          username: "张三",
+          userName: "张三",
           level: "4级",
           userId: "12110112",
-          userMassage: "这是用户的信息",
         },
       },
       {
-        id: "3",
+        postId: "3",
         title: "寻找失落的提瓦特大陆",
         body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img><img src="src/assets/霍霍果照片.png"></img>',
         date: "2022-12-12 12:12:12",
         thumbUp: 121,
         isLiked: 0,
         userInfo: {
-          username: "张三",
+          userName: "张三",
           level: "4级",
           userId: "12110112",
-          userMassage: "这是用户的信息",
         },
       },
     ]);
@@ -147,8 +118,20 @@ export default {
     const selectType = ref("不限");
     const selectTemp = ref("不限");
 
-    onMounted(() => {
+    onMounted(async () => {
       console.log("comments", comments.value);
+      try {
+        //这个时间在后端是localDateTime类型
+        let time = {
+          "start-time": "2022-12-12T12:12:12",
+          "end-time": "2025-12-12T12:12:12",
+        }
+        let res = await api.post.getPosts(time);
+        res = res.records
+        comments.val.push(...res);
+      } catch (error) {
+        console.log('error', error);
+      }
     });
 
     const filteredComments = computed(() => {
@@ -163,16 +146,16 @@ export default {
       );
     });
 
-    const sortedComments = computed(() => {
-      if (selectTemp.value === "最热") {
-        return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
-      }
-      if (selectTemp.value === "最新") {
-        return filteredComments.value.sort((a, b) => a.date - b.date);
-      }
-      return filteredComments.value;
+    // const sortedComments = computed(() => {
+    //   if (selectTemp.value === "最热") {
+    //     return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
+    //   }
+    //   if (selectTemp.value === "最新") {
+    //     return filteredComments.value.sort((a, b) => a.date - b.date);
+    //   }
+    //   return filteredComments.value;
 
-    });
+    // });
 
     const selectDateOption = (option) => {
       selectDate.value = option;
@@ -456,6 +439,7 @@ export default {
   border: 0 solid;
   box-sizing: border-box;
 }
+
 .btn-24 {
   -webkit-tap-highlight-color: transparent;
   -webkit-appearance: button;
@@ -474,19 +458,24 @@ export default {
   padding: 0;
   text-transform: uppercase;
 }
+
 .btn-24:disabled {
   cursor: default;
 }
+
 .btn-24:-moz-focusring {
   outline: auto;
 }
+
 .btn-24 svg {
   display: block;
   vertical-align: middle;
 }
+
 .btn-24 [hidden] {
   display: none;
 }
+
 .btn-24 {
   --background: rgb(255, 231, 51);
   background: none;
@@ -498,11 +487,13 @@ export default {
   margin-top: 20px;
   color: rgb(102, 60, 0);
 }
+
 .btn-24 span {
   display: block;
   position: relative;
   transition: transform 0.2s ease;
 }
+
 .btn-24:after,
 .btn-24:before {
   --tilt: 20px;
@@ -520,6 +511,7 @@ export default {
   width: 100%;
   z-index: -1;
 }
+
 .btn-24:after {
   --thickness: 5px;
   background: var(--background);
@@ -528,24 +520,22 @@ export default {
   top: var(--thickness);
   width: calc(100% - var(--thickness) * 2);
 }
+
 .btn-24:hover span {
   transform: translateX(-20px);
 }
+
 .btn-24:hover:after,
 .btn-24:hover:before {
-  -webkit-clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
-  );
-  clip-path: polygon(
-    0 0,
-    calc(100% - var(--tilt)) 0,
-    100% 50%,
-    calc(100% - var(--tilt)) 100%,
-    0 100%
-  );
+  -webkit-clip-path: polygon(0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%);
+  clip-path: polygon(0 0,
+      calc(100% - var(--tilt)) 0,
+      100% 50%,
+      calc(100% - var(--tilt)) 100%,
+      0 100%);
 }
 </style>

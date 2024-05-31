@@ -17,33 +17,35 @@ import { Post } from '../../types'
 
 let postList = ref<Post[]>([
   {
-    id: 1,
+    postId: 1,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
     userInfo: {
-      username: "张三",
+      userName: "张三",
       avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
       level: "4级",
       userId: "12110112",
-      userMassage: "这是用户的信息",
       birth: "2022-12-12",
+      gender: "男",
+      intro: "这个人很懒，什么都没有留下"
     }},{
-    id: 2,
+    postId: 2,
     title: "寻找失落的提瓦特大陆",
     body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
     date: "2022-12-12 12:12:12",
     thumbUp: 121,
     isLiked: 0,
     userInfo: {
-      username: "张三",
+      userName: "张三",
       avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
       level: "4级",
       userId: "12110112",
-      userMassage: "这是用户的信息",
       birth: "2022-12-12",
+      gender: "男",
+      intro: "这个人很懒，什么都没有留下"
     },
   }
   ]);

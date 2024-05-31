@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import userInfoVue from "../components/personalComponents/userInfo.vue";
-import { ref } from "vue";
+import { ref,watchEffect,computed } from "vue";
 import { getUserInfo } from "../utils/userUtil.vue";
 import { useRoute } from "vue-router";
 import store from "../store";
@@ -84,28 +84,36 @@ export default {
   components: { userInfoVue },
 
   setup() {
-    const route = useRoute();
-    let userId = route.params.userId;
-    console.log("转入个人页面，id为", userId);
-    let isMaster =
-      store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
-    let userInfo = ref({
-      userId: 1,
-      userName: "12110425",
-      gender: "男",
-      birth: null,
-      account: "12110425",
-      intro: "HAHAHA",
-      avatar:
-        "https://upload-bbs.miyoushe.com/upload/2024/05/27/75276539/f07086935b182a7f0d14e89406490402_7317743301541027725.jpg",
-    });
-    let promise = getUserInfo(userId);
-    promise.then((res) => {
-      userInfo.value = res;
-    });
-    console.log(store.getters.getIsLogin);
-    return { userInfo, isMaster };
-  },
+  const route = useRoute();
+  let userId = route.params.userId;
+  let masterUserInfo = computed(() => store.getters.getUserInfo);
+  console.log("转入个人页面，id为", userId);
+  let isMaster = ref(false);
+  let userInfo = ref({
+    userId: 1,
+    userName: "12110425",
+    gender: "男",
+    birth: null,
+    account: "12110425",
+    intro: "HAHAHA",
+    avatar:
+      "https://upload-bbs.miyoushe.com/upload/2024/05/27/75276539/f07086935b182a7f0d14e89406490402_7317743301541027725.jpg",
+  });
+
+  watchEffect(() => {
+    isMaster.value = store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
+    masterUserInfo = masterUserInfo
+    if (store.getters.getIsLogin && isMaster) {
+      let promise = getUserInfo(userId);
+      promise.then((res) => {
+        userInfo.value = res;
+      });
+    }
+  });
+
+  console.log(store.getters.getIsLogin);
+  return { userInfo, isMaster };
+},
 };
 </script>
 

@@ -61,7 +61,7 @@ export interface SignatureInfo {
     expire: number;
     host: string;
     policy: string;
-    signature: string;
+    intro: string;
 }
 
 export interface UserInfo {
@@ -70,7 +70,7 @@ export interface UserInfo {
         gender: string,
         level: string,
         userId: string,
-        signature: string,
+        intro: string,
         birth: string,
         account?: string,
 }

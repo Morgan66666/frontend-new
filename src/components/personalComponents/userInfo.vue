@@ -1,7 +1,7 @@
 <template>
                 <div class="main_container_userInfo_container">
                     <div class="main_container_user_avatar_container">
-                        <img src="../../assets/霍霍.png" class="main_container_user_avatar" alt="">
+                        <img :src=userInfo.avatar class="main_container_user_avatar" alt="">
                     </div>
 
                     <div class="main_container_user_info">
@@ -64,6 +64,7 @@ export default {
     height: 150px;
     margin-top: 20px;
     margin-left: 20px;
+    border: 1px solid #9f9f9f;
 }
 
 .main_container_user_info{
