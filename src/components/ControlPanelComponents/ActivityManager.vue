@@ -21,7 +21,7 @@
     </el-table>
 
     <!-- 编辑活动的对话框 -->
-    <el-dialog :title="dialogTitle" v-model:visible="dialogVisible">
+    <el-dialog :title="dialogTitle" v-model="dialogVisible">
       <el-form :model="form">
         <el-form-item label="活动标题">
           <el-input v-model="form.title"></el-input>

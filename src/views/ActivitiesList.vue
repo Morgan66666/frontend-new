@@ -1,27 +1,30 @@
 <template>
   <SearchBar :onSearch="Search"/>
   <div class="background-container">
-    <v-container >
-      <v-row>
-        <v-col
-            v-for="activity in activities"
-            :key="activity.activityId"
-            cols="12" sm="6" md="6" lg="6"
-            class="my"
-        >
-          <activity-card :activity="activity" @click="navigateToActivityDetail(activity)"/>
-        </v-col>
-      </v-row>
-    </v-container>
+    <div class="list">
+      <v-container >
+        <v-row>
+          <v-col
+              v-for="activity in activities"
+              :key="activity.activityId"
+              cols="12" sm="6" md="6" lg="6"
+              class="my"
+          >
+            <activity-card :activity="activity" @click="navigateToActivityDetail(activity)"/>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import {Activity} from "../types";
-import {onMounted, ref, inject} from "vue";
+import {Activity, ActivityDetail} from "../types";
+import {onMounted, ref, inject, PropType, watch} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
+const api:any = inject("$api");
 
 const router:any = inject("$router");
 
@@ -30,14 +33,36 @@ function navigateToActivityDetail(activity: Activity) {
   router.push(`/activity`);
 
 }
-const api:any = inject("$api");
+
+function Search(searchQuery: string) {
+  console.log('搜索', searchQuery);
+  // 假设 api.activity.searchActivities 是你的搜索 API
+  api.getActivities({ query: searchQuery }).then((res: any) => {
+    activities.value = res.data;
+  });
+}
+
+
 onMounted(async () => {
   api.activity.getActivities().then((res:any) => {
-    activities.value = res
+    const records = res.records;
+    console.log(records)
+    activities.value = records
   })
 })
 
-const activities = ref<Activity[]>([
+const props = defineProps({
+  searchActivities: {
+    type: Array as PropType<ActivityDetail[]>,
+    required: true
+  }
+})
+
+watch(() => props.searchActivities, (newVal) => {
+  activities.value = newVal
+})
+
+const activities = ref<ActivityDetail[]>([
   {
     activityId: 1,
     title: '活动一',
@@ -46,7 +71,9 @@ const activities = ref<Activity[]>([
     activityBeginTime: '2024-05-01',
     activityEndTime: '2024-05-01',
     img: 'https://www.natgeo.com.cn/pic/program_default.768.jpg',
-    price: 100
+    price: 100,
+    capacity: 100,
+    participantsCount: 50
   },
   {
     activityId: 2,
@@ -56,7 +83,9 @@ const activities = ref<Activity[]>([
     activityBeginTime: '2024-05-02',
     activityEndTime: '2024-05-02',
     img: 'https://i.natgeofe.com/n/5d7fc2d3-30a5-475d-ba96-b35f4dc6d213/NationalGeographic_1517431_2x3.jpg?w=2880&h=4320',
-    price: 200
+    price: 200,
+    capacity: 200,
+    participantsCount: 150
   },
   {
     activityId: 23,
@@ -66,14 +95,12 @@ const activities = ref<Activity[]>([
     activityBeginTime: '2024-05-03',
     activityEndTime: '2024-05-03',
     img: 'https://i.natgeofe.com/n/519530cd-2b07-4722-86f4-1ef1887b0565/PIA10189_square.jpg?w=2880&h=2880',
-    price: 300
+    price: 300,
+    capacity: 300,
+    participantsCount: 250
   },
   // ...更多活动
 ]);
-
-function Search() {
-  console.log('搜索');
-}
 
 </script>
 
@@ -85,8 +112,13 @@ function Search() {
 
 .background-container{
   width: 100%;
-  height: auto;
+  height: 100vh;
   background-color: #f4f5f7;
+}
+
+.list {
+  width: 75vw;
+  margin: 0 auto;
 }
 
 
