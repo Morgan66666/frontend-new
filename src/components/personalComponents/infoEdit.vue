@@ -9,6 +9,7 @@
           <v-card-title class="headline">上传图片</v-card-title>
           <v-card-text>
             <div
+              style="border: 1px dashed #ccc; padding: 20px; text-align: center;"
               id="dropzone"
               @dragover.prevent
               @dragenter.prevent
@@ -19,7 +20,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog = false"
+            <v-btn color="green darken-1" @click="dialog = false"
               >关闭</v-btn
             >
           </v-card-actions>
@@ -147,7 +148,6 @@ export default {
         getUserInfo(userId).then(res  => {
           console.log("重新登录成功", res);
           store.dispatch("LoginIn", res);
-          
         })
       }).catch((error: any) => {
         console.error("更新用户信息失败", error);
