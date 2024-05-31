@@ -35,6 +35,9 @@ let apiConfig = {
     { name: "getPostsByType", method: "get", url: "/api/posts" },//根据类型获得帖子
     { name: "getPostsByBody", method: "", url: "/api/posts" },//根据帖子内容获得帖子
     { name: "getCommentsByPostId", method: "get", url: "/api/posts/{postId}/comments" },//根据帖子id获得评论
+    { name: "updatePostLike", method:"post", url:"/api/posts/{postId}/like"},//更新帖子点赞数
+    { name: "getIfUserLikePost", method:"get", url:"/api/posts/{postId}/like"},//获取用户是否点赞帖子
+    { name: "getSortedPostsByLike", method:"get", url:"/api/posts/hot"},//获取按照点赞数排序的帖子
   ],
   //管理员相关
   admin: [

@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, inject } from 'vue'
 import { UserInfo } from '../../types'
 import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router:any = inject("$router") as ReturnType<typeof useRouter>;
 const props = defineProps({
     userInfo: {
         type: Object as () => UserInfo,

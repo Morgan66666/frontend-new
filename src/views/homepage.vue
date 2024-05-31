@@ -18,10 +18,9 @@
 
               <router-link to="/post-edit" style="text-decoration: none;" class="btn-24"
                 :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
-
             </div>
             <div>
-              <button class="btn-24">聊天</button>
+              <button class="btn-24" @click="store.dispatch('SetShowChatWindow', true)">聊天</button>
             </div>
             <div>
               <button class="btn-24">A I</button>
@@ -38,6 +37,10 @@
         </div>
       </div>
     </div>
+
+    <div class="chat" v-if="chatVisible">
+      <chat-component></chat-component>
+    </div>
   </div>
 </template>
 
@@ -47,14 +50,17 @@
 <script setup lang="ts">
 import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
+import chatComponent from '../components/chatComponent.vue';
 import { Post } from '../types';
 import { inject,onMounted } from 'vue';
+import store from '../store';
 
 const api:any = inject('$api');
 let comments = reactive<Post[]>([]);
 
 let pageNum = 1
 let pageSize = 10
+let chatVisible = ref(false);
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
   try {
@@ -117,13 +123,13 @@ const handleThumbUpChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === -1) {
-      let thumbUp = post.thumbUp + 1;
+      let likes = post.likes + 1;
       post.isLiked = 1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     } else {
-      let thumbUp = post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+      let likes = post.isLiked === 1 ? post.likes - 1 : post.likes + 1;
       post.isLiked = post.isLiked === 1 ? 0 : 1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     }
   }
   console.log('post', post);
@@ -133,9 +139,9 @@ const handleThumbDownChange = ({ id }:any) => {
   let post = getPostById(id);
   if (post != null) {
     if (post.isLiked === 1) {
-      let thumbUp = post.thumbUp - 1;
+      let likes = post.likes - 1;
       post.isLiked = -1;
-      post.thumbUp = thumbUp;
+      post.likes = likes;
     } else {
       post.isLiked = post.isLiked === -1 ? 0 : -1;
     }

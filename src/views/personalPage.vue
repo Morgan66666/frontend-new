@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import userInfoVue from "../components/personalComponents/userInfo.vue";
-import { ref,watchEffect,computed } from "vue";
+import { ref,watchEffect,computed, onMounted,inject } from "vue";
 import { getUserInfo } from "../utils/userUtil.vue";
 import { useRoute } from "vue-router";
 import store from "../store";
@@ -100,13 +100,28 @@ export default {
       "https://upload-bbs.miyoushe.com/upload/2024/05/27/75276539/f07086935b182a7f0d14e89406490402_7317743301541027725.jpg",
   });
 
+
+  onMounted(() => {
+    if (!store.getters.getIsLogin || !isMaster.value) {
+      let promise = getUserInfo(userId);
+      promise.then((res) => {
+        userInfo.value = res;
+        console.log("获取用户信息成功", res);
+      });
+    }else{
+      userInfo.value = masterUserInfo.value;
+    }
+  });
+
   watchEffect(() => {
+    userId = route.params.userId;
     isMaster.value = store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
     masterUserInfo = masterUserInfo
     if (store.getters.getIsLogin && isMaster) {
       let promise = getUserInfo(userId);
       promise.then((res) => {
         userInfo.value = res;
+        console.log("获取用户信息成功", res);
       });
     }
   });

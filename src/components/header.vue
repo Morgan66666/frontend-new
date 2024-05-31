@@ -30,58 +30,61 @@
       </div>
       <div class="header_search_container">
         <div class="userInfo_avatar">
-          <img :src=userInfo.avatar @click="avatar" alt="" />
+          <img :src=userInfo?.avatar @click="avatar" alt="" />
         </div>
-        <div class="userInfo-username">{{ userInfo.userName }}</div>
+        <div class="userInfo-username">{{ userInfo?.userName }}</div>
         <div class="options" v-if="showOptions">
           <a @click="toPersonal">个人主页</a>
           <a @click="showChat">消息</a>
           <a @click="logOut">登出</a>
         </div>
       </div>
-      <div class="login" v-if="isVisible">
+      <div class="login" v-show="isVisible">
         <login-component @login="login"></login-component>
       </div>
     </div>
-    <div class="chat" v-if="chatVisible">
+    <div class="chat" v-show='chatVisible'>
       <chat-component></chat-component>
     </div>
 
-    <div class="background" v-if="backIsVisible" @click="hide"></div>
+    <div class="background" v-show="backIsVisible" @click="hide"></div>
     <div class=""></div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect, inject } from "vue";
 import loginComponent from "../components/loginComponent.vue";
 import chatComponent from "./chatComponent.vue";
 import store from "../store";
 import { UserInfo } from "../types";
-import { useRouter } from "vue-router";
 
 export default {
   name: "headerOfMainPage",
 
   components: { loginComponent, chatComponent },
   setup() {
-    let isVisible = ref(false);
-    let chatVisible = ref(false);
-    let backIsVisible = ref(false);
-    let router = useRouter();
+    let isVisible = ref(store.getters.getShowLoginWindow);
+    let backIsVisible = ref(store.getters.getShowChatWindow||isVisible);
+    let chatVisible = ref(store.getters.getShowChatWindow)
+    // let router = useRouter();
+    let router:any = inject("$router");
     const showOptions = ref(false);
+    store.dispatch('SetShowChatWindow', false)
+    store.dispatch('SetShowLoginWindow', false)
     const avatar = () => {
       if (store.getters.getIsLogin) {
         showOptions.value = !showOptions.value;
+        
       } else {
-        isVisible.value = true;
+        store.dispatch('SetShowLoginWindow', true)
         backIsVisible.value = true;
         showOptions.value = false;
       }
     };
 
     const showChat = () => {
-      chatVisible.value = !chatVisible.value;
+      store.dispatch('SetShowChatWindow', true)
       backIsVisible.value = !backIsVisible.value;
       showOptions.value = false;
     };
@@ -91,7 +94,7 @@ export default {
         router.push(`/personal/${store.getters.getUserInfo.userId}`);
         showOptions.value = false;
       } else {
-        isVisible.value = true;
+        store.dispatch('SetShowLoginWindow', true)
         showOptions.value = false;
       }
     };
@@ -113,6 +116,7 @@ export default {
       userInfo.value = defaultUserInfo;
       hide();
       showOptions.value = false;
+      router.push(`/`);
       alert("登出成功");
     }
     const userInfo = ref(defaultUserInfo);
@@ -130,17 +134,22 @@ export default {
       }
     };
 
+    watchEffect(() => {
+      userInfo.value = store.getters.getUserInfo;
+      chatVisible.value = store.getters.getShowChatWindow
+      isVisible.value = store.getters.getShowLoginWindow;
+      backIsVisible.value = store.getters.getShowChatWindow||store.getters.getShowLoginWindow
+    });
+
     const hide = () => {
-      isVisible.value = false;
-      chatVisible.value = false;
-      backIsVisible.value = false;
+      store.dispatch("SetShowChatWindow",false)
+      store.dispatch("SetShowLoginWindow",false)
     };
 
     return {
       avatar,
       isVisible,
       login,
-      chatVisible,
       backIsVisible,
       showOptions,
       showChat,
@@ -148,7 +157,9 @@ export default {
       hide,
       userInfo,
       logOut,
-      router
+      router,
+      store,
+      chatVisible
     };
   },
 };
@@ -171,7 +182,7 @@ export default {
 }
 
 .header_nav {
-  width: 30em;
+  width: 40em;
   height: 100%;
   background-color: rgb(31, 34, 51);
   justify-content: left;
@@ -205,10 +216,8 @@ export default {
   width: 14em;
   height: 100%;
   background-color: rgb(31, 34, 51);
-  justify-content: center;
-  justify-items: center;
-  vertical-align: middle;
   display: flex;
+  flex-direction: row; 
   position: relative;
 }
 
@@ -225,7 +234,7 @@ export default {
   margin-top: 0.2em;
   background-color: rgb(183, 144, 144);
   display: inline;
-  margin-left: 12em;
+  /* margin-left: 12em; */
   border-radius: 60%;
   cursor: pointer;
 }
@@ -280,7 +289,7 @@ export default {
   flex-direction: column;
   background-color: rgb(31,34,51);
   min-width: 120px;
-  right: 0px;
+  left: -10px;
   top: 3.5em;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 120;

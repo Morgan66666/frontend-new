@@ -38,12 +38,14 @@ export interface ActivityDetail {
 }
 
 export interface Post {
+    userId?: string;
     body: string;
     date: string;
     postId: number;
     isLiked: number;
-    thumbUp: number;
+    likes: number;
     title: string;
+    type: string;
     userInfo: UserInfo;
 }
 

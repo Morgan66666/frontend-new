@@ -18,46 +18,23 @@
       </div>
       <div class="main_comments_card_content">
         <div class="content_html" v-html="comment.body"></div>
-
-
       </div>
       <div class="main_comments_card_operator_container">
-        <div class="main_comments_card_operator_container_left">
-          {{ comment.createTime }}
-        </div>
-        <div class="main_comments_card_operator_container_right">
-          <img alt="点赞"
-            v-if="comment.isLiked === 1"
-            src="../../assets/icon/thumb-up1.svg"
-            @click="thumbUp"
-          />
-          <img alt="点赞" v-else src="../../assets/icon/thumb-up.svg" @click="thumbUp" />
-          <div class="other_info_operations_number">{{ comment.thumbUp }}</div>
-          <img alt="点踩"
-            v-if="comment.isLiked === -1"
-            src="../../assets/icon/thumb-down1.svg"
-            @click="thumbDown"
-          />
-          <img
-            v-else alt="点踩"
-            src="../../assets/icon/thumb-down.svg"
-            @click="thumbDown"
-          />
-        </div>
+         <div class="data">{{comment.createTime}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {PropType} from "vue";
+import {PropType, inject} from "vue";
 import { UserInfo } from "../../types";
 
 interface Comment {
   id: number;
   body: string;
   createTime: string;
-  thumbUp: number;
+  likes: number;
   isLiked: number;
   userInfo: UserInfo;
 }
@@ -75,7 +52,8 @@ export default {
   setup(props:any, cxy:any) {
     // const comment = JSON.parse(JSON.stringify(props.comment));
     // props.comment = comment;
-    const thumbUp = () => {
+    const route:any = inject("$router");
+    const likes = () => {
       //根据id获得 评论, 调用父组件的方法
       cxy.emit("update:thumpUp", {
         id: props.comment.id,
@@ -93,9 +71,13 @@ export default {
 
     const enterUserPage = (id:any) => {
       console.log(id);
+      cxy.emit("enterUserPage", {
+        id: id,
+      });
+      route.push({ path: `/personal/${id}` });
     };
 
-    return { thumbUp, thumbDown, enterUserPage};
+    return { likes, thumbDown, enterUserPage};
   },
 
 };

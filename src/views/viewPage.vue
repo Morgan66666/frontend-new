@@ -98,9 +98,10 @@ export default {
       title: "寻找失落的提瓦特大陆",
       body: '<p>家人们谁懂啊，这个游戏一点都不好玩</p><img  src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img><p>竟然有男角色</p><img src="https://tsundora.com/image/2020/10/genshin_3.jpg"></img>',
       date: "2022-12-12 12:12:12",
-      thumbUp: 121,
+      likes: 121,
       isLiked: 0,
       userId: "1",
+      type: "体育比赛",
       userInfo: {
         userName: "张三",
         avatar: "https://tsundora.com/image/2020/10/genshin_3.jpg",
@@ -111,9 +112,12 @@ export default {
         birth: "2022-12-12",
       },
     });
-    const api: any = inject("$api");
-    const router: any = useRouter();
 
+
+
+
+    const api: any = inject("$api");
+    const router:any = inject("$router") as ReturnType<typeof useRouter>;
     let postId = router.currentRoute.value.params.id;
     function handleThumbUpChange({ id }: any) {
       let comment = getCommentById(id);
@@ -133,8 +137,9 @@ export default {
         post.title = res.title;
         post.body = res.body;
         post.date = res.date;
-        post.thumbUp = res.thumbUp;
-        post.isLiked = res.isLiked;
+        post.likes = res.likes;
+        // post.isLiked = res.isLiked;
+        post.isLiked = 0
         getUserInfo(res.userId).then((userInfo: any) => {
           userInfo.level = "4级";
           post.userInfo = userInfo;
@@ -162,7 +167,7 @@ export default {
     };
 
     onMounted(() => {
-      // initial();
+      
     });
 
     watchEffect(() => {
@@ -204,16 +209,17 @@ export default {
       }
       let newCommentForm = {
         body: newContent.value,
-        postId: postId,
-        userId: store.getters.getUserInfo.userId,
-        createTime: Date.now(),
+        postId: parseInt(postId),
+        userId: store.getters.getUserInfo.userId
+        // createTime: Date.now(),
       };
 
       api.comment.createComment(newCommentForm).then((res: any) => {
         console.log("commentId", res);
         api.comment
-          .getCommentByCommentId({ commentId: res })
+          .getCommentByCommentId({ commentId: res.value })
           .then((res: any) => {
+            console.log("userId", res.userId);
             getUserInfo(res.userId).then((userInfo: any) => {
               userInfo.level = "4级";
               res.userInfo = userInfo;

@@ -47,7 +47,7 @@
               :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
           </div>
           <div>
-            <button class="btn-24">聊天</button>
+            <button class="btn-24" @click = "store.dispatch('SetShowChatWindow', true)">聊天</button>
           </div>
           <div>
             <button class="btn-24">A I</button>
@@ -63,6 +63,8 @@
 import { ref, watch, onMounted, inject, computed } from "vue";
 import postComment from "../components/homePageComponents/postComment.vue";
 import SearchBar from "../components/SearchBar.vue";
+import store from '../store';
+
 export default {
   components: { postComment, SearchBar },
   name: "forumPage",
@@ -110,7 +112,7 @@ export default {
     const sortedComments = computed(() => {
       console.log("comments排序", filteredComments.value);
       if (selectTemp.value === "最热") {
-        return filteredComments.value.sort((a, b) => b.thumbUp - a.thumbUp);
+        return filteredComments.value.sort((a, b) => b.likes - a.likes);
       }
       if (selectTemp.value === "最新") {
         return filteredComments.value.sort((a, b) => a.date - b.date);
@@ -135,14 +137,14 @@ export default {
       let post = getPostById(id);
       if (post != null) {
         if (post.isLiked === -1) {
-          let thumbUp = post.thumbUp + 1;
+          let likes = post.likes + 1;
           post.isLiked = 1;
-          post.thumbUp = thumbUp;
+          post.likes = likes;
         } else {
-          let thumbUp =
-            post.isLiked === 1 ? post.thumbUp - 1 : post.thumbUp + 1;
+          let likes =
+            post.isLiked === 1 ? post.likes - 1 : post.likes + 1;
           post.isLiked = post.isLiked === 1 ? 0 : 1;
-          post.thumbUp = thumbUp;
+          post.likes = likes;
         }
       }
       console.log("post", post);
@@ -152,9 +154,9 @@ export default {
       let post = getPostById(id);
       if (post != null) {
         if (post.isLiked === 1) {
-          let thumbUp = post.thumbUp - 1;
+          let likes = post.likes - 1;
           post.isLiked = -1;
-          post.thumbUp = thumbUp;
+          post.likes = likes;
         } else {
           post.isLiked = post.isLiked === -1 ? 0 : -1;
         }
@@ -209,7 +211,8 @@ export default {
       Search,
       searchText,
       filteredComments,
-      sortedComments
+      sortedComments,
+      store
     };
   },
 };

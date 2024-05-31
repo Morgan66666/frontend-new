@@ -6,7 +6,10 @@ const store = new Vuex.Store({
   state: {
     token: null,
     user: null as UserInfo | null,    
-    isLogin: false
+    isLogin: false,
+    showChatWindow: false,
+    showLoginWindow: false
+
   },
   getters: {
     getToken (state) {
@@ -18,7 +21,14 @@ const store = new Vuex.Store({
     getIsLogin (state) {
       //return state.token !== null && state.user !== null && new Date(state.token?.expireTime) > new Date()
       return state.user !== null
+    },
+    getShowChatWindow(state){
+      return state.showChatWindow
+    },
+    getShowLoginWindow(state){
+      return state.showLoginWindow
     }
+
   },
   mutations: {
     SetToken (state, token) {
@@ -34,6 +44,12 @@ const store = new Vuex.Store({
       state.token = null
       state.user = null
       state.isLogin = false
+    },
+    SetShowChatWindow(state, show){
+      state.showChatWindow = show
+    },
+    SetShowLoginWindow(state, show){
+      state.showLoginWindow = show
     }
   },
   actions: {
@@ -45,6 +61,12 @@ const store = new Vuex.Store({
     },
     LoginOut (context) {
       context.commit('LoginOut')
+    },
+    SetShowChatWindow(context, show){
+      context.commit('SetShowChatWindow',show)
+    },
+    SetShowLoginWindow(context, show){
+      context.commit('SetShowLoginWindow',show)
     }
   },
   plugins: [createPersistedState()]

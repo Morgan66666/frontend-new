@@ -25,6 +25,7 @@ import SearchBar from "../components/SearchBar.vue";
 import router from "../router";
 
 
+
 function navigateToActivityDetail(activity: Activity) {
   console.log('跳转到活动详情页', activity);
   router.push(`/activity`);
