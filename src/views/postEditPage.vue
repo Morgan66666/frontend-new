@@ -67,7 +67,7 @@ import store from "../store";
 
 // 先检查用户是否登录，没登录就跳转到登录页面
 onMounted(() => {
-  let proxy = getCurrentInstance()?.proxy;
+  let proxy = getCurrentInstance()?.proxy as any;
   if (!store.getters.getIsLogin){
     proxy.$message.success("请先登录")
     store.dispatch("SetShowLoginWindow", true);

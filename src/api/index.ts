@@ -38,6 +38,13 @@ let apiConfig = {
     { name: "updatePostLike", method:"post", url:"/api/posts/{postId}/like"},//更新帖子点赞数
     { name: "getIfUserLikePost", method:"get", url:"/api/posts/{postId}/like"},//获取用户是否点赞帖子
     { name: "getSortedPostsByLike", method:"get", url:"/api/posts/hot"},//获取按照点赞数排序的帖子
+    { name: "createPostCollection", method:"post", url:"/api/posts/collections"},//创建收藏
+    { name: "getCollectionsByUserId", method:"get", url:"/api/posts/collections/posts/{userId}"},//获取用户收藏
+    { name : "deletePostCollection", method:"delete", url:"/api/posts/collections/{postId}"},//删除收藏
+    { name: "getPostByCollection", method:"get", url:"/api/posts/collections/{collectionId}"},//获取收藏的帖子
+    { name: "getIsCollected", method:"get", url: "/api/posts/collections/isCollected/{postId}"},//获取是否收藏
+    { name: "getHistoryByUserId", method:"get", url:"/api/posts/histories/user/{userId}"},//获取浏览历史
+    { name: "createHistory", method:"post", url:"/api/posts/histories"},//创建浏览历史
   ],
   //管理员相关
   admin: [
@@ -51,6 +58,7 @@ let apiConfig = {
     { name: "getCommentByCommentId", method: "get", url: "/api/comments/{commentId}" },//根据评论id获得评论
     { name: "updateComment", method: "put", url: "/api/comments/update" },//修改评论
     { name: "deleteComment", method: "delete", url: "/api/comments/{commentId}" },//删除评论
+    { name: "getCommentsByUserId", method: "get", url: "/api/comments/all/{userId}/page/{pageNum}" },//根据用户id获得评论
   ],
   //活动相关
   activity: [

@@ -41,19 +41,14 @@
         </div>
       </div>
       <div class="main_container_rightMessage">
-        <div class="main_container_mainMessage_rightMessage_card">
-          <div>
-            <router-link to="/post-edit" class="btn-24"
-              :class="{ active: $route.path.startsWith('/post-edit') }">发帖</router-link>
-          </div>
-          <div>
-            <button class="btn-24" @click = "store.dispatch('SetShowChatWindow', true)">聊天</button>
-          </div>
-          <div>
-            <button class="btn-24">A I</button>
-          </div>
+        <div class="announcement-edition">
+          公告
+          <div >希望有兴趣参加三人两足比赛的同学速速前往三甲医院进行不必要的肢体裁剪手术，逾期者取消参赛资格</div>
         </div>
-        <div class="main_container_mainMessage_rightMessage_card">2</div>
+        <div class="main_container_mainMessage_rightMessage_card">
+          热门内容
+            <popularPostComponent></popularPostComponent>
+        </div>
       </div>
     </div>
   </div>
@@ -63,10 +58,11 @@
 import { ref, watch, onMounted, inject, computed } from "vue";
 import postComment from "../components/homePageComponents/postComment.vue";
 import SearchBar from "../components/SearchBar.vue";
+import popularPostComponent from "../components/viewComponents/popularPostComponent.vue";
 import store from '../store';
 
 export default {
-  components: { postComment, SearchBar },
+  components: { postComment, SearchBar,popularPostComponent },
   name: "forumPage",
   setup() {
     const api = inject("$api");
@@ -100,11 +96,25 @@ export default {
       console.log("comments过滤", comments.value);
       return comments.value.filter(
         (comment) => {
-          // 这个过滤器还有问题，需要修改
-          if (selectDate.value !== "不限" && comment.date !== selectDate.value) {
+          if (selectType.value !== "不限" &&selectType.value !== comment.type) {
             return false;
           }
-          return !(selectType.value !== "不限" && comment.userInfo.userName !== selectType.value);
+
+          let selectTimestamp;
+          switch (selectDate.value) {
+            case '今日':
+              selectTimestamp = new Date().setHours(0, 0, 0, 0);
+              break;
+            case '一周内':
+              selectTimestamp = new Date().getTime() - 7 * 24 * 60 * 60 * 1000;
+              break;
+            case '一月内':
+              selectTimestamp = new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
+              break;
+            default:
+              selectTimestamp = null;
+          }
+          return !(selectTimestamp !== null && comment.createTime < selectTimestamp);
         }
       );
     });
@@ -115,7 +125,7 @@ export default {
         return filteredComments.value.sort((a, b) => b.likes - a.likes);
       }
       if (selectTemp.value === "最新") {
-        return filteredComments.value.sort((a, b) => a.date - b.date);
+        return filteredComments.value.sort((a, b) => a.createTime - b.createTime);
       }
       return filteredComments.value;
 
@@ -133,19 +143,10 @@ export default {
       selectTemp.value = option;
     };
 
-    const handleThumbUpChange = ({ id }) => {
+    const handleThumbUpChange = ({ id, likes }) => {
       let post = getPostById(id);
       if (post != null) {
-        if (post.isLiked === -1) {
-          let likes = post.likes + 1;
-          post.isLiked = 1;
-          post.likes = likes;
-        } else {
-          let likes =
-            post.isLiked === 1 ? post.likes - 1 : post.likes + 1;
-          post.isLiked = post.isLiked === 1 ? 0 : 1;
-          post.likes = likes;
-        }
+        post.likes = likes;
       }
       console.log("post", post);
     };
@@ -165,7 +166,7 @@ export default {
     };
 
     const getPostById = (id) => {
-      return comments.value.find((item) => item.id === id);
+      return comments.value.find((item) => item.postId === id);
     };
 
     const Search = () => {
@@ -173,15 +174,17 @@ export default {
         return;
       }
       let searchForm = {
-        searchText: searchText.value,
+        title: searchText.value,
+        body: searchText.value,
+
         selectDate: selectDate.value,
         selectType: selectType.value,
         selectTemp: selectTemp.value,
       };
 
-      api.Post.getPosts(searchForm).then((res) => {
+      api.post.getPosts(searchForm).then((res) => {
         console.log(res);
-        comments.value = res;
+        comments.value = res.records;
       });
 
       console.log(searchText.value);
@@ -311,7 +314,6 @@ export default {
   width: 720px;
   height: 100%;
   background-color: transparent;
-  display: inline-block;
   float: left;
   margin: 20px 0 0 0;
 }
@@ -330,12 +332,10 @@ export default {
   height: auto;
   background-color: rgb(255, 255, 255);
   margin: 20px;
-  padding: 60px 10px;
+  padding: 10px 10px;
   box-sizing: border-box;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
-  text-align: center;
-  align-content: center;
 }
 
 .right_op_button {
@@ -396,113 +396,20 @@ export default {
   color: rgb(106, 61, 0);
 }
 
-/* 按钮样式 */
-.btn-24,
-.btn-24 *,
-.btn-24 :after,
-.btn-24 :before,
-.btn-24:after,
-.btn-24:before {
-  border: 0 solid;
-  box-sizing: border-box;
+.announcement-edition{
+  padding: 20px;
+  margin: 20px;
+  width: 180px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
 }
-
-.btn-24 {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-appearance: button;
-  background-color: #000;
-  background-image: none;
-  color: #fff;
-  cursor: pointer;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  font-size: 100%;
-  font-weight: 900;
-  line-height: 1.5;
-  margin: 0;
-  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
-  padding: 0;
-  text-transform: uppercase;
-}
-
-.btn-24:disabled {
-  cursor: default;
-}
-
-.btn-24:-moz-focusring {
-  outline: auto;
-}
-
-.btn-24 svg {
-  display: block;
-  vertical-align: middle;
-}
-
-.btn-24 [hidden] {
-  display: none;
-}
-
-.btn-24 {
-  --background: rgb(255, 231, 51);
-  background: none;
-  overflow: hidden;
-  padding: 0.8rem 3rem;
-  position: relative;
-  text-decoration: none;
-  width: 150px;
-  margin-top: 20px;
-  color: rgb(102, 60, 0);
-}
-
-.btn-24 span {
-  display: block;
-  position: relative;
-  transition: transform 0.2s ease;
-}
-
-.btn-24:after,
-.btn-24:before {
-  --tilt: 20px;
-  background: #636262;
-  -webkit-clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%);
-  clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%);
-  content: "";
-  display: block;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  transition: -webkit-clip-path 0.2s ease;
-  transition: clip-path 0.2s ease, -webkit-clip-path 0.2s ease;
-  width: 100%;
-  z-index: -1;
-}
-
-.btn-24:after {
-  --thickness: 5px;
-  background: var(--background);
-  height: calc(100% - var(--thickness) * 2);
-  left: var(--thickness);
-  top: var(--thickness);
-  width: calc(100% - var(--thickness) * 2);
-}
-
-.btn-24:hover span {
-  transform: translateX(-20px);
-}
-
-.btn-24:hover:after,
-.btn-24:hover:before {
-  -webkit-clip-path: polygon(0 0,
-      calc(100% - var(--tilt)) 0,
-      100% 50%,
-      calc(100% - var(--tilt)) 100%,
-      0 100%);
-  clip-path: polygon(0 0,
-      calc(100% - var(--tilt)) 0,
-      100% 50%,
-      calc(100% - var(--tilt)) 100%,
-      0 100%);
+.announcement-edition div {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #666;
 }
 </style>

@@ -220,10 +220,13 @@ export default {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
+
 }
 
+
+
 .list {
-  width: 25%;
+  flex: 1;
   background-color: transparent;
   border-right: 1px solid rgb(164, 164, 164);
 }
@@ -236,6 +239,7 @@ export default {
   cursor: pointer;
   border-bottom: 1px solid rgb(0, 0, 0);
   background-color: transparent;
+  transition: background-color 0.3s ease;
 }
 
 .list-item-avatar {
@@ -244,26 +248,23 @@ export default {
   border-radius: 50%;
   background-color: rgb(0, 0, 0);
   margin-left: 20px;
-  margin-top: auto;
-  margin-bottom: auto;
+  align-self: center;
 }
 
 .list-item-username {
   margin-left: 20px;
   color: rgb(0, 0, 0);
   font-size: 16px;
-  margin-top: auto;
-  margin-bottom: auto;
+  align-self: center;
 }
 
 .list-item:hover {
-  background-color: rgb(183, 183, 183);
+  background-color: rgb(200, 200, 200);
 }
 
 .list-item.active {
   background-color: rgb(183, 183, 183);
 }
-
 .content {
   width: 75%;
   overflow-y: auto;

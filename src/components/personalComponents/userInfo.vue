@@ -6,17 +6,23 @@
 
                     <div class="main_container_user_info">
                         <div class="main_container_user_info_name">{{ userInfo.userName }}</div>
-                        <div class="main_container_user_info_id">ID: {{ userInfo.userId }}</div>
+                        <div class="main_container_user_info_id">ID: {{ userInfo.account }}</div>
                         <p class="main_container_user_info_signature">
                             {{ userInfo.intro }}
                         </p>
                     </div>
+                    <div class="button-container">
+                        <button @click="sendMessage">私信</button>
+                        <button v-if="isMaster" @click="edit">编辑</button>
+                    </div>
+                    
                     
                 </div>
 </template>
 
 <script lang="ts">
-
+import { toRefs, inject, ref, watchEffect, getCurrentInstance } from 'vue';
+import store from '../../store';
 
 
 export default {
@@ -28,12 +34,46 @@ export default {
       }
 
   },
-//   setup(props:any) {
-    
-//     console.log("信息展示卡",userInfo.value);
-//     return {userInfo};
-//   },
+  
+  setup(props) {
+    const router = inject('$router') as any;
+    const { userInfo } = toRefs(props);
+    const instance = getCurrentInstance();
+    const proxy = instance?.proxy;
 
+    const isMaster = ref(store.getters.getUserInfo.userId === userInfo.value.userId);
+    const sendMessage = () => {
+      if (!store.getters.getIsLogin) {
+        store.dispatch('SetShowLoginWindow', true);
+        return;
+      }
+      if (store.getters.getUserInfo.userId === userInfo.value.userId){
+
+        proxy?.$message.error('不能给自己发消息');
+        return;
+      }
+
+      // 创建一个绘画，然后打开聊天窗口
+      store.dispatch('SetShowChatWindow', true);
+
+      console.log('sendMessage');
+    };
+
+    const edit = () => {
+      router.push(`/personal/${userInfo.value.userId}/infoEdit`);
+    };
+    watchEffect(() => {
+      isMaster.value = store.getters.getUserInfo.userId === userInfo.value.userId;
+    });
+
+
+    return {
+      userInfo,
+      sendMessage,
+      edit,
+      isMaster
+    };
+  },
 };
 </script>
 
@@ -43,6 +83,7 @@ export default {
     height: 200px;
     background-color: rgb(247,248,252);
     margin-top: 20px;
+    display: flex;
     border-radius: 5px;
 }
 
@@ -68,48 +109,63 @@ export default {
 
 .main_container_user_info{
     height: 100%;
-    width: 780px;
+    width: 580px;
     background-color: rgb(255,255,255);
     display: inline;
-    float: right;
+    /* float: right; */
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
 .main_container_user_info_name{
-    line-height: 2em;
-    margin-top: 8px;
-    margin-left: 10px;
-    align-items: center;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    display: flex;
-    font-weight: bold;
-    font-size: 2em;
+    font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
     
 }
 
 .main_container_user_info_id{
-    line-height: 1.1em;
-    margin-left: 10px;
-    align-items: center;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    display: flex;
-    font-size: 1.1em;
+    font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
 }
 
 .main_container_user_info_signature{
     height: 100px;
     line-height:18px;  
-    margin-left: 10px;
     margin-top: 12px;
     margin-right: 12px;
-    font-size: 0.8em;
     background-color: rgb(255,255,255);
     word-wrap:break-word;  
     word-break:break-all;  
+    font-size: 0.8em;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  padding: 20px;
+  background-color: rgb(255,255,255);
+}
+
+.button-container button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  background-color: #fff;
+    color: #00b2ff;
+    border: 1px solid #00c3ff;
+    border-radius: 4px;
+}
+
+
+
+.button-container button:hover {
+  color: #00a2ff;
+  border: 1px solid #00a2ff;
 }
 </style>

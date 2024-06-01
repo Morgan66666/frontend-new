@@ -50,8 +50,6 @@ export default {
   },
 
   setup(props:any, cxy:any) {
-    // const comment = JSON.parse(JSON.stringify(props.comment));
-    // props.comment = comment;
     const route:any = inject("$router");
     const likes = () => {
       //根据id获得 评论, 调用父组件的方法
@@ -89,6 +87,7 @@ export default {
   height: 35px;
   background-color: transparent;
   align-items: center;
+  cursor: pointer;
   /* border-bottom: 1px solid rgb(162, 160, 160); */
 }
 
@@ -267,6 +266,14 @@ export default {
   text-align: center;
   font-size: 0.8em;
   line-height: 24px;
+}
+
+.data{
+  color: rgb(151,151,151);
+  font: 0.8em sans-serif;
+  margin-left: 10px;
+  margin-top: 5px;
+
 }
 
 :deep(.content_html img) {

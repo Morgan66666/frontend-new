@@ -4,7 +4,7 @@ import personalPage from '../views/personalPage.vue'
 import commentsList from '../components/personalComponents/commentsList.vue'
 import ActivityDetail from "../views/ActivityDetail.vue";
 
-var router = createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
@@ -49,6 +49,10 @@ var router = createRouter({
                     component: () => import('@/components/personalComponents/infoEdit.vue'),
 
                 },
+                {
+                    path: 'browseHistory',
+                    component: () => import('@/components/personalComponents/browseHistoryList.vue')
+                }
             ]
         },
         {

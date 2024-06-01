@@ -14,6 +14,11 @@
           <button class="content" @click="item.show = !item.show">
             {{ item.postInfo.title }}
           </button>
+
+          <div class="time">
+            浏览时间: {{ formatDate(item.postInfo.createTime) }}
+          </div>
+
           <transition name="slide-fade">
             <postComment v-if="item.show" :comment="item"></postComment>
           </transition>
@@ -33,6 +38,8 @@ const api: any = inject("$api");
 let postsShow = ref<any>([]);
 const router: any = inject("$router") as ReturnType<typeof useRouter>;
 const userId = router.currentRoute.value.params.userId;
+const showComment = {};
+
 const formatDate = (value:any) => {
       if (value) {
       
@@ -41,7 +48,7 @@ const formatDate = (value:any) => {
     }
 
 onMounted(() => {
-  api.post.getCollectionsByUserId({ userId: userId }).then((res: any) => {
+  api.post.getHistoryByUserId({ userId: userId }).then((res: any) => {
     // 根据拿到的收藏记录获取帖子
     Promise.all(
       res.records.map((item: { postId: any; postInfo: any }) => {
@@ -54,11 +61,12 @@ onMounted(() => {
       })
     ).then((records) => {
       Promise.all(
-        records.map((item: { userId: any; userInfo: any }) => {
+        records.map((item: { userId: any; userInfo: any; show: boolean }) => {
           return api.user
             .getUserInfoByUserId({ userId: item.userId })
             .then((res: any) => {
               item.userInfo = res;
+              item.show = false;
               return item;
             });
         })
@@ -158,5 +166,5 @@ div.center {
 .slide-fade-leave-from {
   transform-origin: top;
   transform: scaleY(1);
-} 
+}
 </style>

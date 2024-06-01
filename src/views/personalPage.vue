@@ -17,32 +17,41 @@
           >
             <img
               class="main_icon_svg"
-              src="../assets/icon/time.svg"
+              src="../assets/icon/MaterialSymbolsLightArticleOutline.svg"
               alt="百度logo"
             />
             <a>发帖</a>
           </router-link>
 
-          <div v-if="isMaster" class="main_container_user_function_left_button">
+          <router-link v-if="isMaster" class="main_container_user_function_left_button" :class="{
+              active: $route.path === `/personal/${userInfo.userId}/collected`,
+            }"
+            :to="`/personal/${userInfo.userId}/collected`">
+            
+              <img
+                class="main_icon_svg"
+                src="../assets/icon/EpCollection.svg"
+                alt="百度logo"
+              />
+              <a>收藏</a>
+          </router-link>
+          <router-link v-if="isMaster" class="main_container_user_function_left_button"
+          :class="{
+              active: $route.path === `/personal/${userInfo.userId}/browseHistory`,
+            }"
+            :to="`/personal/${userInfo.userId}/browseHistory`"
+          >
             <img
               class="main_icon_svg"
-              src="../assets/icon/time.svg"
-              alt="百度logo"
-            />
-            <a>收藏</a>
-          </div>
-          <div v-if="isMaster" class="main_container_user_function_left_button">
-            <img
-              class="main_icon_svg"
-              src="../assets/icon/time.svg"
+              src="../assets/icon/UilNotes.svg"
               alt="百度logo"
             />
             <a>浏览记录</a>
-          </div>
+          </router-link>
           <div v-if="isMaster" class="main_container_user_function_left_button">
             <img
               class="main_icon_svg"
-              src="../assets/icon/time.svg"
+              src="../assets/icon/DashiconsTicketsAlt.svg"
               alt="百度logo"
             />
             <a>购票记录</a>
@@ -58,7 +67,7 @@
           >
             <img
               class="main_icon_svg"
-              src="../assets/icon/time.svg"
+              src="../assets/icon/MaterialSymbolsEditOutlineRounded.svg"
               alt="百度logo"
             />
             <a>编辑资料</a>
@@ -74,7 +83,7 @@
 
 <script lang="ts">
 import userInfoVue from "../components/personalComponents/userInfo.vue";
-import { ref,watchEffect,computed, onMounted,inject } from "vue";
+import { ref, watchEffect, computed, onMounted, inject } from "vue";
 import { getUserInfo } from "../utils/userUtil.vue";
 import { useRoute } from "vue-router";
 import store from "../store";
@@ -84,51 +93,50 @@ export default {
   components: { userInfoVue },
 
   setup() {
-  const route = useRoute();
-  let userId = route.params.userId;
-  let masterUserInfo = computed(() => store.getters.getUserInfo);
-  console.log("转入个人页面，id为", userId);
-  let isMaster = ref(false);
-  let userInfo = ref({
-    userId: 1,
-    userName: "12110425",
-    gender: "男",
-    birth: null,
-    account: "12110425",
-    intro: "HAHAHA",
-    avatar:
-      "https://upload-bbs.miyoushe.com/upload/2024/05/27/75276539/f07086935b182a7f0d14e89406490402_7317743301541027725.jpg",
-  });
+    const route = useRoute();
+    let userId = route.params.userId;
+    let masterUserInfo = computed(() => store.getters.getUserInfo);
+    console.log("转入个人页面，id为", userId);
+    let isMaster = ref(false);
+    let userInfo = ref({
+      userId: 1,
+      userName: "12110425",
+      gender: "男",
+      birth: null,
+      account: "12110425",
+      intro: "HAHAHA",
+      avatar:
+        "https://upload-bbs.miyoushe.com/upload/2024/05/27/75276539/f07086935b182a7f0d14e89406490402_7317743301541027725.jpg",
+    });
 
+    onMounted(() => {
+      if (!store.getters.getIsLogin || !isMaster.value) {
+        let promise = getUserInfo(userId);
+        promise.then((res) => {
+          userInfo.value = res;
+          console.log("获取用户信息成功", res);
+        });
+      } else {
+        userInfo.value = masterUserInfo.value;
+      }
+    });
 
-  onMounted(() => {
-    if (!store.getters.getIsLogin || !isMaster.value) {
-      let promise = getUserInfo(userId);
-      promise.then((res) => {
-        userInfo.value = res;
-        console.log("获取用户信息成功", res);
-      });
-    }else{
-      userInfo.value = masterUserInfo.value;
-    }
-  });
+    watchEffect(() => {
+      userId = route.params.userId;
+      isMaster.value =
+        store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
+      if (store.getters.getIsLogin && isMaster) {
+        let promise = getUserInfo(userId);
+        promise.then((res) => {
+          userInfo.value = res;
+          console.log("获取用户信息成功", res);
+        });
+      }
+    });
 
-  watchEffect(() => {
-    userId = route.params.userId;
-    isMaster.value = store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
-    masterUserInfo = masterUserInfo
-    if (store.getters.getIsLogin && isMaster) {
-      let promise = getUserInfo(userId);
-      promise.then((res) => {
-        userInfo.value = res;
-        console.log("获取用户信息成功", res);
-      });
-    }
-  });
-
-  console.log(store.getters.getIsLogin);
-  return { userInfo, isMaster };
-},
+    console.log(store.getters.getIsLogin);
+    return { userInfo, isMaster };
+  },
 };
 </script>
 
@@ -182,6 +190,8 @@ export default {
   cursor: pointer;
   text-decoration: none;
   color: rgb(255, 255, 255);
+  transition: color 0.4s;
+  transition: background-color 0.4s;
 }
 
 .main_container_user_function_left_button a {
@@ -190,15 +200,17 @@ export default {
   height: 0.5em;
   display: inline-block;
   line-height: 0.5em;
+  transition: color 0.3s;
+  transition: background-color 0.3s;
 }
 
 .main_container_user_function_left_button.active {
-  background-color: rgb(71, 74, 88);
+  background-color: rgb(152, 235, 239);
   color: rgb(136, 146, 205);
 }
 
 .main_container_user_function_left_button:hover {
-  background-color: rgb(71, 74, 88);
+  background-color: rgb(214, 236, 227);
   color: rgb(136, 146, 205);
 }
 

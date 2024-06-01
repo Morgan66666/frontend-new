@@ -4,28 +4,28 @@
       <a>编辑资料</a>
     </div>
     <div>
-      <v-dialog v-model="dialog" width="500">
-        <v-card>
-          <v-card-title class="headline">上传图片</v-card-title>
-          <v-card-text>
-            <div
-              style="border: 1px dashed #ccc; padding: 20px; text-align: center;"
-              id="dropzone"
-              @dragover.prevent
-              @dragenter.prevent
-              @drop="onDrop"
-            >
-              拖拽图片到这里上传
-            </div>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" @click="dialog = false"
-              >关闭</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+<v-dialog v-model="dialog" width="500">
+  <v-card>
+    <v-card-title class="headline">上传图片</v-card-title>
+    <v-card-text>
+      <div
+        style="border: 1px dashed #ccc; padding: 20px; text-align: center;"
+        id="dropzone"
+        @dragover.prevent
+        @dragenter.prevent
+        @drop="onDrop"
+      >
+        拖拽图片到这里上传
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <input type="file" ref="fileInput" style="display: none" @change="onFileSelected" />
+      <v-btn color="blue darken-1" @click="$refs.fileInput.click()">选择文件</v-btn>
+      <v-btn color="green darken-1" @click="dialog = false">关闭</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
     </div>
 
     <hr />
@@ -99,7 +99,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted, inject, getCurrentInstance } from "vue";
 import axios from "axios";
 import store from "../../store";
 import { v4 as uuidv4 } from "uuid";
@@ -123,13 +123,15 @@ export default {
     const imageUrl = ref(userInfo.avatar);
     const api = inject("$api") as any;
     const dialog = ref(false);
+    const instance = getCurrentInstance();
+    const proxy:any = instance?.proxy;
 
     const saveInfo = () => {
       console.log(username.value);
       username.value = document.getElementById("username")?.innerHTML || "";
       intro.value = document.getElementById("intro")?.innerHTML || "";
       gender.value = selectGender.value;
-      alert(`${username.value} ${intro.value}`);
+      proxy.$message.success(`${username.value} ${intro.value}`);
       let userId = store.getters.getUserInfo.userId;
       let newUserInfo = {
         userId : userId,
@@ -143,7 +145,7 @@ export default {
 
       api.user.updateUser(newUserInfo).then((response: any) => {
         console.log("更新用户信息成功", response);
-        alert("更新用户信息成功");
+        proxy.$message.success("更新用户信息成功");
         // 重新登录
         getUserInfo(userId).then(res  => {
           console.log("重新登录成功", res);
@@ -151,7 +153,7 @@ export default {
         })
       }).catch((error: any) => {
         console.error("更新用户信息失败", error);
-        alert("更新用户信息失败");
+        proxy.$message.success("更新用户信息失败");
       });
     };
 
@@ -164,7 +166,7 @@ export default {
           const uniqueFilename = uuidv4() + "." + extension;
           console.log("uniqueFilename", uniqueFilename);
           if (extension !== "jpg" && extension !== "png") {
-            alert("只能上传jpg/png文件");
+            proxy.$message.error("只能上传jpg/png文件");
             return;
           }
           formData.append("key", signatureInfo.dir + uniqueFilename);
@@ -181,16 +183,16 @@ export default {
               console.log("上传成功", response);
               imageUrl.value = signatureInfo.host + "/" + uniqueFilename;
               
-              alert("上传成功");
+              proxy.$message.success("上传成功");
             })
             .catch((error) => {
               console.error("上传失败", error);
-              alert("上传失败");
+              proxy.$message.success("上传失败");
             });
         })
         .catch((error: any) => {
           console.error("获取签名信息失败", error);
-          alert("获取签名信息失败");
+          proxy.$message.error("获取签名信息失败");
         });
     };
 
@@ -220,6 +222,14 @@ export default {
       if (!files.length) return;
       handleUpload(files[0]);
       console.log(files);
+      dialog.value = false;
+    };
+
+    const onFileSelected = (e: any) => {
+      if (!e.target.files.length) return;
+      const file = e.target.files[0];
+      handleUpload(file);
+      dialog.value = false;
     };
 
     const triggerFileInput = () => {
@@ -249,6 +259,7 @@ export default {
       dialog,
       onDrop,
       triggerFileInput,
+      onFileSelected,
     };
   },
 };

@@ -29,7 +29,7 @@ onMounted(() => {
   // api.post.getPopularPost().then((res: any) => {
   //   postList.value = res.data;
   // });
-  api.post.getPosts().then((res: any) => {
+  api.post.getSortedPostsByLike({pageNum:1,pageSize:5}).then((res: any) => {
     Promise.all(
       res.records.map((item: { userId: any; userInfo: any }) => {
         

@@ -5,7 +5,7 @@
         <div class="main_container_mainMessage">
           <div class="main_main_card">
             <div class="main_main_card_title">{{ post.title }}</div>
-
+            <div class="date">{{ post.date }}</div>
             <div class="main_main_card_content" v-html="post.body"></div>
 
             <div class="main_main_card_other_info_container">
@@ -47,7 +47,6 @@
           <div class="main_container_mainMessage_rightMessage_card">
             热门内容
             <popularPostComponent></popularPostComponent>
-            <div></div>
           </div>
           <div class="main_container_mainMessage_rightMessage_card">
             广告招租
@@ -70,6 +69,7 @@ import { Post, UserInfo } from "../types";
 import { getUserInfo } from "../utils/userUtil.vue";
 import postMasterComponentVue from "../components/viewComponents/postMasterComponent.vue";
 import popularPostComponent from "../components/viewComponents/popularPostComponent.vue";
+import moment from "moment";
 
 interface Comment {
   id: number;
@@ -115,10 +115,6 @@ export default {
         birth: "2022-12-12",
       },
     });
-
-
-
-
     const api: any = inject("$api");
     const router:any = inject("$router") as ReturnType<typeof useRouter>;
     let postId = router.currentRoute.value.params.id;
@@ -127,19 +123,19 @@ export default {
       if (comment != undefined) {
         if (comment.isLiked === 1) {
           comment.isLiked = 0;
-          comment.thumbUp--;
         } else {
           comment.isLiked = 1;
-          comment.thumbUp++;
         }
       }
     }
+
+    
 
     const initial = () => {
       api.post.getPostByPostId({ postId: postId }).then((res: any) => {
         post.title = res.title;
         post.body = res.body;
-        post.date = res.date;
+        post.date = moment(res.createComment).format("YYYY-MM-DD HH:mm:ss");;
         post.likes = res.likes;
         // post.isLiked = res.isLiked;
         post.isLiked = 0
@@ -164,6 +160,7 @@ export default {
 
         Promise.all(promises).then(() => {
           console.log("根据postId获取comments", comments);
+          comments.length = 0
           comments.push(...getComments);
         });
       });
@@ -176,17 +173,14 @@ export default {
       // 在这里根据 id 获取新的 post 数据
     });
 
+    onMounted(() => {
+      api.post.createHistory({ postId: postId }).then((res: any) => {
+        console.log("createHistory", res);
+      });
+    });
+
     function handleThumbDownChange({ id }: any) {
-      let comment = getCommentById(id);
-      if (comment != null) {
-        if (comment.isLiked === -1) {
-          comment.isLiked = 0;
-          comment.thumbUp++;
-        } else {
-          comment.isLiked = -1;
-          comment.thumbUp--;
-        }
-      }
+      console.log("handleThumbDownChange", id);
     }
 
     function getCommentById(id: any) {
@@ -199,7 +193,7 @@ export default {
 
     function comment() {
       if (!store.getters.getIsLogin) {
-        store.dispatch("SetShowLogin", true);
+        store.dispatch("SetShowLoginWindow", true);
         proxy.$message.error("请先登录");
         return;
       }
@@ -342,9 +336,12 @@ export default {
   width: 100%;
   color: rgb(73, 73, 73);
   font-size: 1em;
+  line-height: 1.5em; /* 添加行高以改善阅读体验 */
   margin: 10px 0 0;
   word-wrap: break-word;
   word-break: break-all;
+  text-align: justify; /* 两端对齐可以使段落看起来更整齐 */
+  padding: 0 15px; /* 添加内边距以防止文本贴近边缘 */
 }
 
 .main_main_card_content img {
@@ -481,5 +478,15 @@ export default {
 .slide-leave-from {
   max-height: 500px;
   /* 你需要根据实际情况调整这个值 */
+}
+
+.date{
+  font-size: 0.8em;
+  color: rgb(151, 151, 151);
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border-bottom: 1px solid rgb(162, 160, 160);
 }
 </style>
