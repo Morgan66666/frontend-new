@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import {PropType, inject} from "vue";
-import { UserInfo } from "../../types";
+import { UserInfo } from "@/types";
 
 interface Comment {
   id: number;

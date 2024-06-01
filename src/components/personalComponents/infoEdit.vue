@@ -103,7 +103,7 @@ import { ref, onMounted, inject, getCurrentInstance } from "vue";
 import axios from "axios";
 import store from "../../store";
 import { v4 as uuidv4 } from "uuid";
-import { UserInfo } from "../../types";
+import { UserInfo } from "@/types";
 import { getUserInfo } from "../../utils/userUtil.vue";
 
 export default {

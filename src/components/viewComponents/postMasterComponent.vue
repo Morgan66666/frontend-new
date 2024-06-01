@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue'
-import { UserInfo } from '../../types'
+import { UserInfo } from '@/types'
 import { useRouter } from "vue-router";
 
 const router:any = inject("$router") as ReturnType<typeof useRouter>;

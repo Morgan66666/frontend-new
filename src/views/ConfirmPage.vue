@@ -64,15 +64,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import axiosInstance from '../main.ts';
-import { ElMessage } from 'element-plus';
-import { ActivityDetail } from '../types';
+import {ref, onMounted, inject} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {ElMessage} from 'element-plus';
+import {ActivityDetail, Order, UserInfo} from '@/types';
+import * as timeUtil from "@/utils/timeUtil.ts";
 
 const route = useRoute();
 const router = useRouter();
 const activityId = route.query.activityId;
+const store:any = inject('$store');
 
 let activity = ref<ActivityDetail>({
   activityBeginTime: "2024-05-01",
@@ -111,14 +112,33 @@ const phoneRules = [
 
 const valid = ref(false);
 
+const api: any = inject('$api');
+
 const getActivity = async (activityId: number) => {
   try {
-    const res = await axiosInstance.get(`/activity/${activityId}`);
-    activity.value = res.data;
+    const data: ActivityDetail = await api.activity.getActivityByActivityId({activityId: activityId});
+    // 假设时间戳字段是 activityBeginTime 和 activityEndTime
+    data.activityBeginTime = timeUtil.convertTimestampToLocal(Number(data.activityBeginTime));
+    data.activityEndTime = timeUtil.convertTimestampToLocal(Number(data.activityEndTime));
+    data.bookBeginTime = timeUtil.convertTimestampToLocal(Number(data.bookBeginTime));
+    data.bookEndTime = timeUtil.convertTimestampToLocal(Number(data.bookEndTime));
+    activity.value = data;
+    console.log(activity.value);
   } catch (e) {
     console.error(e);
   }
 };
+
+const order = ref<Order>({
+  activityId: 0,
+  name: "",
+  phoneNumber: "",
+  userId: ""
+
+});
+
+let userInfo:UserInfo = store.getters.getUserInfo;
+
 
 const confirmOrder = () => {
   if (!valid.value) {
@@ -128,12 +148,30 @@ const confirmOrder = () => {
     });
     return;
   }
-  ElMessage({
-    message: '订单确认成功！',
-    type: 'success',
-  });
+  const userId = userInfo.userId;
+  try {
+    order.value = {
+      activityId: activity.value.activityId,
+      name: contact.value.name,
+      phoneNumber: contact.value.phone,
+      userId: userId
+    };
+    api.order.createOrder(order.value).then((res: any) => {
+      console.log('订单创建成功', res);
+      ElMessage({
+        message: '订单创建成功',
+        type: 'success',
+      });
+    });
+  } catch (e) {
+    console.error(e);
+    ElMessage({
+      message: '订单创建失败',
+      type: 'error',
+    });
+  }
   // 在这里可以添加进一步的订单处理逻辑，比如跳转到支付页面
-  router.push('/payment');
+  router.push({path: '/activity', query: {activityId: activity.value.activityId}});
 };
 
 const goBack = () => {

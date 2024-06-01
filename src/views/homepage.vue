@@ -51,7 +51,7 @@
 import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import chatComponent from '../components/chatComponent.vue';
-import { Post } from '../types';
+import { Post } from '@/types';
 import { inject,onMounted } from 'vue';
 import store from '../store';
 

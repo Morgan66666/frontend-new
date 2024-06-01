@@ -13,6 +13,9 @@
             <activity-card :activity="activity" @click="navigateToActivityDetail(activity)"/>
           </v-col>
         </v-row>
+        <el-affix :offset="200" position="bottom">
+          <div class="create-activity-button" @click="createActivity">+</div>
+        </el-affix>
       </v-container>
     </div>
   </div>
@@ -20,18 +23,24 @@
 
 <script setup lang="ts">
 
-import {Activity, ActivityDetail} from "../types";
+import {ActivityDetail} from "@/types";
 import {onMounted, ref, inject, PropType, watch} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
+
 const api:any = inject("$api");
 
 const router:any = inject("$router");
 
-function navigateToActivityDetail(activity: Activity) {
+function navigateToActivityDetail(activity: Partial<ActivityDetail>) {
   console.log('跳转到活动详情页', activity);
-  router.push(`/activity`);
+  router.push({path: '/activity' , query: {activityId: activity.activityId}});
+}
 
+function createActivity() {
+  console.log('创建活动');
+  // 跳转到创建活动页面或显示创建活动的对话框
+  router.push({path: '/create-activity'});
 }
 
 function Search(searchQuery: string) {
@@ -41,7 +50,6 @@ function Search(searchQuery: string) {
     activities.value = res.data;
   });
 }
-
 
 onMounted(async () => {
   api.activity.getActivities().then((res:any) => {
@@ -62,7 +70,7 @@ watch(() => props.searchActivities, (newVal) => {
   activities.value = newVal
 })
 
-const activities = ref<ActivityDetail[]>([
+const activities = ref<Partial<ActivityDetail>[]>([
   {
     activityId: 1,
     title: '活动一',
@@ -106,11 +114,12 @@ const activities = ref<ActivityDetail[]>([
 
 <style scoped>
 
+
 .my {
   margin-top: 50px;
 }
 
-.background-container{
+.background-container {
   width: 100%;
   height: 100vh;
   background-color: #f4f5f7;
@@ -121,8 +130,20 @@ const activities = ref<ActivityDetail[]>([
   margin: 0 auto;
 }
 
-
-
-
-
+.create-activity-button {
+  position: fixed;
+  bottom: 22vh;
+  right: 20vh;
+  width: 50px;
+  height: 50px;
+  background-color: #409eff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
 </style>

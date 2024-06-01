@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import { UserInfo } from '../types'
+import { UserInfo } from '@/types'
 
 const store = new Vuex.Store({
   state: {

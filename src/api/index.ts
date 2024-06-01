@@ -73,7 +73,11 @@ let apiConfig = {
     { name: "getSignature", method: "get", url: "/api/oss" },//获得oss签名
   ],
   order: [
-
+    { name: "createOrder", method: "post", url: "/api/orders" },//创建订单
+    { name: "getOrderById", method: "get", url: "/api/orders/{orderId}" },//根据订单id获得订单
+    { name: "updateOrder", method: "put", url: "/api/orders/{orderId}" },//修改订单
+    { name: "deleteOrder", method: "delete", url: "/api/orders/{orderId}" },//删除订单
+    { name: "getOrders", method: "get", url: "/api/orders" },//根据用户id获得订单
   ]
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了

@@ -34,7 +34,7 @@
         <v-card-actions>
           <div class="button-container">
             <button class="confirm-button" @click="handleConfirm">确定</button>
-          <button class="cannel-button" @click="dialog = false">取消</button>
+          <button class="cancel-button" @click="dialog = false">取消</button>
           </div>
           
         </v-card-actions>
@@ -58,7 +58,7 @@
 import { ref, defineComponent, getCurrentInstance } from "vue";
 
 import { inject } from "vue";
-import { UserInfo } from "../types";
+import { UserInfo } from "@/types";
 
 export default defineComponent({
   setup(_, { emit }) {
@@ -328,7 +328,7 @@ button:hover {
   background-color: #2b7de9;
 }
 
-.cannel-button {
+.cancel-button {
   background-color: #f1f1f1;
   color: black;
   border: none;
@@ -340,7 +340,7 @@ button:hover {
   cursor: pointer;
 }
 
-.cannel-button:hover {
+.cancel-button:hover {
   background-color: #e0e0e0;
 }
 

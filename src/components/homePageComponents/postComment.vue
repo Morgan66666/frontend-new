@@ -255,15 +255,11 @@ export default {
         .getIsCollected({ postId: props.comment.postId })
         .then((res: any) => {
           console.log("res", res);
-          if (res) {
-            isStar.value = true;
-          } else {
-            isStar.value = false;
-          }
+          isStar.value = !!res;
         });
     };
     onMounted(() => {
-      getUserInfo(id).then((res) => {
+      getUserInfo(id).then((res:any) => {
         console.log("res", res);
         userInfo.value = res;
         console.log(userInfo.value);

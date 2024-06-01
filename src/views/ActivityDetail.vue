@@ -12,8 +12,12 @@
           <div class="info">
             <span class="title">{{ activity.title }}</span>
             <div class="time">
-              <div class="time-title">时间：</div>
+              <div class="time-title">活动时间：</div>
               <div class="time-content">{{ activity.activityBeginTime }} - {{ activity.activityEndTime }}</div>
+            </div>
+            <div class="time">
+              <div class="time-title">预定时间：</div>
+              <div class="time-content">{{ activity.bookBeginTime }} - {{ activity.bookEndTime }}</div>
             </div>
             <div class="location">
               <div class="location-title">地点：</div>
@@ -65,16 +69,19 @@
         <span>活动详情</span>
       </div>
       <div class="activity-detail-container">
+        <div class="activity-content" v-html="activity.content"/>
+
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ActivityDetail } from "../types";
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import axiosInstance from '../main.ts';
+import { ActivityDetail } from "@/types";
+import {computed, inject, onMounted, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import * as timeUtil from "@/utils/timeUtil.ts";
+const api:any = inject("$api");
 
 let activity = ref<ActivityDetail>({
   activityBeginTime: "2024-05-01",
@@ -97,8 +104,9 @@ let activity = ref<ActivityDetail>({
   capacity: 100,
 });
 
-const props = defineProps<{ activityId: number }>();
+
 const router = useRouter();
+const route = useRoute();
 
 const remaining = computed(() => {
   return activity.value.capacity - activity.value.participantsCount;
@@ -118,15 +126,22 @@ function star() {
 
 const getData = async (activityId: number) => {
   try {
-    const res = await axiosInstance.get(`/activity/${activityId}`);
-    activity.value = res.data;
+    const data:ActivityDetail = await api.activity.getActivityByActivityId({ activityId: activityId });
+    // 假设时间戳字段是 activityBeginTime 和 activityEndTime
+    data.activityBeginTime = timeUtil.convertTimestampToLocal(Number(data.activityBeginTime));
+    data.activityEndTime = timeUtil.convertTimestampToLocal(Number(data.activityEndTime));
+    data.bookBeginTime = timeUtil.convertTimestampToLocal(Number(data.bookBeginTime));
+    data.bookEndTime = timeUtil.convertTimestampToLocal(Number(data.bookEndTime));
+    activity.value = data;
+    console.log(activity.value);
   } catch (e) {
     console.error(e);
   }
 };
 
 onMounted(() => {
-  getData(props.activityId);
+  const activityId = Number(route.query.activityId);
+  getData(activityId);
 });
 </script>
 
@@ -135,6 +150,9 @@ onMounted(() => {
   background-color: #f4f5f7;
 }
 
+.activity-content {
+  margin: 20px 30px;
+}
 .activity-detail {
   width: 100%;
 }

@@ -57,7 +57,7 @@ import { ref, watchEffect, inject } from "vue";
 import loginComponent from "../components/loginComponent.vue";
 import chatComponent from "./chatComponent.vue";
 import store from "../store";
-import { UserInfo } from "../types";
+import { UserInfo } from "@/types";
 
 export default {
   name: "headerOfMainPage",
