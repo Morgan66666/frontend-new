@@ -41,9 +41,9 @@
             </div>
             <div class="edit-box-item-input-container">
               <select class="edit-box-plate" v-model="selectedPlate">
-                <option value="体育比赛">体育比赛</option>
-                <option value="电竞比赛">电竞比赛</option>
-                <option value="艺术比赛">艺术比赛</option>
+                <option value="体育">体育</option>
+                <option value="电竞">电竞</option>
+                <option value="艺术">艺术</option>
               </select>
             </div>
           </div>
@@ -80,7 +80,7 @@ onMounted(() => {
 let quillContent = ref();
 let title = ref("");
 let content = ref("你好");
-let selectedPlate = ref("体育比赛");
+let selectedPlate = ref("体育");
 let api:any = inject('$api');
 let userInfo:UserInfo = store.getters.getUserInfo;
 

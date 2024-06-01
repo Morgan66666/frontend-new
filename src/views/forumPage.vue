@@ -73,7 +73,7 @@ export default {
     const comments = ref([
     ]);
     const searchText = ref("");
-    const types = ref(["游戏", "运动", "不限"]);
+    const types = ref(["体育", "游戏","艺术", "不限"]);
     const dates = ref(["今日", "一周内", "一月内", "不限"]);
     const temps = ref(["最新", "最热", "不限"]);
     const selectDate = ref("不限");
