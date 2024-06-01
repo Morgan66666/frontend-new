@@ -76,6 +76,7 @@ const activityId = route.query.activityId;
 const store:any = inject('$store');
 
 let activity = ref<ActivityDetail>({
+  status: "",
   activityBeginTime: "2024-05-01",
   activityEndTime: "2024-05-01",
   activityId: 0,
@@ -91,7 +92,7 @@ let activity = ref<ActivityDetail>({
   img: 'https://www.natgeo.com.cn/pic/program_default.768.jpg',
   price: 100,
   content: '这是活动一的内容',
-  capacity: 100,
+  capacity: 100
 });
 
 const numTickets = ref(1);
@@ -133,7 +134,8 @@ const order = ref<Order>({
   activityId: 0,
   name: "",
   phoneNumber: "",
-  userId: ""
+  userId: "",
+  amount: 0,
 
 });
 
@@ -154,7 +156,8 @@ const confirmOrder = () => {
       activityId: activity.value.activityId,
       name: contact.value.name,
       phoneNumber: contact.value.phone,
-      userId: userId
+      userId: userId,
+      amount: numTickets.value
     };
     api.order.createOrder(order.value).then((res: any) => {
       console.log('订单创建成功', res);
