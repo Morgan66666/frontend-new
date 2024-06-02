@@ -26,6 +26,7 @@ instance.interceptors.response.use(response => {
         status: error.response ? error.response?.statusText : "",
         statusText: error.response?.statusText,
         data: error.response ? error.response?.data : "",
+        code: error.response ? error.response?.status : "",
     });
 });
 export default instance;

@@ -104,7 +104,7 @@ export default {
       userId: "123456",
       userName: "未登录",
       intro: "这个人很懒，什么都没写",
-      avatar: "",
+      avatar: "https://th.bing.com/th/id/OIP.akEXjXSun7zbVDGMJUegdgHaHa?rs=1&pid=ImgDetMain",
       gender: "保密",
       level: "4",
       birth: "2000-01-01",

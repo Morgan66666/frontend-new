@@ -103,6 +103,10 @@ const publicPost = () => {
 
   api.post.createPost(post).then((res:any) => {
     console.log(res);
+    if (res?.code === 400){
+      alert("创建失败");
+      return;
+    }
     alert("创建成功");
   });
 

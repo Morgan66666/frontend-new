@@ -10,6 +10,7 @@
             class="avatar"
             :src="item.userInfo.avatar"
             alt=""
+            onerror="https://th.bing.com/th/id/OIP.akEXjXSun7zbVDGMJUegdgHaHa?rs=1&pid=ImgDetMain"
           />
           <button class="content" @click="item.show = !item.show">
             {{ item.postInfo.title }}
