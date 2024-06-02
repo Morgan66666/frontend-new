@@ -2,12 +2,13 @@
 import { createApp } from 'vue'
 import axios from 'axios'
 import App from './App.vue'
+import router from "./router"
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import router from "./router"
+
 import { createPinia } from "pinia"
 import store from "./store/index"
 import api from "./api/index"
@@ -35,6 +36,11 @@ export default axiosInstance
 const pinia = createPinia()
 
 const app = createApp(App)
+
+app.provide('$router', router)
+
+app.use(router)
+
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$message = ElMessage
 
@@ -45,11 +51,10 @@ app.use(ElementPlus, {
 app.provide('$axios', axios)
 app.provide('$api', api)
 app.provide('$store', store)
-app.provide('$router', router)
 
-app.use(router)
 app.use(vuetify)
 
 app.use(pinia)
 app.use(store)
 app.mount('#app')
+    

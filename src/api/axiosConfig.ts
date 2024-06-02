@@ -18,7 +18,7 @@ const instance = axios.create({
     timeout: 2000,
 });
 instance.interceptors.response.use(response => {
-    // console.log(response);
+    // console.log("获取的数据",response);
     return response.data;
 }, error => {
     console.log(error);
