@@ -64,6 +64,7 @@ export default defineComponent({
   setup(_, { emit }) {
     const api: any = inject("$api");
     const store: any = inject("$store");
+    const router: any = inject("$router");
     const active_username = ref(false);
     const active_password = ref(false);
     const username = ref("");
@@ -126,16 +127,20 @@ export default defineComponent({
             gender: res.userResponse.gender,
             level: "4",
           };
-        });
-      } catch (error:any) {
-        console.log(error);
-      } finally {
-        if (user) {
+          if (user) {
           store.dispatch("LoginIn", user);
           store.dispatch("SetToken", token);
           proxy?.$message.success('登录成功')
-          emit("login", true);
+          if(user.userName == "admin"){
+            router.push("/control-panel");
+          }else{
+            emit("login", true);
+          }
+          
         }
+        });
+      } catch (error:any) {
+        console.log(error);
       }
     };
     const handleConfirm = () => {
