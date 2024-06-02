@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref, inject, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { Post } from "../../types";
+import { Post } from "@/types";
 
 let postList = ref<Post[]>([]);
   const router = inject("$router") as ReturnType<typeof useRouter>;

@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import userInfoVue from "../components/personalComponents/userInfo.vue";
-import { ref, watchEffect, computed, onMounted, inject } from "vue";
+import { ref, watchEffect, computed, onMounted } from "vue";
 import { getUserInfo } from "../utils/userUtil.vue";
 import { useRoute } from "vue-router";
 import store from "../store";
@@ -112,7 +112,7 @@ export default {
     onMounted(() => {
       if (!store.getters.getIsLogin || !isMaster.value) {
         let promise = getUserInfo(userId);
-        promise.then((res) => {
+        promise.then((res:any) => {
           userInfo.value = res;
           console.log("获取用户信息成功", res);
         });
@@ -127,7 +127,7 @@ export default {
         store.getters.getIsLogin && store.getters.getUserInfo.userId == userId;
       if (store.getters.getIsLogin && isMaster) {
         let promise = getUserInfo(userId);
-        promise.then((res) => {
+        promise.then((res:any) => {
           userInfo.value = res;
           console.log("获取用户信息成功", res);
         });

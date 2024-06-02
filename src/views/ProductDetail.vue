@@ -50,7 +50,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed } from 'vue';
-import { type Product } from '../types';
+import { type Product } from '@/types';
 
 
 const images = ref<string[]>([

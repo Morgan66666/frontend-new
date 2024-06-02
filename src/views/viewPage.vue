@@ -65,7 +65,7 @@ import commentCardVue from "../components/viewComponents/commentCard.vue";
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
 import store from "../store";
 import { useRouter } from "vue-router";
-import { Post, UserInfo } from "../types";
+import { Post, UserInfo } from "@/types";
 import { getUserInfo } from "../utils/userUtil.vue";
 import postMasterComponentVue from "../components/viewComponents/postMasterComponent.vue";
 import popularPostComponent from "../components/viewComponents/popularPostComponent.vue";
@@ -135,7 +135,7 @@ export default {
       api.post.getPostByPostId({ postId: postId }).then((res: any) => {
         post.title = res.title;
         post.body = res.body;
-        post.date = moment(res.createComment).format("YYYY-MM-DD HH:mm:ss");;
+        post.date = moment(res.createComment).format("YYYY-MM-DD HH:mm:ss");
         post.likes = res.likes;
         // post.isLiked = res.isLiked;
         post.isLiked = 0
@@ -145,6 +145,8 @@ export default {
         });
 
         console.log(post);
+      }).catch((err: any) => {
+        console.log(err);
       });
       api.post.getCommentsByPostId({ postId: postId }).then((res: any) => {
         let getComments = res.records;

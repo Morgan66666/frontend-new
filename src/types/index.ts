@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 export interface Activity {
     activityBeginTime: string;  // 使用ISO格式的日期字符串
     activityEndTime: string;    // 使用ISO格式的日期字符串
@@ -21,20 +23,20 @@ export interface ActivityDetail {
     activityBeginTime: string;  // 使用ISO格式的日期字符串
     activityEndTime: string;    // 使用ISO格式的日期字符串
     activityId: number;
-    bookBeginTime?: string;  // 使用ISO格式的日期字符串
-    bookEndTime?: string;    // 使用ISO格式的日期字符串
+    bookBeginTime: string;  // 使用ISO格式的日期字符串
+    bookEndTime: string;    // 使用ISO格式的日期字符串
     capacity: number;
     createTime?: string;
     description: string;
     img: string;
     location: string;
-    organizerId?: number;
+    organizerId: number;
     participantsCount: number;
     price: number;
     title: string;
-    type?: string;
-    status?: string;
-    content?: string;
+    type: string;
+    status: string;
+    content: string;
 }
 
 export interface Post {
@@ -46,7 +48,8 @@ export interface Post {
     likes: number;
     title: string;
     type: string;
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
+    createTime?: string;
 }
 
 export interface Product {
@@ -58,6 +61,7 @@ export interface Product {
 }
 
 export interface SignatureInfo {
+    signature: string;
     accessid: string;
     dir: string;
     expire: number;
@@ -81,11 +85,14 @@ export interface UserInfo {
 export interface Order {
   orderId?: number;
   activityId: number;
-  userId: number;
-  amount?: number;
-  tradeNumber?: number;
-  createTime?: string; // 注意：因为TypeScript不直接支持LocalDateTime，可以使用ISO格式的字符串
+  userId: string;
+  numberOfPeople?: number;
+  transactionId?: string;
+  totlePrice: string;
+  createTime?: string;
   status?: number;
+  name: string;
+  phoneNumber: string;
 }
 
 

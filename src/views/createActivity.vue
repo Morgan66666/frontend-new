@@ -54,7 +54,7 @@
       </el-form-item>
       <el-form-item label="活动内容" :rules="[{ required: true, message: '请输入活动内容', trigger: 'blur' }]">
         <div class="editor">
-          <quill-component @update:content="handleUpdate" ref="quillContent"/>
+          <editor @update:content="handleUpdate" ref="quillContent"/>
         </div>
       </el-form-item>
       <el-form-item label="活动图片">
@@ -87,14 +87,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import {ref, computed, inject} from 'vue';
 import { ElMessage, FormInstance } from 'element-plus';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { UploadRequestOptions, UploadFile, UploadFiles } from 'element-plus/es/components/upload/src/upload';
 import { UploadFilled } from '@element-plus/icons-vue';
-import { ActivityDetail, SignatureInfo } from '../types';
-import quillComponent from '@/components/editPostComponents/quillComponent.vue';
+import { ActivityDetail, SignatureInfo } from '@/types';
+import Editor from "@/components/editor.vue";
+import * as timeUtil from '@/utils/timeUtil.ts';
 
 const form = ref<Partial<ActivityDetail>>({
   title: '',
@@ -225,18 +226,30 @@ const isFormValid = computed(() => {
     form.value.bookEndTime &&
     form.value.activityBeginTime &&
     form.value.activityEndTime &&
-    form.value.capacity > 0 &&
+    form.value.capacity! > 0 &&
     form.value.location &&
     form.value.type &&
     form.value.content
   );
 });
 
+const api:any = inject("$api");
+
 const handleSubmit = async () => {
   try {
     if (!formRef.value) return;
     await formRef.value.validate();
     // 假设调用API创建活动
+    const activity = {
+      ...form.value,
+      bookBeginTime: timeUtil.convertLocalToTimestamp(form.value.bookBeginTime!),
+      bookEndTime: timeUtil.convertLocalToTimestamp(form.value.bookEndTime!),
+      activityBeginTime: timeUtil.convertLocalToTimestamp(form.value.activityBeginTime!),
+      activityEndTime: timeUtil.convertLocalToTimestamp(form.value.activityEndTime!),
+    }
+    await api.activity.createActivity(activity).then((res: any) => {
+      console.log(res);
+    });
     console.log('Form Submitted', form.value);
     ElMessage.success('活动创建成功');
     // 重置表单

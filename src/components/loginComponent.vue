@@ -34,7 +34,7 @@
         <v-card-actions>
           <div class="button-container">
             <button class="confirm-button" @click="handleConfirm">确定</button>
-          <button class="cannel-button" @click="dialog = false">取消</button>
+          <button class="cancel-button" @click="dialog = false">取消</button>
           </div>
           
         </v-card-actions>
@@ -58,12 +58,13 @@
 import { ref, defineComponent, getCurrentInstance } from "vue";
 
 import { inject } from "vue";
-import { UserInfo } from "../types";
+import { UserInfo } from "@/types";
 
 export default defineComponent({
   setup(_, { emit }) {
     const api: any = inject("$api");
     const store: any = inject("$store");
+    const router: any = inject("$router");
     const active_username = ref(false);
     const active_password = ref(false);
     const username = ref("");
@@ -126,16 +127,20 @@ export default defineComponent({
             gender: res.userResponse.gender,
             level: "4",
           };
-        });
-      } catch (error:any) {
-        console.log(error);
-      } finally {
-        if (user) {
+          if (user) {
           store.dispatch("LoginIn", user);
           store.dispatch("SetToken", token);
           proxy?.$message.success('登录成功')
-          emit("login", true);
+          if(user.userName == "admin"){
+            router.push("/control-panel");
+          }else{
+            emit("login", true);
+          }
+          
         }
+        });
+      } catch (error:any) {
+        console.log(error);
       }
     };
     const handleConfirm = () => {
@@ -328,7 +333,7 @@ button:hover {
   background-color: #2b7de9;
 }
 
-.cannel-button {
+.cancel-button {
   background-color: #f1f1f1;
   color: black;
   border: none;
@@ -340,7 +345,7 @@ button:hover {
   cursor: pointer;
 }
 
-.cannel-button:hover {
+.cancel-button:hover {
   background-color: #e0e0e0;
 }
 

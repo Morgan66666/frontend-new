@@ -8,7 +8,7 @@ const instance = axios.create({
     //     // Do whatever you want to transform the data
     //     return data;
     // }],
-    baseURL: 'http://192.168.3.13:23309',
+    baseURL: 'http://localhost:23309',
     withCredentials: true,
     headers: {
         // 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ const instance = axios.create({
     timeout: 2000,
 });
 instance.interceptors.response.use(response => {
-    // console.log(response);
+    // console.log("获取的数据",response);
     return response.data;
 }, error => {
     console.log(error);
@@ -26,6 +26,7 @@ instance.interceptors.response.use(response => {
         status: error.response ? error.response?.statusText : "",
         statusText: error.response?.statusText,
         data: error.response ? error.response?.data : "",
+        code: error.response ? error.response?.status : "",
     });
 });
 export default instance;

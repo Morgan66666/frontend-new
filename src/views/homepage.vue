@@ -23,7 +23,7 @@
               <button class="btn-24" @click="store.dispatch('SetShowChatWindow', true)">聊天</button>
             </div>
             <div>
-              <button class="btn-24">A I</button>
+              <button class="btn-24" @click="toAI">A I</button>
             </div>
 
           </div>
@@ -51,15 +51,16 @@
 import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import chatComponent from '../components/chatComponent.vue';
-import { Post } from '../types';
+import { Post } from '@/types';
 import { inject,onMounted } from 'vue';
 import store from '../store';
+import router from "@/router";
 
 const api:any = inject('$api');
 let comments = reactive<Post[]>([]);
 
 let pageNum = 1
-let pageSize = 10
+let pageSize = 4
 let chatVisible = ref(false);
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
@@ -78,6 +79,10 @@ onMounted(async () => {
     console.log('error', error);
   }
 });
+
+function toAI() {
+  router.push('/ai');
+}
 
 const handleScroll = async () => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -163,7 +168,7 @@ watch(comments, (newComments) => {
 <style scoped>
 .main_container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   justify-content: center;
   background-color: rgb(247, 248, 252);
   box-sizing: content-box;

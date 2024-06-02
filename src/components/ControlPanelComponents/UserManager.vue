@@ -45,7 +45,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import { UserInfo } from '../../types';
+import { UserInfo } from '@/types';
 
 const users = ref<UserInfo[]>([]);
 const dialogVisible = ref(false);

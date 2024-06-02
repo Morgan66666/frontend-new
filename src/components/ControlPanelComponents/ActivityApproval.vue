@@ -78,7 +78,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import { ActivityDetail } from '../../types';
+import { ActivityDetail } from '@/types';
 
 const activities = ref<ActivityDetail[]>([]);
 const dialogVisible = ref(false);

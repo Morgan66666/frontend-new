@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import quillComponent from "../components/editPostComponents/quillComponent.vue";
 import {ref, inject, onMounted, getCurrentInstance} from "vue";
-import { UserInfo } from "../types";
+import { UserInfo } from "@/types";
 import store from "../store";
 
 // 先检查用户是否登录，没登录就跳转到登录页面
@@ -103,6 +103,10 @@ const publicPost = () => {
 
   api.post.createPost(post).then((res:any) => {
     console.log(res);
+    if (res?.code === 400){
+      alert("创建失败");
+      return;
+    }
     alert("创建成功");
   });
 

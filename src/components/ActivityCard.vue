@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 import {PropType, ref} from 'vue';
-import {ActivityDetail} from "../types";
+import {ActivityDetail} from "@/types";
 
 defineProps({
   activity: {
-    type: Object as PropType<ActivityDetail>,
+    type: Object as PropType<Partial<ActivityDetail>>,
     required: true
   }
 });
