@@ -1,4 +1,4 @@
-# 构建阶段
+# 使用最新的 Node.js 20 Alpine 镜像
 FROM node:20-alpine AS builder
 
 # 设置工作目录
@@ -7,8 +7,14 @@ WORKDIR /app
 # 复制项目文件
 COPY . .
 
+# 清理 node_modules 和锁文件
+RUN rm -rf node_modules package-lock.json pnpm-lock.yaml
+
+# 安装 pnpm
+RUN npm install -g pnpm
+
 # 安装依赖
-RUN npm install -g pnpm && pnpm install
+RUN pnpm install
 
 # 构建项目
 RUN pnpm run build
