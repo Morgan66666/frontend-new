@@ -60,6 +60,13 @@ let apiConfig = {
     { name: "deleteComment", method: "delete", url: "/api/comments/{commentId}" },//删除评论
     { name: "getCommentsByUserId", method: "get", url: "/api/comments/all/{userId}/page/{pageNum}" },//根据用户id获得评论
   ],
+  // 聊天相关
+  chat:[
+    {name: "getChatList", method: "get", url: "/backend/msg/all/sessions"},//获取聊天列表
+    {name: "getChatRecord", method: "get", url: "/backend/msg/{dstId}"},//获取聊天记录
+    {name: "createChat", method: "post", url: "/backend/msg"},//创建聊天
+    {name: "deleteChat", method: "delete", url: "/backend/msg/{dstId}"},//删除聊天
+  ],
   //活动相关
   activity: [
     { name: "createActivity", method: "post", url: "/api/activities" },//创建活动

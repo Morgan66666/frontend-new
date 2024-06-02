@@ -101,7 +101,7 @@ export default {
 
 
     const defaultUserInfo:UserInfo = {
-      userId: "123456",
+      userId: "",
       userName: "未登录",
       intro: "这个人很懒，什么都没写",
       avatar: "https://th.bing.com/th/id/OIP.akEXjXSun7zbVDGMJUegdgHaHa?rs=1&pid=ImgDetMain",
@@ -135,7 +135,13 @@ export default {
     };
 
     watchEffect(() => {
-      userInfo.value = store.getters.getUserInfo;
+
+      
+      if(!store.getters.getIsLogin){
+        userInfo.value = defaultUserInfo;
+      }else{
+        userInfo.value = store.getters.getUserInfo;
+      }
       chatVisible.value = store.getters.getShowChatWindow
       isVisible.value = store.getters.getShowLoginWindow;
       backIsVisible.value = store.getters.getShowChatWindow||store.getters.getShowLoginWindow

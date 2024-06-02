@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, inject, onMounted } from "vue";
 
 interface message {
   id: string;
@@ -124,6 +124,7 @@ const selectedItem = ref({
 });
 const message = ref("");
 const textarea = ref(null);
+const api = inject("$api")
 
 const autoGrow = () => {
   if (textarea.value === null) {
@@ -137,45 +138,48 @@ const autoGrow = () => {
 
 let socket;
 
-// onMounted(() => {
-//   socket = new WebSocket('ws://your-websocket-url');
-//   socket.onopen = (event) => {
-//     console.log('WebSocket is open now.');
-//   };
-//   socket.onmessage = (event) => {
-//   // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
+// 获取host
+
+
+onMounted(() => {
+  socket = new WebSocket('ws://localhost:23309/');
+  socket.onopen = (event) => {
+    console.log('WebSocket is open now.');
+  };
+  socket.onmessage = (event) => {
+  // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
 
 
 
 
-//     const message = JSON.parse(event.data);
-//     for (const element of items.value) {
-//       if (element.id === message.id) {
-//         element.messageList.push(message);
-//         return;
-//       }
-//     }
-//     // 这里的头像地址是假的，实际开发中应该从后端获取，但是没想好怎么获取，所以就先这样了
-//     let newItem = {
-//       id: message.id,
-//       username: message.username,
-//       avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
-//       messageList: [message],
-//     };
-//     items.value.push(newItem);
+    const message = JSON.parse(event.data);
+    for (const element of items.value) {
+      if (element.id === message.id) {
+        element.messageList.push(message);
+        return;
+      }
+    }
+    // 这里的头像地址是假的，实际开发中应该从后端获取，但是没想好怎么获取，所以就先这样了
+    let newItem = {
+      id: message.id,
+      username: message.username,
+      avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
+      messageList: [message],
+    };
+    items.value.push(newItem);
 
 
-//     console.log('WebSocket message received:', event);
-//   };
+    console.log('WebSocket message received:', event);
+  };
 
-//   socket.onclose = (event) => {
-//     console.log('WebSocket is closed now.');
-//   };
+  socket.onclose = (event) => {
+    console.log('WebSocket is closed now.');
+  };
 
-//   socket.onerror = (event) => {
-//     console.error('WebSocket error observed:', event);
-//   };
-// });
+  socket.onerror = (event) => {
+    console.error('WebSocket error observed:', event);
+  };
+});
 
 const sendMessage = () => {
   if (message.value === "") {
