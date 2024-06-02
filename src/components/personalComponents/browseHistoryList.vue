@@ -39,8 +39,6 @@ const api: any = inject("$api");
 let postsShow = ref<any>([]);
 const router: any = inject("$router") as ReturnType<typeof useRouter>;
 const userId = router.currentRoute.value.params.userId;
-const showComment = {};
-
 const formatDate = (value:any) => {
       if (value) {
       

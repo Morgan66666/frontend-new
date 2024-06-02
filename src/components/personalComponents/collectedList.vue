@@ -27,18 +27,17 @@
 import { ref, inject, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import postComment from "../homePageComponents/postComment.vue";
-import moment from 'moment';
 
 const api: any = inject("$api");
 let postsShow = ref<any>([]);
 const router: any = inject("$router") as ReturnType<typeof useRouter>;
 const userId = router.currentRoute.value.params.userId;
-const formatDate = (value:any) => {
-      if (value) {
-      
-        return moment(value).format("YYYY-MM-DD HH:mm:ss");
-      }
-    }
+// const formatDate = (value:any) => {
+//       if (value) {
+//
+//         return moment(value).format("YYYY-MM-DD HH:mm:ss");
+//       }
+//     }
 
 onMounted(() => {
   api.post.getCollectionsByUserId({ userId: userId }).then((res: any) => {

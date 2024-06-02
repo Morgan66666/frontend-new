@@ -28,23 +28,16 @@
 
 <script lang="ts">
 import {PropType, inject} from "vue";
-import { UserInfo } from "@/types";
 
-interface Comment {
-  id: number;
-  body: string;
-  createTime: string;
-  likes: number;
-  isLiked: number;
-  userInfo: UserInfo;
-}
+
+
 
 
 export default {
   name: "CommentCard",
   props: {
     comment: {
-      type: Object as PropType<Comment>,
+      type: Object as PropType<any>,
       required: true,
     },
   },

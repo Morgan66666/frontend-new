@@ -84,6 +84,7 @@ import * as timeUtil from "@/utils/timeUtil.ts";
 const api:any = inject("$api");
 
 let activity = ref<ActivityDetail>({
+  status: "",
   activityBeginTime: "2024-05-01",
   activityEndTime: "2024-05-01",
   activityId: 0,
@@ -101,7 +102,7 @@ let activity = ref<ActivityDetail>({
   img: 'https://www.natgeo.com.cn/pic/program_default.768.jpg',
   price: 100,
   content: '这是活动一的内容,哈哈哈哈哈哈哈哈红红火火恍恍惚惚哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
-  capacity: 100,
+  capacity: 100
 });
 
 

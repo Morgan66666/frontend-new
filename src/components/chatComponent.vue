@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 interface message {
   id: string;
@@ -124,14 +124,13 @@ const selectedItem = ref({
 });
 const message = ref("");
 const textarea = ref(null);
-const api = inject("$api")
 
 const autoGrow = () => {
   if (textarea.value === null) {
     return;
   }
-  textarea.value.style.height = "auto";
-  textarea.value.style.height = textarea.value.scrollHeight + "px";
+  // textarea.value.style.height = "auto";
+  // textarea.value.style.height = textarea.value.scrollHeight + "px";
 };
 
 // 建立websocket连接
@@ -144,7 +143,7 @@ let socket;
 onMounted(() => {
   socket = new WebSocket('ws://localhost:23309/');
   socket.onopen = (event) => {
-    console.log('WebSocket is open now.');
+    console.log('WebSocket is open now.', event);
   };
   socket.onmessage = (event) => {
   // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
@@ -173,7 +172,7 @@ onMounted(() => {
   };
 
   socket.onclose = (event) => {
-    console.log('WebSocket is closed now.');
+    console.log('WebSocket is closed now.', event);
   };
 
   socket.onerror = (event) => {

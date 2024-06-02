@@ -5,7 +5,7 @@
       :key="index"
       class="post_master_item"
     >
-      <img class="post_master_item_img" :src="item.userInfo.avatar" alt="" />
+      <img class="post_master_item_img" :src="item.userInfo!.avatar" alt="" />
       <div class="post_master_item_title" @click="jumpToPost(item.postId)">
         {{ item.title }}
       </div>
