@@ -2,7 +2,7 @@
   <div class="comment_card">
     <div class="main_userinfo">
       <div class="userInfo_avatar" @click="enterUserPage()">
-        <img :src="userInfo.avatar" alt="" />
+        <img :src="userInfo.avatar" alt="" onerror="https://th.bing.com/th/id/OIP.akEXjXSun7zbVDGMJUegdgHaHa?rs=1&pid=ImgDetMain"/>
       </div>
       <span class="userInfo_username" @click="enterUserPage()">{{
         userInfo.userName

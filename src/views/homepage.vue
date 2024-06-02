@@ -59,7 +59,7 @@ const api:any = inject('$api');
 let comments = reactive<Post[]>([]);
 
 let pageNum = 1
-let pageSize = 10
+let pageSize = 4
 let chatVisible = ref(false);
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);

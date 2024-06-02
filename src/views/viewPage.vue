@@ -145,6 +145,8 @@ export default {
         });
 
         console.log(post);
+      }).catch((err: any) => {
+        console.log(err);
       });
       api.post.getCommentsByPostId({ postId: postId }).then((res: any) => {
         let getComments = res.records;
