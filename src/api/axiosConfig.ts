@@ -3,12 +3,14 @@ import axios from 'axios';
 
 //此文件配置请求前置操作,后置操作
 
+const host = 'http://localhost:23309'
+
 const instance = axios.create({
     // transformRequest: [function(data) {
     //     // Do whatever you want to transform the data
     //     return data;
     // }],
-    baseURL: 'http://localhost:23309',
+    baseURL: host,
     withCredentials: true,
     headers: {
         // 'Content-Type': 'application/json',
@@ -30,4 +32,5 @@ instance.interceptors.response.use(response => {
     });
 });
 export default instance;
+export host;
 
