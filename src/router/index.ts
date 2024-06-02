@@ -90,6 +90,12 @@ const router = createRouter({
             path: '/confirm-order',
             component: () => import('@/views/ConfirmPage.vue'),
             meta: {ShowHeader: true}
+        },
+        {
+            name: 'AIHelper',
+            path: '/ai',
+            component: () => import('@/components/AIHelper.vue'),
+            meta: {ShowHeader: true}
         }
     ],
 });

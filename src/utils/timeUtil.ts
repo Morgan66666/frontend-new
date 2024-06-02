@@ -24,7 +24,7 @@ export const convertISOToLocal = (isoString: string): string => {
  * @param timestamp - 时间戳（毫秒）
  * @returns 本地时间字符串
  */
-export const convertTimestampToLocal = (timestamp: number): string => {
+export const convertTimestampToLocal = (timestamp: string|number): string => {
   const date = new Date(timestamp); // 时间戳是毫秒
   return date.toLocaleString();
 };

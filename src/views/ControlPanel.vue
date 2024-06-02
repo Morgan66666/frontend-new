@@ -2,9 +2,9 @@
   <div class="control-panel-container">
     <div class="common-layout" style="height: 100%">
       <el-container style="height: 100%">
-        <el-header>
-          Header
-        </el-header>
+<!--        <el-header>-->
+<!--          Header-->
+<!--        </el-header>-->
         <el-container>
           <el-aside width="250px">
             <Menu @menu-select="handleMenuSelect" />
@@ -13,7 +13,7 @@
             <el-main>
               <component :is="currentComponent"></component>
             </el-main>
-            <el-footer>Footer</el-footer>
+<!--            <el-footer>Footer</el-footer>-->
           </el-container>
         </el-container>
       </el-container>

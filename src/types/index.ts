@@ -49,6 +49,7 @@ export interface Post {
     title: string;
     type: string;
     userInfo?: UserInfo;
+    createTime?: string;
 }
 
 export interface Product {

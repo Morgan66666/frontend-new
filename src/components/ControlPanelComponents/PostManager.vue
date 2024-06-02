@@ -99,7 +99,4 @@ onUnmounted(() => {
   width: 100%;
 }
 
-.el-table {
-  width: 100%;
-}
 </style>
