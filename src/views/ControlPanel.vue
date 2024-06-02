@@ -28,14 +28,14 @@ import ActivityManager from '@/components/ControlPanelComponents/ActivityManager
 import UserManager from '@/components/ControlPanelComponents/UserManager.vue';
 import OrderManager from '@/components/ControlPanelComponents/OrderManager.vue';
 import ApiManager from '@/components/ControlPanelComponents/ApiManager.vue';
-import ActivityApproval from "@/components/ControlPanelComponents/ActivityApproval.vue";
+import PostManager from '@/components/ControlPanelComponents/PostManager.vue';
 
 const components = {
   ActivityManager,
   UserManager,
   OrderManager,
   ApiManager,
-  ActivityApproval
+  PostManager
 };
 
 const currentComponent = ref<ReturnType<typeof defineComponent>>(ActivityManager);

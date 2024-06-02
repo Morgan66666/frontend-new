@@ -48,7 +48,7 @@ export interface Post {
     likes: number;
     title: string;
     type: string;
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
 }
 
 export interface Product {
@@ -85,8 +85,9 @@ export interface Order {
   orderId?: number;
   activityId: number;
   userId: string;
-  amount?: number;
-  tradeNumber?: number;
+  numberOfPeople?: number;
+  transactionId?: string;
+  totlePrice: string;
   createTime?: string;
   status?: number;
   name: string;

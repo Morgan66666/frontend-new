@@ -131,13 +131,15 @@ const getActivity = async (activityId: number) => {
 };
 
 const order = ref<Order>({
+  totlePrice: "",
   activityId: 0,
   name: "",
   phoneNumber: "",
   userId: "",
-  amount: 0,
+  numberOfPeople: 0
 
 });
+
 
 let userInfo:UserInfo = store.getters.getUserInfo;
 
@@ -153,11 +155,12 @@ const confirmOrder = () => {
   const userId = userInfo.userId;
   try {
     order.value = {
+      totlePrice: "",
       activityId: activity.value.activityId,
       name: contact.value.name,
       phoneNumber: contact.value.phone,
       userId: userId,
-      amount: numTickets.value
+      numberOfPeople: numTickets.value
     };
     api.order.createOrder(order.value).then((res: any) => {
       console.log('订单创建成功', res);
@@ -173,7 +176,7 @@ const confirmOrder = () => {
       type: 'error',
     });
   }
-  // 在这里可以添加进一步的订单处理逻辑，比如跳转到支付页面
+
   router.push({path: '/activity', query: {activityId: activity.value.activityId}});
 };
 

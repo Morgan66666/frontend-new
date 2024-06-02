@@ -25,12 +25,12 @@
             </el-icon>
             <span>活动列表</span>
           </el-menu-item>
-          <el-menu-item index="ActivityApproval">
-            <el-icon>
-              <Location />
-            </el-icon>
-            <span>活动审批</span>
-          </el-menu-item>
+<!--          <el-menu-item index="ActivityApproval">-->
+<!--            <el-icon>-->
+<!--              <Location />-->
+<!--            </el-icon>-->
+<!--            <span>活动审批</span>-->
+<!--          </el-menu-item>-->
         </el-sub-menu>
         <el-menu-item index="UserManager">
           <el-icon>
@@ -43,6 +43,12 @@
             <Setting />
           </el-icon>
           <span>订单管理</span>
+        </el-menu-item>
+        <el-menu-item index="PostManager">
+          <el-icon>
+            <Setting />
+          </el-icon>
+          <span>帖子管理</span>
         </el-menu-item>
         <el-menu-item index="ApiManager">
           <el-icon>

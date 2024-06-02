@@ -35,10 +35,10 @@
           <el-input v-model="form.userId"></el-input>
         </el-form-item>
         <el-form-item label="订单金额">
-          <el-input v-model="form.amount"></el-input>
+          <el-input v-model="form.totlePrice"></el-input>
         </el-form-item>
         <el-form-item label="交易人数">
-          <el-input v-model="form.tradeNumber"></el-input>
+          <el-input v-model="form.numberOfPeople"></el-input>
         </el-form-item>
         <el-form-item label="创建时间">
           <el-date-picker v-model="form.createTime" type="datetime" placeholder="选择创建时间"></el-date-picker>
@@ -62,16 +62,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
+import {Order} from "@/types";
 
-interface Order {
-  orderId: number;
-  activityId: number;
-  userId: number;
-  amount: number;
-  tradeNumber: number;
-  createTime: string;
-  status: number;
-}
 
 const orders = ref<Order[]>([]);
 const dialogVisible = ref(false);
@@ -86,20 +78,26 @@ const fetchOrders = async () => {
       {
         orderId: 1,
         activityId: 101,
-        userId: 1001,
-        amount: 99.99,
-        tradeNumber: 1,
+        userId: "1001",
+        totlePrice: "99.99",
+        numberOfPeople: 1,
         createTime: '2024-05-28T12:00:00',
         status: 0,
+        transactionId: "1",
+        name: "张三",
+        phoneNumber: "13812345678",
       },
       {
         orderId: 2,
-        activityId: 102,
-        userId: 1002,
-        amount: 149.99,
-        tradeNumber: 2,
-        createTime: '2024-05-27T14:00:00',
-        status: 1,
+        activityId: 111,
+        userId: "1002",
+        totlePrice: "991.99",
+        numberOfPeople: 1,
+        createTime: '2024-05-28T12:00:00',
+        status: 0,
+        transactionId: "1",
+        name: "李四",
+        phoneNumber: "13812345678",
       },
     ];
   } catch (error) {

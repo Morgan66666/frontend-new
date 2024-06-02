@@ -163,7 +163,7 @@ watch(comments, (newComments) => {
 <style scoped>
 .main_container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   justify-content: center;
   background-color: rgb(247, 248, 252);
   box-sizing: content-box;
