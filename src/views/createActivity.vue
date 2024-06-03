@@ -63,8 +63,6 @@
           drag
           :http-request="uploadImage"
           multiple
-          :on-success="handleSuccess"
-          :on-error="handleError"
           :limit="1"
         >
           <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
@@ -91,7 +89,7 @@ import {ref, computed, inject} from 'vue';
 import { ElMessage, FormInstance } from 'element-plus';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { UploadRequestOptions, UploadFile, UploadFiles } from 'element-plus/es/components/upload/src/upload';
+import { UploadRequestOptions} from 'element-plus/es/components/upload/src/upload';
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ActivityDetail, SignatureInfo } from '@/types';
 import Editor from "@/components/editor.vue";
@@ -160,15 +158,7 @@ const disabledActivityEndDate = (time: Date) => {
   return time.getTime() <= activityBeginTime || time.getTime() < today.getTime();
 };
 
-const handleSuccess = (response: any, file: UploadFile, fileList: UploadFiles) => {
-  console.log(response, file, fileList);
-  ElMessage.success('上传成功');
-};
 
-const handleError = (err: Error, file: UploadFile, fileList: UploadFiles) => {
-  console.error(err, file, fileList);
-  ElMessage.error('上传失败');
-};
 
 const handleUpdate = () => {
   if (quillContent.value && quillContent.value.editor) {
@@ -206,18 +196,18 @@ const uploadImage = async (options: UploadRequestOptions) => {
   }
 };
 
-const getOssSignature = async (): Promise<SignatureInfo> => {
+async function getOssSignature(): Promise<SignatureInfo> {
   try {
-    const response = await axios.get('/api/oss/signature');
-    if (response.data) {
-      return response.data;
+    const response = await api.oss.getSignature();
+    if (response) {
+      return response;
     } else {
       throw new Error('获取签名信息失败');
     }
   } catch (error) {
     throw error;
   }
-};
+}
 
 const isFormValid = computed(() => {
   return (
