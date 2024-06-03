@@ -1,48 +1,26 @@
 <template>
   <div class="main_container">
     <div class="list">
-      <div
-        class="list-item"
-        v-for="item in items"
-        :key="item.id"
-        @click="selectedItem = item"
-        :class="{ active: item === selectedItem }"
-      >
-        <img class="list-item-avatar" :src="item.avatar"  alt=""/>
-        <a class="list-item-username">{{ item.username }}</a>
+      <div class="list-item" v-for="item in items" :key="item.id" @click="choose(item)"
+        :class="{ active: item === selectedItem }">
+        <img class="list-item-avatar" :src="item.avatar" alt="" />
+        <a class="list-item-userName">{{ item.userName }}</a>
       </div>
     </div>
     <div class="content">
       <div class="message-list">
-        <div
-          v-for="item in selectedItem.messageList"
-          :key="item.id"
-          class="message-list-item"
-          :class="{ right: item.userId === userId }"
-        >
-          <img
-            v-if="item.userId !== userId"
-            class="message-list-item-avatar"
-            :src="selectedItem.avatar"
-           alt=""/>
+        <div v-for="item in selectedItem.messageList" :key="item.id" class="message-list-item"
+          :class="{ right: item.userId === userId }">
+          <img v-if="item.userId !== userId" class="message-list-item-avatar" :src="selectedItem.avatar" alt="" />
           <div class="message-list-item-content">{{ item.content }}</div>
-          <img
-            v-if="item.userId === userId"
-            class="message-list-item-avatar"
-            :src="selectedItem.avatar"
-           alt=""/>
+          <img v-if="item.userId === userId" class="message-list-item-avatar" :src="userInfo.avatar" alt="" />
         </div>
       </div>
       <div id="message-input">
-        <textarea
-          ref="textarea"
-          v-model="message"
-          placeholder="Type a message..."
-          @input="autoGrow"
-          :style="{ maxHeight: '120px' }"
-        />
+        <textarea ref="textarea" v-model="message" placeholder="Type a message..." @input="autoGrow"
+          :style="{ maxHeight: '120px' }" />
         <div class="message-input-send" style="width: 100%">
-          <button  @click="sendMessage">发送</button>
+          <button @click="sendMessage">发送</button>
         </div>
       </div>
     </div>
@@ -50,81 +28,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, onMounted } from "vue";
+import { ref, inject, onMounted, watchEffect } from "vue";
+import store from "@/store";
 
 interface message {
   id: string;
   userId: string;
-  username: string;
+  userName: string;
   content: string;
+  createTime: string;
 }
-// const userId = store.getters.getUserInfo.userId;
-const userId = "1";
+const userId = store.getters.getUserInfo?.userId;
 
-const items = ref([
-  {
-    id: "Item 1",
-    username: "This is item 1",
-    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
-    messageList: [
-      {
-        id: "Item 1",
-        userId: "1",
-        username: "Item 1",
-        content: "This is item 1",
-      },
-      {
-        id: "Item 1",
-        userId: "2",
-        username: "Item 1",
-        content:
-          "This is item 1,This is item 1,This is item 1,This is item 1,This is item 1",
-      },
-      {
-        id: "Item 1",
-        userId: "1",
-        username: "Item 1",
-        content: "This is item 1",
-      },
-    ] as message[],
-  },
-  {
-    id: "Item 2",
-    username: "This is item 2",
-    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
-    messageList: [
-      {
-        id: "Item 1",
-        userId: "12",
-        username: "Item 1",
-        content: "This is item 1",
-      },
-    ] as message[],
-  },
-  {
-    id: "Item 3",
-    username: "This is item 3",
-    avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png   ",
-    messageList: [
-      {
-        id: "Item 1",
-        userId: "12",
-        username: "Item 1",
-        content: "This is item 1",
-      },
-    ] as message[],
-  },
+
+const map = new Map();
+const items = ref<any>([
 ]);
 
 const selectedItem = ref({
   id: "",
-  username: "",
+  userName: "",
   avatar: "",
-  messageList: [] as message[],
+  messageList: [] as any[],
 });
 const message = ref("");
-const textarea = ref(null);
-const api = inject("$api")
+const textarea: any = ref(null);
+const api: any = inject("$api")
 
 const autoGrow = () => {
   if (textarea.value === null) {
@@ -136,41 +65,94 @@ const autoGrow = () => {
 
 // 建立websocket连接
 
-let socket;
-
+let socket: WebSocket | null = null;
+const userInfo = ref(store.getters.userInfo);
 // 获取host
 
 
 onMounted(() => {
-  socket = new WebSocket('ws://localhost:23309/');
-  socket.onopen = (event) => {
+  //建立连接
+  let token = store.getters.getToken;
+  socket = new WebSocket('ws://localhost:23309/ws/create?session_id=' + token);
+  // 获取所有聊天会话
+  api.chat.getChatList().then((res: any) => {
+    for (const item of res) {
+      let userId = item.dstId;
+      api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
+        map.set(userId, res);
+        items.value.push({
+          id: res.userId,
+          userName: res.userName,
+          avatar: res.avatar,
+          vis: false,
+          messageList: []
+        });
+      });
+    }
+  });
+  socket.onopen = (event: any) => {
     console.log('WebSocket is open now.');
   };
   socket.onmessage = (event) => {
-  // 假设后端返回的数据格式为 { id: string, userId: string, username: string, content: string }
-
-
-
+    // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
 
     const message = JSON.parse(event.data);
+    console.log("接到信息，开始解析", message)
+    let srcId = message.srcId
+    if (map.has(srcId) && message.type != 3) {
+      message.userId = srcId
+      message.userName = map.get(srcId).userName;
+      message.avatar = map.get(srcId).avatar;
+      message.content = message.body;
+      message.createTime = message.createTime;
+    }
+    srcId = message.srcId == userId ? message.dstId:message.srcId;
+
     for (const element of items.value) {
-      if (element.id === message.id) {
-        element.messageList.push(message);
+      if (element.id === srcId) {
+        if (message.type != 3){
+          element.messageList.push(message);
+        }
+        console.log("聊天信息存在")
         return;
       }
     }
-    // 这里的头像地址是假的，实际开发中应该从后端获取，但是没想好怎么获取，所以就先这样了
-    let newItem = {
-      id: message.id,
-      username: message.username,
-      avatar: "https://api-static.mihoyo.com/mainPage/bh2-logo-v2.png",
-      messageList: [message],
-    };
-    items.value.push(newItem);
-
-
-    console.log('WebSocket message received:', event);
-  };
+    // 建立一个新的会话
+    api.chat.createChat({ dstId: message.srcId }).then((res: any) => {
+      console.log("建立会话", res)
+      let userId = srcId;
+      api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
+        map.set(userId, res);
+        console.log("获取新建立的用户信息", res)
+        let newItem = {
+          id: res.userId,
+          userName: res.userName,
+          avatar: res.avatar,
+          vis:true  ,
+          messageList: []
+        };
+        console.log("构建新的消息会话", newItem)
+        items.value.push(newItem);
+        api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
+          for (const item of res) {
+            console.log("聊天记录：", item)
+            let newMes = {
+              id: item.msgId,
+              userId: item.srcId,
+              userName: map.get(item.srcId).userName,
+              content: item.body,
+              createTime: item.createTime
+            };
+            newItem.messageList.push(newMes);
+            // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
+          }
+          if( message.type != 3){
+            newItem.messageList.push(message);
+          }
+        });
+      });
+    });
+  }
 
   socket.onclose = (event) => {
     console.log('WebSocket is closed now.');
@@ -182,18 +164,89 @@ onMounted(() => {
 });
 
 const sendMessage = () => {
-  if (message.value === "") {
+  if (message.value === ""||selectedItem.value.id==="") {
     return;
   }
-  selectedItem.value.messageList.push({
-    id: selectedItem.value.id,
-    userId: userId,
-    username: "Me",
-    content: message.value,
-  });
+
+  let form = {
+    srcId: userInfo.value.userId,
+    dstId: selectedItem.value.id,
+    body: message.value,
+    type: 1,
+    createTime: new Date().toISOString(),
+    status: 0
+  }
+  let s = JSON.stringify(form);
+  socket?.send(s);
+
+
+  // selectedItem.value.messageList.push({
+  //   id: selectedItem.value.id,
+  //   userId: userId,
+  //   userName: "Me",
+  //   content: message.value,
+  //   createTime: new Date().toISOString(),
+  // });
+
+
   message.value = "";
   autoGrow();
 };
+
+const choose = (list: any) => {
+  selectedItem.value = list
+  if (list.vis){
+    return
+  }else{
+    list.vis = true
+  }
+  selectedItem.value = list
+  let srcId = list.id;
+  api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
+    console.log("res",res)
+    for (const item of res) {
+      let newMes = {
+          id: item.msgId,
+          userId: item.srcId,
+          userName: map.get(item.srcId).userName,
+          content: item.body,
+          createTime: item.createTime
+      };
+      if(list.messageList.length == 0){
+        list.messageList.push(newMes);
+        continue
+      }
+
+      let repeat = false
+      for (let i of list.messageList) {
+        if (i.id === item.id) {
+          repeat = true
+          break
+        } 
+        
+      }
+      
+      if(!repeat){
+        list.messageList.push(newMes);
+      }
+
+      
+
+      console.log("list",list)
+
+    }
+  });
+
+
+}
+
+watchEffect(() => {
+  if (!store.getters.getIsLogin) {
+    return
+  }
+  userInfo.value = store.getters.getUserInfo
+  map.set(userInfo.value.userId, userInfo.value)
+})
 
 
 
@@ -255,7 +308,7 @@ export default {
   align-self: center;
 }
 
-.list-item-username {
+.list-item-userName {
   margin-left: 20px;
   color: rgb(0, 0, 0);
   font-size: 16px;
@@ -269,6 +322,7 @@ export default {
 .list-item.active {
   background-color: rgb(183, 183, 183);
 }
+
 .content {
   width: 75%;
   overflow-y: auto;
@@ -280,7 +334,7 @@ export default {
   height: 68%;
   background-color: transparent;
   overflow-y: auto;
-  
+
 }
 
 .message-list-item {
@@ -340,14 +394,14 @@ export default {
   outline: none;
 }
 
-.message-input-send{
+.message-input-send {
   display: flex;
   align-items: center;
   justify-content: center;
 
 }
 
-.message-input-send button{
+.message-input-send button {
   width: 15%;
   padding: 4px;
   font-size: 16px;
