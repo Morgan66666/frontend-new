@@ -96,6 +96,7 @@ import { UploadFilled } from '@element-plus/icons-vue';
 import { ActivityDetail, SignatureInfo } from '@/types';
 import Editor from "@/components/editor.vue";
 import * as timeUtil from '@/utils/timeUtil.ts';
+import router from "@/router";
 
 const form = ref<Partial<ActivityDetail>>({
   title: '',
@@ -254,9 +255,12 @@ const handleSubmit = async () => {
     ElMessage.success('活动创建成功');
     // 重置表单
     handleReset();
+    await router.push({path: '/activities'});
   } catch (error) {
     ElMessage.error('活动创建失败');
   }
+
+
 };
 
 const handleReset = () => {

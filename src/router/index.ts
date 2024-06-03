@@ -41,6 +41,10 @@ const router = createRouter({
                     component: () => import('@/components/personalComponents/collectedList.vue')
                 },
                 {
+                    path: 'activitiesCollected',
+                    component: () => import('@/components/personalComponents/activitiesCollectedList.vue')
+                },
+                {
                     path: 'comments',
                     component: () => import('@/components/personalComponents/commentsList.vue')
                 },
@@ -52,6 +56,10 @@ const router = createRouter({
                 {
                     path: 'browseHistory',
                     component: () => import('@/components/personalComponents/browseHistoryList.vue')
+                },
+                {
+                    path: 'orderHistory',
+                    component: () => import('@/components/personalComponents/OrderHistory.vue')
                 }
             ]
         },

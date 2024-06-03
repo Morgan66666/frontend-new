@@ -131,13 +131,12 @@ const getActivity = async (activityId: number) => {
 };
 
 const order = ref<Order>({
-  totlePrice: "",
+  totalPrice: "",
   activityId: 0,
   name: "",
   phoneNumber: "",
   userId: "",
   numberOfPeople: 0
-
 });
 
 
@@ -155,7 +154,7 @@ const confirmOrder = () => {
   const userId = userInfo.userId;
   try {
     order.value = {
-      totlePrice: "",
+      totalPrice: String(activity.value.price * numTickets.value),
       activityId: activity.value.activityId,
       name: contact.value.name,
       phoneNumber: contact.value.phone,

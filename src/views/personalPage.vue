@@ -35,6 +35,18 @@
               />
               <a>收藏</a>
           </router-link>
+          <router-link v-if="isMaster" class="main_container_user_function_left_button" :class="{
+              active: $route.path === `/personal/${userInfo.userId}/activitiesCollected`,
+            }"
+            :to="`/personal/${userInfo.userId}/activitiesCollected`">
+
+              <img
+                class="main_icon_svg"
+                src="../assets/icon/EpCollection.svg"
+                alt="百度logo"
+              />
+              <a>活动收藏</a>
+          </router-link>
           <router-link v-if="isMaster" class="main_container_user_function_left_button"
           :class="{
               active: $route.path === `/personal/${userInfo.userId}/browseHistory`,
@@ -48,14 +60,27 @@
             />
             <a>浏览记录</a>
           </router-link>
-          <div v-if="isMaster" class="main_container_user_function_left_button">
+          <router-link v-if="isMaster" class="main_container_user_function_left_button"
+            :class="{
+                active: $route.path === `/personal/${userInfo.userId}/orderHistory`,
+              }"
+              :to="`/personal/${userInfo.userId}/orderHistory`"
+            >
             <img
               class="main_icon_svg"
-              src="../assets/icon/DashiconsTicketsAlt.svg"
+              src="../assets/icon/UilNotes.svg"
               alt="百度logo"
             />
-            <a>购票记录</a>
-          </div>
+            <a>订单记录</a>
+          </router-link>
+<!--          <div v-if="isMaster" class="main_container_user_function_left_button">-->
+<!--            <img-->
+<!--              class="main_icon_svg"-->
+<!--              src="../assets/icon/DashiconsTicketsAlt.svg"-->
+<!--              alt="百度logo"-->
+<!--            />-->
+<!--            <a>购票记录</a>-->
+<!--          </div>-->
 
           <router-link
             v-if="isMaster"

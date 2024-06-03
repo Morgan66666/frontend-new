@@ -87,12 +87,20 @@ export interface Order {
   activityId: number;
   userId: string;
   numberOfPeople?: number;
-  transactionId?: string;
-  totlePrice: string;
+  orderNumber?: string;
+  totalPrice: string;
   createTime?: string;
   status?: number;
   name: string;
   phoneNumber: string;
+}
+
+
+export interface AcStar {
+    activityId: number;
+    collectorId: string;
+    collectionId: number;
+    status?: string;
 }
 
 

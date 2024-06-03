@@ -71,9 +71,12 @@ let apiConfig = {
   activity: [
     { name: "createActivity", method: "post", url: "/api/activities" },//创建活动
     { name: "getActivityByActivityId", method: "get", url: "/api/activities/{activityId}" },//根据活动id获得活动
-    { name: "updateActivity", method: "put", url: "/api/activities/update" },//修改活动
+    { name: "updateActivity", method: "put", url: "/api/activities" },//修改活动
     { name: "deleteActivity", method: "delete", url: "/api/activities/{activityId}" },//删除活动
     { name: "getActivities", method: "get", url: "/api/activities" },//根据时间、标题等获得活动
+    { name: "starActivity", method: "post", url: "/api/activities/collections" },//收藏活动
+    { name: "unstarActivity", method: "delete", url: "/api/activities/collections/{collectionId}" },//取消收藏活动
+    { name: "getCollectionsByUserId", method: "get", url: "/api/activities/collections/activity/{collector_Id}" },//根据用户id获得收藏的活动
   ],
   //oss相关
   oss: [
@@ -82,9 +85,14 @@ let apiConfig = {
   order: [
     { name: "createOrder", method: "post", url: "/api/orders" },//创建订单
     { name: "getOrderById", method: "get", url: "/api/orders/{orderId}" },//根据订单id获得订单
-    { name: "updateOrder", method: "put", url: "/api/orders/{orderId}" },//修改订单
+    { name: "updateOrder", method: "put", url: "/api/orders" },//修改订单
     { name: "deleteOrder", method: "delete", url: "/api/orders/{orderId}" },//删除订单
     { name: "getOrders", method: "get", url: "/api/orders" },//根据用户id获得订单
+    { name: "getOrdersByUserId", method: "get", url: "/api/orders/user/{userId}" },//根据用户id获得订单
+  ],
+  ai: [
+    {name: "generate", method: "post", url: "/api/ai/generate"},//生成文本
+    {name: "updateAPI", method: "put", url: "/api/ai/update"},//更新API
   ]
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了

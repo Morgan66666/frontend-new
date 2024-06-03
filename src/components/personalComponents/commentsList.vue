@@ -33,7 +33,7 @@ import { ref, inject, onMounted} from 'vue'
 import { useRouter } from 'vue-router';
 import postComment from '../homePageComponents/postComment.vue'
 import moment from 'moment';
-import { getUserInfo } from '../../utils/userUtil.js';
+import { getUserInfo } from '@/utils/userUtil.ts';
 
 
 const api:any = inject('$api');
