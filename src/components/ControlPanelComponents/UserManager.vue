@@ -19,7 +19,7 @@
     <el-dialog :title="dialogTitle" v-model="dialogVisible">
       <el-form :model="form">
         <el-form-item label="用户名">
-          <el-input v-model="form.username"></el-input>
+          <el-input v-model="form.userName"></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-input v-model="form.gender"></el-input>
@@ -31,7 +31,7 @@
           <el-date-picker v-model="form.birth" type="date" placeholder="选择生日"></el-date-picker>
         </el-form-item>
         <el-form-item label="个性签名">
-          <el-input type="textarea" v-model="form.signature" rows="3"></el-input>
+          <el-input type="textarea" v-model="form.intro" rows="3"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -59,20 +59,20 @@ const fetchUsers = async () => {
     users.value = [
       {
         avatar: 'https://example.com/avatar1.png',
-        username: '用户1',
+        userName: '用户1',
         gender: '男',
         level: '高级',
         userId: '1',
-        signature: '这是用户1的个性签名',
+        intro: '这是用户1的个性签名',
         birth: '1990-01-01',
       },
       {
         avatar: 'https://example.com/avatar2.png',
-        username: '用户2',
+        userName: '用户2',
         gender: '女',
         level: '中级',
         userId: '2',
-        signature: '这是用户2的个性签名',
+        intro: '这是用户2的个性签名',
         birth: '1992-02-02',
       },
     ];

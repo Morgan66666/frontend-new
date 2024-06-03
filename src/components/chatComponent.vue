@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import store from "@/store";
 
 interface message {
@@ -59,8 +59,8 @@ const autoGrow = () => {
   if (textarea.value === null) {
     return;
   }
-  textarea.value.style.height = "auto";
-  textarea.value.style.height = textarea.value.scrollHeight + "px";
+  // textarea.value.style.height = "auto";
+  // textarea.value.style.height = textarea.value.scrollHeight + "px";
 };
 
 // 建立websocket连接
@@ -155,7 +155,7 @@ onMounted(() => {
   }
 
   socket.onclose = (event) => {
-    console.log('WebSocket is closed now.');
+    console.log('WebSocket is closed now.', event);
   };
 
   socket.onerror = (event) => {

@@ -84,7 +84,7 @@
 <script lang="ts">
 import userInfoVue from "../components/personalComponents/userInfo.vue";
 import { ref, watchEffect, computed, onMounted } from "vue";
-import { getUserInfo } from "../utils/userUtil.vue";
+import { getUserInfo } from "../utils/userUtil.js";
 import { useRoute } from "vue-router";
 import store from "../store";
 

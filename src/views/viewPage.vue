@@ -66,7 +66,7 @@ import quillComponent from "../components/editPostComponents/quillComponent.vue"
 import store from "../store";
 import { useRouter } from "vue-router";
 import { Post, UserInfo } from "@/types";
-import { getUserInfo } from "../utils/userUtil.vue";
+import { getUserInfo } from "../utils/userUtil.js";
 import postMasterComponentVue from "../components/viewComponents/postMasterComponent.vue";
 import popularPostComponent from "../components/viewComponents/popularPostComponent.vue";
 import moment from "moment";
@@ -196,7 +196,7 @@ export default {
     function comment() {
       if (!store.getters.getIsLogin) {
         store.dispatch("SetShowLoginWindow", true);
-        proxy.$message.error("请先登录");
+        proxy!.$message.error("请先登录");
         return;
       }
       if (!show.value) {
@@ -204,7 +204,7 @@ export default {
         return;
       }
       if(newContent.value === ""){
-        proxy.$message.error("评论内容不能为空");
+        proxy!.$message.error("评论内容不能为空");
         return;
       }
       let newCommentForm = {

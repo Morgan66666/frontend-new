@@ -107,7 +107,7 @@
 <script lang="ts">
 import { onMounted, PropType, ref, inject, watchEffect } from "vue";
 import { computed } from "vue";
-import { getUserInfo } from "../../utils/userUtil.vue";
+import { getUserInfo } from "../../utils/userUtil.js";
 import router from "../../router";
 import moment from "moment";
 import store from "../../store";

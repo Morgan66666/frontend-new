@@ -21,7 +21,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <input type="file" ref="fileInput" style="display: none" @change="onFileSelected" />
-      <v-btn color="blue darken-1" @click="$refs.fileInput.click()">选择文件</v-btn>
+      <v-btn color="blue darken-1" @click="selectFile">选择文件</v-btn>
       <v-btn color="green darken-1" @click="dialog = false">关闭</v-btn>
     </v-card-actions>
   </v-card>
@@ -104,7 +104,7 @@ import axios from "axios";
 import store from "../../store";
 import { v4 as uuidv4 } from "uuid";
 import { UserInfo } from "@/types";
-import { getUserInfo } from "../../utils/userUtil.vue";
+import { getUserInfo } from "../../utils/userUtil.js";
 
 export default {
   name: "InfoEdit",
@@ -125,6 +125,22 @@ export default {
     const dialog = ref(false);
     const instance = getCurrentInstance();
     const proxy:any = instance?.proxy;
+
+    const fileInput = ref<HTMLInputElement | null>(null);
+
+    const selectFile = () => {
+      if (fileInput.value) {
+        fileInput.value.click();
+      }
+    };
+
+    const handleFileChange = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        console.log('Selected file:', file);
+      }
+    };
 
     const saveInfo = () => {
       console.log(username.value);
@@ -147,7 +163,7 @@ export default {
         console.log("更新用户信息成功", response);
         proxy.$message.success("更新用户信息成功");
         // 重新登录
-        getUserInfo(userId).then(res  => {
+        getUserInfo(userId).then((res:any)  => {
           console.log("重新登录成功", res);
           store.dispatch("LoginIn", res);
         })
@@ -260,6 +276,10 @@ export default {
       onDrop,
       triggerFileInput,
       onFileSelected,
+      fileInput,
+      selectFile,
+      handleFileChange
+
     };
   },
 };

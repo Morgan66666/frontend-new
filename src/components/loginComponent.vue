@@ -95,7 +95,6 @@ export default defineComponent({
     };
 
     const login = async () => {
-      let user: UserInfo = null;
       let token = null;
 
       let loginForm = {
@@ -117,7 +116,7 @@ export default defineComponent({
             return
           }
           token = res.token;
-          user = {
+          let user:UserInfo = {
             userId: res.userResponse.userId,
             userName: res.userResponse.userName,
             avatar: res.userResponse.avatar,

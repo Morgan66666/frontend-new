@@ -9,7 +9,6 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-import { createPinia } from "pinia"
 import store from "./store/index"
 import api from "./api/index"
 
@@ -23,17 +22,6 @@ const vuetify = createVuetify({
     components,
     directives,
 })
-
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:23309/api', // API基础路径
-    timeout: 1000, // 请求超时时间
-    headers: { 'X-Custom-Header': 'foobar' },
-    withCredentials: true
-})
-
-export default axiosInstance
-
-const pinia = createPinia()
 
 const app = createApp(App)
 
@@ -54,7 +42,6 @@ app.provide('$store', store)
 
 app.use(vuetify)
 
-app.use(pinia)
 app.use(store)
+
 app.mount('#app')
-    
