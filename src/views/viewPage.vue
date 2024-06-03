@@ -9,7 +9,7 @@
             <div class="main_main_card_content" v-html="post.body"></div>
 
             <div class="main_main_card_other_info_container">
-              <div class="main_main_card_other_info_left">{{ post.date }}</div>
+
               <div class="main_main_card_other_info_right"></div>
             </div>
             <div>
@@ -334,7 +334,7 @@ export default {
   line-height: 18px;
   margin-top: 8px;
   background-color: transparent;
-  border-bottom: 1px solid rgb(162, 160, 160);
+  border-bottom: 1px solid rgb(211, 211, 211);
 }
 
 .main_main_card_content p {
@@ -492,6 +492,5 @@ export default {
   margin-left: 20px;
   margin-bottom: 10px;
   background-color: transparent;
-  border-bottom: 1px solid rgb(162, 160, 160);
 }
 </style>

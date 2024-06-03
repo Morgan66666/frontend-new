@@ -104,7 +104,7 @@ export default {
       userId: "",
       userName: "未登录",
       intro: "这个人很懒，什么都没写",
-      avatar: "https://th.bing.com/th/id/OIP.akEXjXSun7zbVDGMJUegdgHaHa?rs=1&pid=ImgDetMain",
+      avatar: "https://cs304.oss-cn-shenzhen.aliyuncs.com/074cb3a6-2b72-479e-b7b8-81839006f3d7.png",
       gender: "保密",
       level: "4",
       birth: "2000-01-01",
@@ -119,9 +119,9 @@ export default {
       router.push(`/`);
       alert("登出成功");
     }
-    const userInfo = ref(defaultUserInfo);
-    if (store.getters.getIsLogin) {
-      userInfo.value = store.getters.getUserInfo;
+    const userInfo = ref(store.getters.getUserInfo);
+    if (!store.getters.getIsLogin) {
+      userInfo.value = defaultUserInfo;
     }
     
 

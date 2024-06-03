@@ -90,10 +90,46 @@
           />保密
         </div>
       </div>
-
+  
       <div class="edit_form_item_button">
-        <button @click="saveInfo">保存</button>
-      </div>
+<button @click="showChangePasswordDialog = true">修改密码</button>
+  <button @click="saveInfo">保存</button>
+
+
+  <v-dialog max-width="500" v-model="showChangePasswordDialog" persistent>
+    <v-card>
+  <!--对话框的标题-->
+  <v-toolbar dense dark color="rgb(152, 235, 239)">
+    <v-toolbar-title>修改密码</v-toolbar-title>
+  </v-toolbar>
+  <!--对话框的内容，表单-->
+  <v-card-text class="px-5">
+    <v-text-field
+      v-model="password"
+      label="新密码"
+      type="password"
+      outlined
+      color="light-blue"
+      hide-details
+    ></v-text-field>
+    <v-text-field
+      v-model="password1"
+      label="再次输入"
+      type="password"
+      outlined
+      color="light-blue"
+      hide-details
+    ></v-text-field>
+  </v-card-text>
+  <!--确定和取消按钮-->
+  <v-card-actions>
+    <v-spacer></v-spacer>
+    <v-btn color="green darken-1"  @click="changePassword">确定</v-btn>
+    <v-btn color="red darken-1"  @click="showChangePasswordDialog = false">取消</v-btn>
+  </v-card-actions>
+</v-card>
+  </v-dialog>
+</div>
     </div>
   </div>
 </template>
@@ -125,6 +161,26 @@ export default {
     const dialog = ref(false);
     const instance = getCurrentInstance();
     const proxy:any = instance?.proxy;
+    let showChangePasswordDialog = ref(false);
+    let password = ref("")
+    let password1 = ref("")
+    const changePassword = () =>  {
+    // 在这里添加修改密码的逻辑
+      api.user.updateUserPassword({password: password.value}).then((res:any) => {
+
+        if(password.value != password.value){
+          proxy.$message.error("两次密码不同")
+          return
+        }
+        if(res?.code == 403||res?.code == 404){
+          proxy.$message.error("与旧密码相同")
+        }else{
+          proxy.$message.success("修改成功")
+        }
+      })
+       
+      showChangePasswordDialog.value = false
+    }
 
     const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -278,7 +334,11 @@ export default {
       onFileSelected,
       fileInput,
       selectFile,
-      handleFileChange
+      handleFileChange,
+      changePassword,
+      showChangePasswordDialog,
+      password,
+      password1
 
     };
   },
@@ -415,14 +475,15 @@ div.center {
 .edit_form_item_button button {
   width: 65px;
   height: 40px;
+  padding: 5px;
   margin-top: 10px;
+  margin: 5px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: rgb(136, 146, 205);
+  background-color: rgb(152, 235, 239)
 }
 
 .edit_form_item_button button:hover {
-  background-color: rgb(71, 74, 88);
-  color: rgb(136, 146, 205);
+  background-color: rgb(205, 231, 234);
 }
 </style>

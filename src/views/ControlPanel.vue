@@ -42,6 +42,7 @@ const currentComponent = ref<ReturnType<typeof defineComponent>>(ActivityManager
 
 const handleMenuSelect = (componentName: keyof typeof components) => {
   currentComponent.value = components[componentName];
+  console.log('currentComponent', currentComponent.value);
 };
 </script>
 

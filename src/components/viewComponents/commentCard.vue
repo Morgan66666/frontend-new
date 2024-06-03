@@ -20,7 +20,7 @@
         <div class="content_html" v-html="comment.body"></div>
       </div>
       <div class="main_comments_card_operator_container">
-         <div class="data">{{comment.createTime}}</div>
+         <div class="data">{{createTime}}</div>
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import {PropType, inject} from "vue";
-
+import moment from 'moment';
 
 
 
@@ -51,6 +51,8 @@ export default {
       });
     };
     console.log(props.comment)
+    
+    let createTime = moment(props.comment.createTime).format("YYYY-MM-DD HH:mm:ss")
 
     const thumbDown = () => {
       //根据id获得 评论
@@ -68,7 +70,7 @@ export default {
       route.push({ path: `/personal/${id}` });
     };
 
-    return { likes, thumbDown, enterUserPage};
+    return { likes, thumbDown, enterUserPage, createTime};
   },
 
 };

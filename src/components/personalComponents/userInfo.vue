@@ -6,7 +6,7 @@
 
     <div class="main_container_user_info">
       <div class="main_container_user_info_name">{{ userInfo.userName }}</div>
-      <div class="main_container_user_info_id">account: {{ userInfo.account }}</div>
+      <div class="main_container_user_info_id">账户: {{ userInfo.account }}</div>
       <p class="main_container_user_info_signature">
         {{ userInfo.intro }}
       </p>

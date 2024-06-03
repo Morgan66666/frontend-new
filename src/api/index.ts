@@ -16,9 +16,9 @@ let apiConfig = {
   //用户模块相关
   user:
    [{ name: "getUserInfoByUserId", method: "get", url: "/api/users/{userId}" },//根据id获得用户信息
-  { name: "getUserInfoByUserName", method: "get", url: "/api/users" },//根据名字获得用户信息
+  { name: "getUsers", method: "get", url: "/api/users/search" },//根据获取批量用户
   { name: "updateUser", method: "put", url: "/api/users" },//更新用户信息
-  { name: "updateUserPassword", method: "put", url: "/api/users/{userId}/password" }, //更新用户密码
+  { name: "updateUserPassword", method: "put", url: "/api/users/password" }, //更新用户密码
   { name: "getCommentsByUserId", method: "get", url: "/api/users/{userId}/comments" },//根据id获得用户评论
 
   ],
@@ -49,7 +49,7 @@ let apiConfig = {
   //管理员相关
   admin: [
     { name: "exportActivities", method: "get", url: "/api/admin/activities/export" },//导出活动
-    { name: "banPost", method: "post", url: "/api/admin/posts/{postId}/ban" },//禁止帖子
+    { name: "banPost", method: "put", url: "/api/admin/posts/{postId}/ban" },//禁止帖子
     { name: "banComment", method: "post", url: "/api/admin/comments/{commentId}/ban" },//禁止评论
   ],
   //评论相关

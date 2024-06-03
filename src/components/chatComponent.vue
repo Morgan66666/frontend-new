@@ -38,8 +38,8 @@ interface message {
   content: string;
   createTime: string;
 }
-const userId = store.getters.getUserInfo?.userId;
-const map = new Map();
+const userId = ref(store.getters.getUserInfo?.userId);
+let map = ref(new Map());
 const items = ref<any>([
 ]);
 
@@ -70,20 +70,28 @@ const userInfo = ref(store.getters.userInfo);
 
 
 const initializeChat = () => {
-    if(!store.getters.getIsLogin||hadInitial){
+    if(!store.getters.getIsLogin){
+      items.value = []
+      hadInitial = false
+      return
+    }
+
+    if(hadInitial){
       return
     }
     hadInitial = true
-
+    console.log("建立连接")
     //建立连接
     let token = store.getters.getToken;
     socket = new WebSocket('ws://localhost:23309/ws/create?session_id=' + token);
     // 获取所有聊天会话
     api.chat.getChatList().then((res: any) => {
+      console.log("聊天会话", res)
       for (const item of res) {
+        
         let userId = item.dstId;
         api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
-          map.set(userId, res);
+          map.value.set(userId, res);
           items.value.push({
             id: res.userId,
             userName: res.userName,
@@ -98,61 +106,42 @@ const initializeChat = () => {
       // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
 
       const message = JSON.parse(event.data);
-      console.log("接到信息，开始解析", message)
-      let srcId = message.srcId
-      if (map.has(srcId) && message.type != 3) {
-        message.userId = srcId
-        message.userName = map.get(srcId).userName;
-        message.avatar = map.get(srcId).avatar;
-        message.content = message.body;
-        message.createTime = message.createTime;
+      console.log("接受数据", message)
+      // 如果type等于3，说明是系统发送的建立会话的消息,这个会话在服务器上已经存在
+      if(message.type == 3){
+        let id = message.srcId;
+        if(map.value.get(id) != null){
+          return
       }
-      srcId = message.srcId == userId ? message.dstId:message.srcId;
-
-      for (const element of items.value) {
-        if (element.id === srcId) {
-          if (message.type != 3){
-            element.messageList.push(message);
-          }
-          console.log("聊天信息存在")
-          return;
-        }
-      }
-      // 建立一个新的会话
-      api.chat.createChat({ dstId: message.srcId }).then((res: any) => {
-        console.log("建立会话", res)
-        let userId = srcId;
-        api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
-          map.set(userId, res);
-          console.log("获取新建立的用户信息", res)
-          let newItem = {
+      
+        api.user.getUserInfoByUserId({userId: id}).then((res:any) => {
+          console.log("userInfo", res)
+          map.value.set(id, res);
+          let item = {
             id: res.userId,
             userName: res.userName,
             avatar: res.avatar,
-            vis:true  ,
-            messageList: [] as any[],
-          };
-          console.log("构建新的消息会话", newItem)
-          items.value.push(newItem);
-          api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
-            for (const item of res) {
-              console.log("聊天记录：", item)
-              let newMes = {
-                id: item.msgId,
-                userId: item.srcId,
-                userName: map.get(item.srcId).userName,
-                content: item.body,
-                createTime: item.createTime
-              } as any;
-              newItem.messageList.push(newMes);
-              // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
-            }
-            if( message.type != 3){
-              newItem.messageList.push(message);
-            }
-          });
-        });
-      });
+            vis: false,
+            messageList: [] as any[]
+          }
+          item.id = res.userId
+          console.log("item", item)
+          items.value.push(item)
+          console.log("userInfo", res.userId)
+          console.log("items", items.value)
+        })
+      }else{
+        let userId = message.srcId;
+        let item : any = items.value.find((t:any) => t.id === userId);
+        item.messageList.push({
+          userId: message.userId,
+        userName: map.value.get(userId).userName,
+        content: message.body,
+        createTime: message.createTime
+        })
+
+      }
+      
     }
 
     socket.onclose = (event) => {
@@ -173,6 +162,12 @@ const sendMessage = () => {
   if (message.value === ""||selectedItem.value.id==="") {
     return;
   }
+  if(socket==null){
+    alert("未连接服务器")
+  }
+  console.log("当前用户", userInfo.value)
+
+  console.log("chatList", items)
 
   let form = {
     srcId: userInfo.value.userId,
@@ -182,8 +177,16 @@ const sendMessage = () => {
     createTime: new Date().toISOString(),
     status: 0
   }
+  console.log(form)
   let s = JSON.stringify(form);
   socket?.send(s);
+  selectedItem.value.messageList.push({
+    userId: userInfo.value.userId,
+    userName: userInfo.value.userName,
+    content: form.body,
+    createTime: form.createTime
+
+  })
 
 
   // selectedItem.value.messageList.push({
@@ -200,6 +203,7 @@ const sendMessage = () => {
 };
 
 const choose = (list: any) => {
+  console.log("选中",list)
   selectedItem.value = list
   if (list.vis){
     return
@@ -208,13 +212,14 @@ const choose = (list: any) => {
   }
   selectedItem.value = list
   let srcId = list.id;
+  // 拿到两人之间所有的消息记录
   api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
     console.log("res",res)
     for (const item of res) {
       let newMes = {
           id: item.msgId,
           userId: item.srcId,
-          userName: map.get(item.srcId).userName,
+          userName: map.value.get(item.srcId).userName,
           content: item.body,
           createTime: item.createTime
       };
@@ -229,29 +234,32 @@ const choose = (list: any) => {
           repeat = true
           break
         } 
-        
       }
       
       if(!repeat){
         list.messageList.push(newMes);
       }
-
-      
-
       console.log("list",list)
-
     }
   });
 
 
 }
 
+
 watchEffect(() => {
   if (!store.getters.getIsLogin) {
+    items.value = []
+    userInfo.value = store.getters.getUserInfo
+    selectedItem.value.messageList = []
+    hadInitial = false
+    map.value = new Map()
     return
   }
   userInfo.value = store.getters.getUserInfo
-  map.set(userInfo.value.userId, userInfo.value)
+  userId.value = store.getters.getUserInfo.userId
+  map.value.set(userInfo.value.userId, userInfo.value)
+  initializeChat()
 })
 
 
