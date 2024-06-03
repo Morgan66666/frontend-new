@@ -132,11 +132,10 @@ const fetchActivities = async () => {
     api.activity.getActivities(form).then((res: any) => {
       if (res.code==undefined) {
         activities.value = res.records
-        console.log("aaaa", activities.value)
       }
       else console.log(res)
 
-  })
+    })
   } catch (error) {
     ElMessage.error('获取活动列表失败');
   }

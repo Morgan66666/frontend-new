@@ -62,7 +62,7 @@ const handleDelete = async (orderId: number) => {
   try {
     const res = await api.activity.unstarActivity({ collectionId: orderId });
     if (res.code === undefined) {
-      orders.value = orders.value.filter(order => order.activityId !== orderId);
+      await fetchStar();
       ElMessage.success('删除成功');
     } else {
       throw new Error('删除订单失败');
