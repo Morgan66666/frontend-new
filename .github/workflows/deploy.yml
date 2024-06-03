@@ -11,17 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # 停止并删除现有容器
+            docker stop frontend || true
+            docker rm frontend || true
 
-      - name: Deploy to server
-        env:
-          DOCKER_IMAGE: sustechcs304/frontend:latest
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          scp -i private_key deploy.sh $SSH_USER@$SSH_HOST:~
-          ssh -i private_key $SSH_USER@$SSH_HOST 'bash ~/deploy.sh'
+            # 尝试删除旧镜像
+            docker rmi sustechcs304/frontend:latest || true
+
+            # 拉取最新镜像
+            docker pull sustechcs304/frontend:latest
+
+            # 启动新容器，将宿主机的 45632 端口映射到容器的 80 端口
+            docker run -d --name frontend -p 45632:80 sustechcs304/frontend:latest
