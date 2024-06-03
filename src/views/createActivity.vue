@@ -63,8 +63,6 @@
           drag
           :http-request="uploadImage"
           multiple
-          :on-success="handleSuccess"
-          :on-error="handleError"
           :limit="1"
         >
           <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
@@ -206,18 +204,18 @@ const uploadImage = async (options: UploadRequestOptions) => {
   }
 };
 
-const getOssSignature = async (): Promise<SignatureInfo> => {
+async function getOssSignature(): Promise<SignatureInfo> {
   try {
-    const response = await axios.get('/api/oss/signature');
-    if (response.data) {
-      return response.data;
+    const response = await api.oss.getSignature();
+    if (response) {
+      return response;
     } else {
       throw new Error('获取签名信息失败');
     }
   } catch (error) {
     throw error;
   }
-};
+}
 
 const isFormValid = computed(() => {
   return (
