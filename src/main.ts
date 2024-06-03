@@ -24,10 +24,10 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
+app.use(router)
 
 app.provide('$router', router)
 
-app.use(router)
 
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$message = ElMessage

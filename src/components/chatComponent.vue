@@ -39,8 +39,6 @@ interface message {
   createTime: string;
 }
 const userId = store.getters.getUserInfo?.userId;
-
-
 const map = new Map();
 const items = ref<any>([
 ]);
@@ -54,6 +52,7 @@ const selectedItem = ref({
 const message = ref("");
 const textarea: any = ref(null);
 const api: any = inject("$api")
+let hadInitial = false;
 
 const autoGrow = () => {
   if (textarea.value === null) {
@@ -70,95 +69,105 @@ const userInfo = ref(store.getters.userInfo);
 // 获取host
 
 
-onMounted(() => {
-  //建立连接
-  let token = store.getters.getToken;
-  socket = new WebSocket('ws://localhost:23309/ws/create?session_id=' + token);
-  // 获取所有聊天会话
-  api.chat.getChatList().then((res: any) => {
-    for (const item of res) {
-      let userId = item.dstId;
-      api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
-        map.set(userId, res);
-        items.value.push({
-          id: res.userId,
-          userName: res.userName,
-          avatar: res.avatar,
-          vis: false,
-          messageList: [] as any[],
+const initializeChat = () => {
+    if(!store.getters.getIsLogin||hadInitial){
+      return
+    }
+    hadInitial = true
+
+    //建立连接
+    let token = store.getters.getToken;
+    socket = new WebSocket('ws://localhost:23309/ws/create?session_id=' + token);
+    // 获取所有聊天会话
+    api.chat.getChatList().then((res: any) => {
+      for (const item of res) {
+        let userId = item.dstId;
+        api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
+          map.set(userId, res);
+          items.value.push({
+            id: res.userId,
+            userName: res.userName,
+            avatar: res.avatar,
+            vis: false,
+            messageList: [] as any[],
+          });
         });
-      });
-    }
-  });
-  socket.onmessage = (event) => {
-    // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
-
-    const message = JSON.parse(event.data);
-    console.log("接到信息，开始解析", message)
-    let srcId = message.srcId
-    if (map.has(srcId) && message.type != 3) {
-      message.userId = srcId
-      message.userName = map.get(srcId).userName;
-      message.avatar = map.get(srcId).avatar;
-      message.content = message.body;
-      message.createTime = message.createTime;
-    }
-    srcId = message.srcId == userId ? message.dstId:message.srcId;
-
-    for (const element of items.value) {
-      if (element.id === srcId) {
-        if (message.type != 3){
-          element.messageList.push(message);
-        }
-        console.log("聊天信息存在")
-        return;
       }
-    }
-    // 建立一个新的会话
-    api.chat.createChat({ dstId: message.srcId }).then((res: any) => {
-      console.log("建立会话", res)
-      let userId = srcId;
-      api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
-        map.set(userId, res);
-        console.log("获取新建立的用户信息", res)
-        let newItem = {
-          id: res.userId,
-          userName: res.userName,
-          avatar: res.avatar,
-          vis:true  ,
-          messageList: [] as any[],
-        };
-        console.log("构建新的消息会话", newItem)
-        items.value.push(newItem);
-        api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
-          for (const item of res) {
-            console.log("聊天记录：", item)
-            let newMes = {
-              id: item.msgId,
-              userId: item.srcId,
-              userName: map.get(item.srcId).userName,
-              content: item.body,
-              createTime: item.createTime
-            } as any;
-            newItem.messageList.push(newMes);
-            // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
+    });
+    socket.onmessage = (event) => {
+      // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
+
+      const message = JSON.parse(event.data);
+      console.log("接到信息，开始解析", message)
+      let srcId = message.srcId
+      if (map.has(srcId) && message.type != 3) {
+        message.userId = srcId
+        message.userName = map.get(srcId).userName;
+        message.avatar = map.get(srcId).avatar;
+        message.content = message.body;
+        message.createTime = message.createTime;
+      }
+      srcId = message.srcId == userId ? message.dstId:message.srcId;
+
+      for (const element of items.value) {
+        if (element.id === srcId) {
+          if (message.type != 3){
+            element.messageList.push(message);
           }
-          if( message.type != 3){
-            newItem.messageList.push(message);
-          }
+          console.log("聊天信息存在")
+          return;
+        }
+      }
+      // 建立一个新的会话
+      api.chat.createChat({ dstId: message.srcId }).then((res: any) => {
+        console.log("建立会话", res)
+        let userId = srcId;
+        api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
+          map.set(userId, res);
+          console.log("获取新建立的用户信息", res)
+          let newItem = {
+            id: res.userId,
+            userName: res.userName,
+            avatar: res.avatar,
+            vis:true  ,
+            messageList: [] as any[],
+          };
+          console.log("构建新的消息会话", newItem)
+          items.value.push(newItem);
+          api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
+            for (const item of res) {
+              console.log("聊天记录：", item)
+              let newMes = {
+                id: item.msgId,
+                userId: item.srcId,
+                userName: map.get(item.srcId).userName,
+                content: item.body,
+                createTime: item.createTime
+              } as any;
+              newItem.messageList.push(newMes);
+              // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
+            }
+            if( message.type != 3){
+              newItem.messageList.push(message);
+            }
+          });
         });
       });
-    });
+    }
+
+    socket.onclose = (event) => {
+      console.log('WebSocket is closed now.', event);
+    };
+
+    socket.onerror = (event) => {
+      console.error('WebSocket error observed:', event);
+    };
   }
 
-  socket.onclose = (event) => {
-    console.log('WebSocket is closed now.', event);
-  };
+  onMounted(() => {
+    initializeChat();
+  });
 
-  socket.onerror = (event) => {
-    console.error('WebSocket error observed:', event);
-  };
-});
 
 const sendMessage = () => {
   if (message.value === ""||selectedItem.value.id==="") {

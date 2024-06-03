@@ -76,7 +76,7 @@ export default {
     const selectType = ref("不限");
     const selectTemp = ref("不限");
 
-    onMounted(async () => {
+    onMounted( () => {
       console.log("comments", comments.value);
       try {
         //这个时间在后端是localDateTime类型
@@ -84,9 +84,12 @@ export default {
           "start-time": "2022-12-12T12:12:12",
           "end-time": "2025-12-12T12:12:12",
         }
-        let res = await api.post.getPosts(time);
-        res = res.records
-        comments.value.push(...res);
+        api.post.getPosts(time).then(res => {
+          console.log("posts", res)
+          res = res.records
+          comments.value.push(...res);
+        })
+        
       } catch (error) {
         console.log('error', error);
       }

@@ -105,7 +105,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, PropType, ref, inject, watchEffect } from "vue";
+import { onMounted, PropType, ref, inject, watchEffect, getCurrentInstance } from "vue";
 import { computed } from "vue";
 import { getUserInfo } from "@/utils/userUtil.ts";
 import router from "../../router";
@@ -126,8 +126,14 @@ export default {
     const api: any = inject("$api");
     const isStar = ref(false);
     const isLiked = ref(false);
+    const instance = getCurrentInstance();
+    const proxy = instance?.proxy as any;
     const likesNum = ref(props.comment.likes);
     const likes = () => {
+      if(!store.getters.getIsLogin) {
+        proxy.$message("请先登录");
+        return;
+      }
       //根据id获得 评论
       api.post
         .updatePostLike({ postId: props.comment.postId })
@@ -144,7 +150,6 @@ export default {
 
     const enterUserPage = ref(function () {
       router.push(`/personal/${props.comment.userId}`);
-      // alert("进入用户页面");
     });
     //根据评论内容获得图片，最多三张
     const imgs = computed(() => {
@@ -203,6 +208,11 @@ export default {
     };
 
     let clickStar = () => {
+      if(!store.getters.getIsLogin) {
+        proxy.$message("请先登录");
+        return;
+      }
+
       updateInfo();
 
       // 根据有没有收藏过来判断是收藏还是取消收藏，现在先设置为仅收藏
@@ -238,8 +248,14 @@ export default {
       intro: "",
       avatar: "",
     });
-    //根据评论id获得用户信息，显示用户头像等
+
     const updateInfo = () => {
+      if(!store.getters.getIsLogin){
+        isStar.value = false
+        isLiked.value = false;
+        return
+      }
+
       api.post
         .getIfUserLikePost({ postId: props.comment.postId })
         .then((res: any) => {
@@ -251,11 +267,13 @@ export default {
             isLiked.value = false;
           }
         });
+
+
       api.post
         .getIsCollected({ postId: props.comment.postId })
         .then((res: any) => {
-          console.log("res", res);
-          isStar.value = !!res;
+
+          isStar.value = res;
         });
     };
     onMounted(() => {
@@ -265,7 +283,7 @@ export default {
         console.log(userInfo.value);
       });
 
-      updateInfo();
+      updateInfo(); 
       // 获取用户是否点赞了该评论
     });
 

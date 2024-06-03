@@ -17,7 +17,7 @@
           </button>
 
           <div class="time">
-            浏览时间: {{ formatDate(item.postInfo.createTime) }}
+            浏览时间: {{ formatDate(item.createTime) }}
           </div>
 
           <transition name="slide-fade">
@@ -50,7 +50,8 @@ onMounted(() => {
   api.post.getHistoryByUserId({ userId: userId }).then((res: any) => {
     // 根据拿到的收藏记录获取帖子
     Promise.all(
-      res.records.map((item: { postId: any; postInfo: any }) => {
+      res.records.map((item: { postId: any; postInfo: any; createTime:any }) => {
+        item.createTime = formatDate(item.createTime);
         return api.post
           .getPostByPostId({ postId: item.postId })
           .then((res: any) => {
@@ -70,7 +71,7 @@ onMounted(() => {
             });
         })
       ).then((records) => {
-        console.log("获取收藏帖子成功", records);
+        console.log("获取浏览帖子成功", records);
         postsShow.value = records;
       });
     });
