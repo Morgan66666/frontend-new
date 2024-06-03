@@ -97,6 +97,9 @@ let apiConfig = {
 };
 // 获取token，与后端交互时的秘钥，不用每次调用接口都传，直接在这里统一处理了
 let getTokenFn = () => {
+  if(!store.getters.getIsLogin){
+    return {}
+  }
   return { "authorization": `Bearer ${store.getters.getToken}` };
 }
 // 格式化参数

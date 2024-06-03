@@ -135,6 +135,8 @@ export default defineComponent({
           }else{
             emit("login", true);
           }
+          username.value = "";
+          password.value = "";
           
         }
         });
