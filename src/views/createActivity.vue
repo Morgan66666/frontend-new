@@ -158,15 +158,7 @@ const disabledActivityEndDate = (time: Date) => {
   return time.getTime() <= activityBeginTime || time.getTime() < today.getTime();
 };
 
-const handleSuccess = (response: any, file: UploadFile, fileList: UploadFiles) => {
-  console.log(response, file, fileList);
-  ElMessage.success('上传成功');
-};
 
-const handleError = (err: Error, file: UploadFile, fileList: UploadFiles) => {
-  console.error(err, file, fileList);
-  ElMessage.error('上传失败');
-};
 
 const handleUpdate = () => {
   if (quillContent.value && quillContent.value.editor) {
