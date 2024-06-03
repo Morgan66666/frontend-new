@@ -89,7 +89,7 @@ import {ref, computed, inject} from 'vue';
 import { ElMessage, FormInstance } from 'element-plus';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { UploadRequestOptions, UploadFile, UploadFiles } from 'element-plus/es/components/upload/src/upload';
+import { UploadRequestOptions} from 'element-plus/es/components/upload/src/upload';
 import { UploadFilled } from '@element-plus/icons-vue';
 import { ActivityDetail, SignatureInfo } from '@/types';
 import Editor from "@/components/editor.vue";
