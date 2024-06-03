@@ -17,8 +17,9 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref} from 'vue';
+import { ref} from 'vue';
 import { ElMessage } from 'element-plus';
+import axios from "axios";
 
 interface ApiDetail {
   apiKey: string;
@@ -29,11 +30,14 @@ const form = ref<ApiDetail>({
   apiKey: ''
 });
 
-const api:any = inject("$api");
+// const api:any = inject("$api");
 
 const handleSubmit = async () => {
   try {
-    api.ai.updateAPI(form.value).then((res:any) => {
+    // api.ai.updateAPI(form.value).then((res:any) => {
+    //   console.log(res)
+    // });
+    axios.put('https://cs304.cxp666.cn/api/ai/updateAPI', form.value).then((res:any) => {
       console.log(res)
     });
 
