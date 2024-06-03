@@ -1,11 +1,11 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 import homepage from '../views/homepage.vue'
 import personalPage from '../views/personalPage.vue'
 import commentsList from '../components/personalComponents/commentsList.vue'
 import ActivityDetail from "../views/ActivityDetail.vue";
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
