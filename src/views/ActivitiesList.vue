@@ -47,7 +47,7 @@ function createActivity() {
 function Search(searchQuery: string) {
   console.log('搜索', searchQuery);
   // 假设 api.activity.searchActivities 是你的搜索 API
-  api.getActivities({ query: searchQuery }).then((res: any) => {
+  api.activity.getActivities({ query: searchQuery }).then((res: any) => {
     activities.value = res.data;
   });
 }

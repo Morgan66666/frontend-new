@@ -69,7 +69,7 @@ const submitQuestion = async () => {
 
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/ai/generate', {
+    const response = await fetch('https://ai.cxp666.cn/api/ai/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

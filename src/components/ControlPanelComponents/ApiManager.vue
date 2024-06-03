@@ -37,7 +37,7 @@ const handleSubmit = async () => {
     // api.ai.updateAPI(form.value).then((res:any) => {
     //   console.log(res)
     // });
-    axios.put('https://cs304.cxp666.cn/api/ai/updateAPI', form.value).then((res:any) => {
+    axios.put('https://ai.cxp666.cn/api/ai/updateAPI', form.value).then((res:any) => {
       console.log(res)
     });
 
