@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, inject } from "vue";
 import store from "@/store";
 
 interface message {
@@ -85,14 +85,11 @@ onMounted(() => {
           userName: res.userName,
           avatar: res.avatar,
           vis: false,
-          messageList: []
+          messageList: [] as any[],
         });
       });
     }
   });
-  socket.onopen = (event: any) => {
-    console.log('WebSocket is open now.');
-  };
   socket.onmessage = (event) => {
     // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
 
@@ -129,7 +126,7 @@ onMounted(() => {
           userName: res.userName,
           avatar: res.avatar,
           vis:true  ,
-          messageList: []
+          messageList: [] as any[],
         };
         console.log("构建新的消息会话", newItem)
         items.value.push(newItem);
@@ -142,7 +139,7 @@ onMounted(() => {
               userName: map.get(item.srcId).userName,
               content: item.body,
               createTime: item.createTime
-            };
+            } as any;
             newItem.messageList.push(newMes);
             // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
           }
