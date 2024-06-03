@@ -28,32 +28,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, inject, watchEffect } from "vue";
 import store from "@/store";
-
-interface message {
-  id: string;
-  userId: string;
-  userName: string;
-  content: string;
-  createTime: string;
-}
 const userId = store.getters.getUserInfo?.userId;
-
-
 const map = new Map();
-const items = ref<any>([
-]);
+const items = ref<any[]>([]);
 
 const selectedItem = ref({
   id: "",
   userName: "",
   avatar: "",
-  messageList: [] as any[],
+  messageList: [] as any[], // 将 messageList 定义为 any[]
 });
 const message = ref("");
 const textarea: any = ref(null);
-const api: any = inject("$api")
+const api: any = inject("$api");
 
 const autoGrow = () => {
   if (textarea.value === null) {
@@ -63,18 +52,13 @@ const autoGrow = () => {
   // textarea.value.style.height = textarea.value.scrollHeight + "px";
 };
 
-// 建立websocket连接
-
 let socket: WebSocket | null = null;
 const userInfo = ref(store.getters.userInfo);
-// 获取host
-
 
 onMounted(() => {
-  //建立连接
   let token = store.getters.getToken;
   socket = new WebSocket('ws://localhost:23309/ws/create?session_id=' + token);
-  // 获取所有聊天会话
+
   api.chat.getChatList().then((res: any) => {
     for (const item of res) {
       let userId = item.dstId;
@@ -85,74 +69,73 @@ onMounted(() => {
           userName: res.userName,
           avatar: res.avatar,
           vis: false,
-          messageList: []
+          messageList: [] as any[], // 将 messageList 定义为 any[]
         });
       });
     }
   });
-  socket.onopen = (event: any) => {
-    console.log('WebSocket is open now.');
-  };
-  socket.onmessage = (event) => {
-    // 假设后端返回的数据格式为 { id: string, userId: string, userName: string, content: string }
 
+  socket.onopen = (event: any) => {
+    console.log('WebSocket is open now.', event);
+  };
+
+  socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
-    console.log("接到信息，开始解析", message)
-    let srcId = message.srcId
+    console.log("接到信息，开始解析", message);
+    let srcId = message.srcId;
     if (map.has(srcId) && message.type != 3) {
-      message.userId = srcId
+      message.userId = srcId;
       message.userName = map.get(srcId).userName;
       message.avatar = map.get(srcId).avatar;
       message.content = message.body;
       message.createTime = message.createTime;
     }
-    srcId = message.srcId == userId ? message.dstId:message.srcId;
+    srcId = message.srcId == userId ? message.dstId : message.srcId;
 
     for (const element of items.value) {
       if (element.id === srcId) {
-        if (message.type != 3){
-          element.messageList.push(message);
+        if (message.type != 3) {
+          element.messageList.push(message); // 使用 any 类型
         }
-        console.log("聊天信息存在")
+        console.log("聊天信息存在");
         return;
       }
     }
-    // 建立一个新的会话
+
     api.chat.createChat({ dstId: message.srcId }).then((res: any) => {
-      console.log("建立会话", res)
+      console.log("建立会话", res);
       let userId = srcId;
       api.user.getUserInfoByUserId({ userId: userId }).then((res: any) => {
         map.set(userId, res);
-        console.log("获取新建立的用户信息", res)
+        console.log("获取新建立的用户信息", res);
         let newItem = {
           id: res.userId,
           userName: res.userName,
           avatar: res.avatar,
-          vis:true  ,
-          messageList: []
+          vis: true,
+          messageList: [] as any[], // 将 messageList 定义为 any[]
         };
-        console.log("构建新的消息会话", newItem)
+        console.log("构建新的消息会话", newItem);
         items.value.push(newItem);
         api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
           for (const item of res) {
-            console.log("聊天记录：", item)
+            console.log("聊天记录：", item);
             let newMes = {
               id: item.msgId,
               userId: item.srcId,
               userName: map.get(item.srcId).userName,
               content: item.body,
-              createTime: item.createTime
+              createTime: item.createTime,
             };
-            newItem.messageList.push(newMes);
-            // Reflect.set(newItem, 'messageList', newItem.messageList.concat(newMes));
+            newItem.messageList.push(newMes); // 使用 any 类型
           }
-          if( message.type != 3){
-            newItem.messageList.push(message);
+          if (message.type != 3) {
+            newItem.messageList.push(message); // 使用 any 类型
           }
         });
       });
     });
-  }
+  };
 
   socket.onclose = (event) => {
     console.log('WebSocket is closed now.', event);
@@ -164,7 +147,7 @@ onMounted(() => {
 });
 
 const sendMessage = () => {
-  if (message.value === ""||selectedItem.value.id==="") {
+  if (message.value === "" || selectedItem.value.id === "") {
     return;
   }
 
@@ -174,89 +157,65 @@ const sendMessage = () => {
     body: message.value,
     type: 1,
     createTime: new Date().toISOString(),
-    status: 0
-  }
+    status: 0,
+  };
   let s = JSON.stringify(form);
   socket?.send(s);
-
-
-  // selectedItem.value.messageList.push({
-  //   id: selectedItem.value.id,
-  //   userId: userId,
-  //   userName: "Me",
-  //   content: message.value,
-  //   createTime: new Date().toISOString(),
-  // });
-
 
   message.value = "";
   autoGrow();
 };
 
 const choose = (list: any) => {
-  selectedItem.value = list
-  if (list.vis){
-    return
-  }else{
-    list.vis = true
+  selectedItem.value = list;
+  if (list.vis) {
+    return;
+  } else {
+    list.vis = true;
   }
-  selectedItem.value = list
+  selectedItem.value = list;
   let srcId = list.id;
   api.chat.getChatRecord({ dstId: srcId }).then((res: any) => {
-    console.log("res",res)
+    console.log("res", res);
     for (const item of res) {
       let newMes = {
-          id: item.msgId,
-          userId: item.srcId,
-          userName: map.get(item.srcId).userName,
-          content: item.body,
-          createTime: item.createTime
+        id: item.msgId,
+        userId: item.srcId,
+        userName: map.get(item.srcId).userName,
+        content: item.body,
+        createTime: item.createTime,
       };
-      if(list.messageList.length == 0){
+      if (list.messageList.length == 0) {
         list.messageList.push(newMes);
-        continue
+        continue;
       }
 
-      let repeat = false
+      let repeat = false;
       for (let i of list.messageList) {
         if (i.id === item.id) {
-          repeat = true
-          break
-        } 
-        
+          repeat = true;
+          break;
+        }
       }
-      
-      if(!repeat){
+
+      if (!repeat) {
         list.messageList.push(newMes);
       }
 
-      
-
-      console.log("list",list)
-
+      console.log("list", list);
     }
   });
-
-
-}
+};
 
 watchEffect(() => {
   if (!store.getters.getIsLogin) {
-    return
+    return;
   }
-  userInfo.value = store.getters.getUserInfo
-  map.set(userInfo.value.userId, userInfo.value)
-})
-
-
-
-
-
-
-
-
-
+  userInfo.value = store.getters.getUserInfo;
+  map.set(userInfo.value.userId, userInfo.value);
+});
 </script>
+
 
 <script lang="ts">
 export default {
