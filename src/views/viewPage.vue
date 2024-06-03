@@ -135,7 +135,7 @@ export default {
       api.post.getPostByPostId({ postId: postId }).then((res: any) => {
         post.title = res.title;
         post.body = res.body;
-        post.date = moment(res.createComment).format("YYYY-MM-DD HH:mm:ss");
+        post.date = moment(res.createTime).format("YYYY-MM-DD HH:mm:ss");
         post.likes = res.likes;
         // post.isLiked = res.isLiked;
         post.isLiked = 0
@@ -156,7 +156,7 @@ export default {
             userInfo.level = "4级";
             comment.userInfo = userInfo;
             // 时间戳转格式化的字符串
-            comment.createTime = new Date(comment.createTime).toLocaleString();
+            // comment.createTime = new Date(comment.createTime).toLocaleString();
           });
         });
 
@@ -176,6 +176,9 @@ export default {
     });
 
     onMounted(() => {
+      if(!store.getters.getIsLogin){
+        return
+      }
       api.post.createHistory({ postId: postId }).then((res: any) => {
         console.log("createHistory", res);
       });
@@ -223,7 +226,7 @@ export default {
             getUserInfo(res.userId).then((userInfo: any) => {
               userInfo.level = "4级";
               res.userInfo = userInfo;
-              res.createTime = new Date(res.createTime).toLocaleString();
+              // res.createTime = new Date(res.createTime).toLocaleString();
               
               comments.push(res);
             });
