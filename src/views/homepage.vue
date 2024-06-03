@@ -6,7 +6,7 @@
         <div class="main_container_mainMessage">
 
           <v-carousel class="carousel" cycle height="440" width="800" hide-delimiters :show-arrows="false">
-            <v-carousel-item v-for="image in images" :key="image" :src="image"></v-carousel-item>
+            <v-carousel-item v-for="image in activities" :key="image.img" :src="image.img" @click="goToActivity(image.activityId)"  class="clickable-image"></v-carousel-item>
           </v-carousel>
 
           <post-comment-component v-for="item in comments" :comment="item" v-bind:key="item.postId"
@@ -44,20 +44,18 @@
   </div>
 </template>
 
-
-
-
 <script setup lang="ts">
 import { ref, watch, reactive,onUnmounted } from 'vue';
 import PostCommentComponent from "../components/homePageComponents/postComment.vue";
 import chatComponent from '../components/chatComponent.vue';
-import { Post } from '@/types';
+import { Post, ActivityDetail } from '@/types';
 import { inject,onMounted } from 'vue';
 import store from '../store';
 import router from "@/router";
 
 const api:any = inject('$api');
 let comments = reactive<Post[]>([]);
+let activities = ref<ActivityDetail[]>([]);
 
 let pageNum = 1
 let pageSize = 4
@@ -65,16 +63,26 @@ let chatVisible = ref(false);
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
   try {
-    //这个时间在后端是localDateTime类型
-    let time = {
+    let postTime = {
       "start-time": "2022-12-12T12:12:12",
       "end-time": "2025-12-12T12:12:12",
       "pageNum": pageNum,
       "pageSize":pageSize
     }
-    let res = await api.post.getPosts(time);
-    res = res.records
-    comments.push(...res);
+    let postRes = await api.post.getPosts(postTime);
+    comments.push(...postRes.records);
+
+    let form = {
+      pageSize: 3,
+      pageNum: 1
+    }
+    let activityRes = await api.activity.getActivities(form);
+    if (activityRes.code == undefined) {
+      activities.value = activityRes.records;
+      console.log("activities", activities.value)
+    } else {
+      console.log(activityRes);
+    }
   } catch (error) {
     console.log('error', error);
   }
@@ -84,6 +92,10 @@ function toAI() {
   router.push('/ai');
 }
 
+function goToActivity(activityId: number) {
+  router.push({ path: '/activity', query: { activityId } });
+}
+
 const handleScroll = async () => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
@@ -91,7 +103,6 @@ const handleScroll = async () => {
     console.log('滚动到底部了');
 
     try {
-        //这个时间在后端是localDateTime类型
         let time = {
           "start-time": "2022-12-12T12:12:12",
           "end-time": "2025-12-12T12:12:12",
@@ -99,30 +110,16 @@ const handleScroll = async () => {
           "pageSize": pageSize
         }
         let res = await api.post.getPosts(time);
-        res = res.records
-        comments.push(...res);
+        comments.push(...res.records);
       } catch (error) {
         console.log('error', error);
       }
-    // 在这里加载更多数据
   }
 };
-
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
-
-
-
-
-
-
-const images = ref([
-  "https://img.universitychina.net/userdata/image/cover/2022/09/1663686690_250073.jpg",
-  "https://img.universitychina.net/userdata/image/article/2022/09/1663684701_102979.jpg",
-  "https://img.universitychina.net/userdata/image/article/2022/09/1663684701_102979.jpg",
-]);
 
 const handleThumbUpChange = ({ id }:any) => {
   let post = getPostById(id);
@@ -161,7 +158,6 @@ const getPostById = (id:any) => {
 watch(comments, (newComments) => {
   console.log('Comments have changed:', newComments);
 }, { deep: true });
-
 </script>
 
 
@@ -358,5 +354,8 @@ watch(comments, (newComments) => {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
   margin-bottom: 50px;
+}
+.clickable-image {
+  cursor: pointer;
 }
 </style>

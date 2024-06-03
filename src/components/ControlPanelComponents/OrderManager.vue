@@ -35,7 +35,7 @@
           <el-input v-model="form.userId"></el-input>
         </el-form-item>
         <el-form-item label="订单金额">
-          <el-input v-model="form.totlePrice"></el-input>
+          <el-input v-model="form.totalPrice"></el-input>
         </el-form-item>
         <el-form-item label="交易人数">
           <el-input v-model="form.numberOfPeople"></el-input>
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import {inject, ref} from 'vue';
 import { ElMessage } from 'element-plus';
 import {Order} from "@/types";
 
@@ -69,37 +69,50 @@ const orders = ref<Order[]>([]);
 const dialogVisible = ref(false);
 const dialogTitle = ref('');
 const form = ref<Partial<Order>>({});
+const api:any = inject("$api");
 
 // 获取订单列表（假设从API获取）
 const fetchOrders = async () => {
   try {
     // 假设API返回订单列表
-    orders.value = [
-      {
-        orderId: 1,
-        activityId: 101,
-        userId: "1001",
-        totlePrice: "99.99",
-        numberOfPeople: 1,
-        createTime: '2024-05-28T12:00:00',
-        status: 0,
-        transactionId: "1",
-        name: "张三",
-        phoneNumber: "13812345678",
-      },
-      {
-        orderId: 2,
-        activityId: 111,
-        userId: "1002",
-        totlePrice: "991.99",
-        numberOfPeople: 1,
-        createTime: '2024-05-28T12:00:00',
-        status: 0,
-        transactionId: "1",
-        name: "李四",
-        phoneNumber: "13812345678",
-      },
-    ];
+    // orders.value = [
+    //   {
+    //     orderId: 1,
+    //     activityId: 101,
+    //     userId: "1001",
+    //     totalPrice: "99.99",
+    //     numberOfPeople: 1,
+    //     createTime: '2024-05-28T12:00:00',
+    //     status: 0,
+    //     transactionId: "1",
+    //     name: "张三",
+    //     phoneNumber: "13812345678",
+    //   },
+    //   {
+    //     orderId: 2,
+    //     activityId: 111,
+    //     userId: "1002",
+    //     totalPrice: "991.99",
+    //     numberOfPeople: 1,
+    //     createTime: '2024-05-28T12:00:00',
+    //     status: 0,
+    //     transactionId: "1",
+    //     name: "李四",
+    //     phoneNumber: "13812345678",
+    //   },
+    // ];
+    let form = {
+      pageSize: 1000,
+      pageNum: 1
+    }
+    api.order.getOrders(form).then((res:any) => {
+      if (res.code == undefined) {
+        const records = res.records;
+        console.log(records)
+        orders.value = records
+      }
+      else console.log(res)
+    })
   } catch (error) {
     ElMessage.error('获取订单列表失败');
   }
@@ -141,7 +154,12 @@ const handleEdit = (order: Order) => {
 const handleDelete = async (orderId: number) => {
   try {
     // 假设调用API删除订单
-    orders.value = orders.value.filter(order => order.orderId !== orderId);
+    api.order.deleteOrder({orderId: orderId}).then((res: any) => {
+      if (res.code == undefined) {
+        orders.value = orders.value.filter(order => order.orderId !== orderId);
+      }
+      else throw new Error('删除订单失败');
+    })
     ElMessage.success('删除成功');
   } catch (error) {
     ElMessage.error('删除失败');
@@ -152,9 +170,13 @@ const handleSave = async () => {
   try {
     // 编辑订单信息，假设调用API更新订单
     const index = orders.value.findIndex(order => order.orderId === form.value.orderId);
-    if (index !== -1) {
-      orders.value[index] = { ...form.value } as Order;
-    }
+    api.order.updateOrder(form.value).then((res: any) => {
+      if (res.code == undefined) {
+        orders.value[index] = { ...form.value } as Order;
+      }
+      else throw new Error('更新订单失败');
+    })
+
     dialogVisible.value = false;
     ElMessage.success('保存成功');
   } catch (error) {

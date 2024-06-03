@@ -27,6 +27,7 @@ import {ActivityDetail} from "@/types";
 import {onMounted, ref, inject, PropType, watch} from "vue";
 import ActivityCard from "../components/ActivityCard.vue";
 import SearchBar from "../components/SearchBar.vue";
+import {convertTimestampToLocal, isValidTimestamp} from "@/utils/timeUtil.ts";
 
 const api:any = inject("$api");
 
@@ -52,12 +53,23 @@ function Search(searchQuery: string) {
 }
 
 onMounted(async () => {
-  api.activity.getActivities().then((res:any) => {
-    const records = res.records;
-    console.log(records)
-    activities.value = records
-  })
+  try {
+      api.activity.getActivities().then((res:any) => {
+        if (res.code == undefined) {
+          const records = res.records;
+          console.log(records)
+          activities.value = records
+        }
+        else console.log(res)
+    })
+  }
+  catch (e) {
+    console.error(e);
+  }
+
+
 })
+
 
 const props = defineProps({
   searchActivities: {
@@ -69,6 +81,8 @@ const props = defineProps({
 watch(() => props.searchActivities, (newVal) => {
   activities.value = newVal
 })
+
+
 
 const activities = ref<Partial<ActivityDetail>[]>([
   {
@@ -110,6 +124,22 @@ const activities = ref<Partial<ActivityDetail>[]>([
   // ...更多活动
 ]);
 
+watch(activities, () => {
+  activities.value.forEach((activity: any) => {
+    if (isValidTimestamp(activity.activityBeginTime)) {
+      activity.activityBeginTime = convertTimestampToLocal(activity.activityBeginTime)
+    }
+    if (isValidTimestamp(activity.activityEndTime)) {
+      activity.activityEndTime = convertTimestampToLocal(activity.activityEndTime)
+    }
+    if (isValidTimestamp(activity.bookBeginTime)) {
+      activity.bookBeginTime = convertTimestampToLocal(activity.bookBeginTime)
+    }
+    if (isValidTimestamp(activity.bookEndTime)) {
+      activity.bookEndTime = convertTimestampToLocal(activity.bookEndTime)
+    }
+  })
+})
 </script>
 
 <style scoped>

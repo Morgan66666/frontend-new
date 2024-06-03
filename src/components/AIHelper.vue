@@ -65,10 +65,11 @@ const submitQuestion = async () => {
   const aiResponse = ref('正在生成回答...');
   chatHistory.value.push({ role: 'AI', content: aiResponse.value });
   userInput.value = '';
+  // const api:any = inject('$api');
 
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/generate', {
+    const response = await fetch('http://127.0.0.1:5000/api/ai/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -77,6 +78,15 @@ const submitQuestion = async () => {
     });
     const data: AIResponse = await response.json();
     aiResponse.value = data.response;
+
+    // api.ai.generate(JSON.stringify({ prompt } as PromptPayload)).then((res: any) => {
+    //   if (res == undefined) {
+    //     aiResponse.value = res.response;
+    //   }
+    //   else console.log(res)
+    // })
+
+
 
     // 更新AI的回答
     chatHistory.value[chatHistory.value.length - 1].content = aiResponse.value;

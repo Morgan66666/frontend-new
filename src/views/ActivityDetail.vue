@@ -81,6 +81,7 @@ import { ActivityDetail } from "@/types";
 import {computed, inject, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import * as timeUtil from "@/utils/timeUtil.ts";
+import {ElMessage} from "element-plus";
 const api:any = inject("$api");
 
 let activity = ref<ActivityDetail>({
@@ -122,6 +123,20 @@ function confirm() {
 }
 
 function star() {
+  try {
+    api.activity.starActivity(activity.value).then((res:any) => {
+      console.error(res)
+      if (res.code == undefined) {
+        ElMessage.success("收藏成功");
+      }
+      else {
+        ElMessage.error("收藏失败");
+      }
+    });
+  }
+  catch (e) {
+    console.error(e);
+  }
   console.log('star');
 }
 
@@ -129,10 +144,10 @@ const getData = async (activityId: number) => {
   try {
     const data:ActivityDetail = await api.activity.getActivityByActivityId({ activityId: activityId });
     // 假设时间戳字段是 activityBeginTime 和 activityEndTime
-    data.activityBeginTime = timeUtil.convertTimestampToLocal(Number(data.activityBeginTime));
-    data.activityEndTime = timeUtil.convertTimestampToLocal(Number(data.activityEndTime));
-    data.bookBeginTime = timeUtil.convertTimestampToLocal(Number(data.bookBeginTime));
-    data.bookEndTime = timeUtil.convertTimestampToLocal(Number(data.bookEndTime));
+    data.activityBeginTime = timeUtil.convertTimestampToLocal(data.activityBeginTime);
+    data.activityEndTime = timeUtil.convertTimestampToLocal(data.activityEndTime);
+    data.bookBeginTime = timeUtil.convertTimestampToLocal(data.bookBeginTime);
+    data.bookEndTime = timeUtil.convertTimestampToLocal(data.bookEndTime);
     activity.value = data;
     console.log(activity.value);
   } catch (e) {

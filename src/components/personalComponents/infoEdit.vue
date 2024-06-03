@@ -140,7 +140,7 @@ import axios from "axios";
 import store from "../../store";
 import { v4 as uuidv4 } from "uuid";
 import { UserInfo } from "@/types";
-import { getUserInfo } from "../../utils/userUtil.js";
+import { getUserInfo } from "@/utils/userUtil.ts";
 
 export default {
   name: "InfoEdit",
