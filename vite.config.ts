@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -12,5 +11,12 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0'
-  }
+  },
+  build: {
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+    },
+  },
 });
